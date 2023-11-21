@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Telika egw ton pairnw!</Text>
+      <Text>Telika egw ton pairnw kai xwris iphone !</Text>
       <StatusBar style="auto" />
     </View>
   );
