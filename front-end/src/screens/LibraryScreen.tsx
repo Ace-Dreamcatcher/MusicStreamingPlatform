@@ -1,20 +1,22 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Image, SafeAreaView, StatusBar } from 'react-native'
-import Ionicons from 'react-native-ionicons'
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+
+const { width, height } = Dimensions.get('window');
 
 export const LibraryScreen = () => {
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content"/>
-            <SafeAreaView style={styles.navigation}>
-                <Text> Navigation </Text>
+            <SafeAreaView style={styles.topContainer}>
+                <Text> Top bar </Text>
             </SafeAreaView>
-            <View style={styles.body}>
+            <View style={styles.mainContainer}>
                 <Text> Library Screen </Text>
             </View>
-            <View style={styles.footer}>
-                <Ionicons name="heart-outline" size={30} />
-                <Text> Footer </Text>
+            <View style={styles.bottomContainer}>
+                <MaterialIcons name="my-library-music" size={24} color="black" />
+                <Ionicons name="search" size={24} color="black" />
             </View>
         </View>
 )}
@@ -22,26 +24,28 @@ export const LibraryScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        //alignItems: 'center',
-        backgroundColor: '#fff'
     },
-    navigation: {
+    topContainer: {
         flex: 0.5,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'red'
+        backgroundColor: 'grey'
     },
-    body: {
-        flex: 8,
+    mainContainer: {
+        flex: 10,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'yellow'
     },
-    footer: {
-        flex: 1.5,
-        justifyContent: 'center',
+    bottomContainer: {
+        flex: 1,
+        justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: 'green'
+        backgroundColor: 'grey',
+        borderTopColor: 'black',
+        borderTopWidth: 1,
+        width: width,
+        paddingVertical: 15,
+        flexDirection: 'row'
     }
 })
