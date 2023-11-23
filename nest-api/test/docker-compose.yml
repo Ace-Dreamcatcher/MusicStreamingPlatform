@@ -1,14 +1,14 @@
-version: '24.0.6'
+version: "4.25.2"
 services:
-  AA_db:
-    images: postgres:15.5
+  AA-db:
+    image: postgres:15
     ports:
-      -5434:5432
+      - "5434:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: Audio_Alcove_db
-      networks:
-        - musicstreamingplatform
+      POSTGRES_DB: AudioAlcove
+    networks:
+      - musicstreamingplatform
 networks:
- musicstreamingplatform:
+  musicstreamingplatform:
