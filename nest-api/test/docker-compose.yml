@@ -1,6 +1,6 @@
 version: '24.0.6'
 services:
-  musicstreamingplatform_db:
+  AA_db:
     images: postgres:15.5
     ports:
       -5434:5432
