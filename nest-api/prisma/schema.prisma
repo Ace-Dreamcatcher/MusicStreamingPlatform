@@ -10,10 +10,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id Int @id @default(autoincrement())
+model User {
+  id String @id @default(uuid())
   createAt DateTime @default(now())
   email String
   username String
   hash String
+}
+
+model Song {
+  id String @id @default(uuid())
+  idArtist String
+  idAlbum String
+  name String
+  track String
+
+  artist Artist @relation(fields: [idArtist], references: [id])
+  album Album @relation(fields: [idAlbum], references: [id])
+}
+
+model Artist {
+  id String @id @default(uuid())
+  name String
+
+  songs Song[]
+  albums Album[]
+}
+
+model Album {
+  id String @id @default(uuid())
+  idArtist String
+  name String
+  image Bytes?
+
+  artist Artist @relation(fields: [idArtist], references: [id])
+  songs Song[]
 }
