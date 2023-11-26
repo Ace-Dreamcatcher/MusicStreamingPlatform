@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
 
-export default function Library() {
+export default function Search() {
   return (
     <View style={styles.container}>
       
