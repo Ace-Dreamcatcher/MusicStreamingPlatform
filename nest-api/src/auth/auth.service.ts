@@ -3,6 +3,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { AuthDto } from "./dto";
 import * as argon from "argon2";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { createCipheriv } from "crypto";
 
 @Injectable({})
 export class AuthService {
