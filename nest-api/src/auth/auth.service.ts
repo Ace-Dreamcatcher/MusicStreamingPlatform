@@ -4,6 +4,8 @@ import { AuthDto } from "./dto";
 import * as argon from "argon2";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { createCipheriv } from "crypto";
+import { equal } from "assert";
+import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
 
 @Injectable({})
 export class AuthService {
@@ -12,10 +14,16 @@ export class AuthService {
 	async signup(dto: AuthDto) {
 		try {
 			const hash = await argon.hash(dto.password);
+			let username: string = "";
+			if (dto.username.length === 0) {
+				username = "user";
+			} else {
+				username = dto.username;
+			}
 			const user = await this.prisma.user.create({
 				data: {
 					email: dto.email,
-					username: dto.username,
+					username,
 					hash,
 				},
 			});
@@ -31,7 +39,22 @@ export class AuthService {
 		}
 	}
 
-	signin() {
-		return "I am small";
+	async signin(dto: AuthDto) {
+		const user = await this.prisma.user.findUnique({
+			where: {
+				email: dto.email,
+			},
+		});
+
+		if (!user) {
+			throw new ForbiddenException("Invalid email!");
+		}
+
+		const passwordMatch = await argon.verify(user.hash, dto.password);
+		if (!passwordMatch) {
+			throw new ForbiddenException("Incorrect password!");
+		}
+
+		return user.username;
 	}
 }
