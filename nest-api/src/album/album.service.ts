@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+
 import { PrismaService } from "src/prisma/prisma.service";
 import { AlbumDto } from "./dto";
 
@@ -6,13 +7,26 @@ import { AlbumDto } from "./dto";
 export class AlbumService {
 	constructor(private prisma: PrismaService) {}
 
-	/*let idArtist: string = this.prisma.artist.get()
-	AlbumInfo(dto: AlbumDto) {
-		const album = this.prisma.album.create({
+	async albumInfo(dto: AlbumDto) {
+		const album = await this.prisma.album.create({
 			data: {
 				name: dto.name,
-                idArtist:
+				artist: {
+					connect: { id: "793bcf72-737f-4cf7-b335-1d68d9be9e74" },
+				},
+				image: dto.image,
 			},
 		});
-	}*/
+
+		const albumFind = await this.prisma.album.findFirst({
+			where: {
+				name: dto.name,
+			},
+			include: {
+				artist: true,
+			},
+		});
+
+		return albumFind;
+	}
 }

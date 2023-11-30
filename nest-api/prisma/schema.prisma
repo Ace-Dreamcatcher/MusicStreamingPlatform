@@ -42,7 +42,7 @@ model Album {
   id String @id @default(uuid())
   idArtist String
   name String
-  image Bytes?
+  image String?
 
   artist Artist @relation(fields: [idArtist], references: [id])
   songs Song[]
