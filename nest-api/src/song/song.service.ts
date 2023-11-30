@@ -15,7 +15,7 @@ export class SongService {
 		const song = await this.prisma.song.create({
 			data: {
 				idAlbum: "o io einai foveros",
-				idArtist: await this.ArtistService.addArtist(dto),
+				idArtist: "await this.ArtistService.addArtist(dto)",
 				name: dto.name,
 				genre: dto.genre,
 				track: dto.track,
