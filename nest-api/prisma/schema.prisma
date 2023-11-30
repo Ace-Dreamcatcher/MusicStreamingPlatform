@@ -23,6 +23,7 @@ model Song {
   idArtist String
   idAlbum String
   name String
+  genre String
   track String
 
   artist Artist @relation(fields: [idArtist], references: [id])
