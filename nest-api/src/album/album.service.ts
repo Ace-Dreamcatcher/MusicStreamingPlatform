@@ -9,13 +9,13 @@ export class AlbumService {
 	async albumInfo(name: string, artistName: string, image?: string) {
 		const result = await this.prisma
 			.$queryRaw`SELECT id FROM "Artist" WHERE name = ${artistName};`;
-		const idArtist: string = await result[0].id;
+		const artistId: string = await result[0].id;
 
 		const album = await this.prisma.album.create({
 			data: {
 				name: name,
 				artist: {
-					connect: { id: idArtist },
+					connect: { id: artistId },
 				},
 				image: image,
 			},

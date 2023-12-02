@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
 export class AdminDto {
-	/*@IsString()
+	@IsString()
 	@IsNotEmpty()
 	songName: string;
 
@@ -11,7 +11,7 @@ export class AdminDto {
 
 	@IsString()
 	@IsNotEmpty()
-	songTrack: string;*/
+	songTrack: string;
 
 	@IsString()
 	@IsNotEmpty()
