@@ -11,15 +11,24 @@ export class AlbumService {
 			.$queryRaw`SELECT id FROM "Artist" WHERE name = ${artistName};`;
 		const artistId: string = await result[0].id;
 
-		const album = await this.prisma.album.create({
-			data: {
+		const albumCheck = await this.prisma.album.findFirst({
+			where: {
+				idArtist: artistId,
 				name: name,
-				artist: {
-					connect: { id: artistId },
-				},
-				image: image,
 			},
 		});
+
+		if (albumCheck === undefined) {
+			const album = await this.prisma.album.create({
+				data: {
+					name: name,
+					artist: {
+						connect: { id: artistId },
+					},
+					image: image,
+				},
+			});
+		}
 
 		const albumFind = await this.prisma.album.findFirst({
 			where: {
