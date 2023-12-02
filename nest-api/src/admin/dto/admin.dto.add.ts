@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class AdminDto {
+export class AdminDtoAdd {
 	@IsString()
 	@IsNotEmpty()
 	songName: string;

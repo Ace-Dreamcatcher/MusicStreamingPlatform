@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from "@nestjs/common";
 
-import { AdminDto } from "./dto";
+import { AdminDtoAdd } from "./dto";
 import { ArtistService } from "src/artist/artist.service";
 import { AlbumService } from "src/album/album.service";
 import { SongService } from "src/song/song.service";
@@ -14,7 +14,7 @@ export class AdminController {
 	) {}
 
 	@Post("adminAdd")
-	async adminAdd(@Body() dto: AdminDto) {
+	async adminAdd(@Body() dto: AdminDtoAdd) {
 		await this.artistService.artistInfo(dto.artistName);
 		await this.albumService.albumInfo(
 			dto.albumName,
