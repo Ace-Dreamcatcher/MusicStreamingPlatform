@@ -17,9 +17,9 @@ export class SongService {
 		const resultArtist = await this.prisma
 			.$queryRaw`SELECT id FROM "Artist" WHERE name = ${artistName};`;
 		const idArtist: string = await resultArtist[0].id;
-		console.log(idArtist);
+
 		const resultAlbum = await this.prisma
-			.$queryRaw`SELECT id FROM "Album" WHERE (name = ${albumName} OR artistId = ${idArtist});`;
+			.$queryRaw`SELECT id FROM "Album" WHERE (name = ${albumName} AND "artistId" = ${idArtist});`;
 		const idAlbum: string = await resultAlbum[0].id;
 
 		const songExists = await this.prisma.song.findFirst({

@@ -33,8 +33,12 @@ export class AlbumService {
 	}
 
 	async deleteAlbum(dto: AdminDtoDelete) {
+		const resultArtist = await this.prisma
+			.$queryRaw`SELECT id FROM "Artist" WHERE name = ${dto.artistName};`;
+		const idArtist: string = await resultArtist[0].id;
+
 		const resultAlbum = await this.prisma
-			.$queryRaw`SELECT id FROM "Album" WHERE name = ${dto.albumName};`;
+			.$queryRaw`SELECT id FROM "Album" WHERE (name = ${dto.albumName} AND "artistId" = ${idArtist});`;
 		const idAlbum: string = await resultAlbum[0].id;
 
 		const count = await this.prisma.song.count({
