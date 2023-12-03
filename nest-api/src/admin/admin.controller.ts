@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 
-import { AdminDtoAdd } from "./dto";
+import { AdminDtoAdd, AdminDtoDelete } from "./dto";
 import { ArtistService } from "src/artist/artist.service";
 import { AlbumService } from "src/album/album.service";
 import { SongService } from "src/song/song.service";
@@ -28,5 +28,10 @@ export class AdminController {
 			dto.artistName,
 			dto.albumName,
 		);
+	}
+
+	@Post("delete")
+	async delete(@Body() dto: AdminDtoDelete) {
+		await this.songService.deleteSong(dto);
 	}
 }

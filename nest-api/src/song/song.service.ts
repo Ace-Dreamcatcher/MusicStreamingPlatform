@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { AdminDtoDelete } from "src/admin/dto";
 
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -43,6 +44,29 @@ export class SongService {
 					},
 				},
 			});
+
+			return "Song Created!";
 		}
+
+		return "Song Already Exists!";
+	}
+
+	async deleteSong(dto: AdminDtoDelete) {
+		const result = await this.prisma
+			.$queryRaw`SELECT id FROM "Song" WHERE name = ${dto.songName};`;
+		const id: string = await result[0].id;
+
+		await this.prisma.song.delete({
+			where: {
+				id: id,
+				name: dto.songName,
+				album: {
+					name: dto.albumName,
+				},
+				artist: {
+					name: dto.artistName,
+				},
+			},
+		});
 	}
 }
