@@ -95,4 +95,8 @@ export class SongService {
 			},
 		});
 	}
+
+	async printSongs() {
+		return this.signToken(song.name);
+	}
 }
