@@ -21,18 +21,28 @@ export class SongService {
 			.$queryRaw`SELECT id FROM "Album" WHERE name = ${albumName};`;
 		const albumId: string = await resultAlbum[0].id;
 
-		const song = await this.prisma.song.create({
-			data: {
+		const songExists = await this.prisma.song.findFirst({
+			where: {
+				idArtist: artistId,
+				idAlbum: albumId,
 				name: name,
-				genre: genre,
-				track: track,
-				artist: {
-					connect: { id: artistId },
-				},
-				album: {
-					connect: { id: albumId },
-				},
 			},
 		});
+
+		if (songExists === null) {
+			await this.prisma.song.create({
+				data: {
+					name: name,
+					genre: genre,
+					track: track,
+					artist: {
+						connect: { id: artistId },
+					},
+					album: {
+						connect: { id: albumId },
+					},
+				},
+			});
+		}
 	}
 }

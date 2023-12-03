@@ -14,7 +14,7 @@ export class ArtistService {
 		});
 
 		if (!artistExists) {
-			const artist = await this.prisma.artist.create({
+			await this.prisma.artist.create({
 				data: {
 					name: name,
 				},
