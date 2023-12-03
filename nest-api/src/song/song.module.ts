@@ -5,10 +5,9 @@ import { SongService } from "./song.service";
 import { ArtistService } from "src/artist/artist.service";
 import { AlbumService } from "src/album/album.service";
 import { SongController } from "./song.controller";
-import { AuthService } from "src/auth/auth.service";
 
 @Module({
 	controllers: [AdminController, SongController],
-	providers: [SongService, ArtistService, AlbumService, AuthService],
+	providers: [SongService, ArtistService, AlbumService],
 })
 export class SongModule {}

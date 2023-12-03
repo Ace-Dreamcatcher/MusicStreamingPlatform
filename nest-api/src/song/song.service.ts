@@ -97,6 +97,9 @@ export class SongService {
 	}
 
 	async printSongs() {
-		return this.signToken(song.name);
+		const resultSong = await this.prisma.song.findMany({
+			select: { name: true },
+		});
+		return resultSong;
 	}
 }
