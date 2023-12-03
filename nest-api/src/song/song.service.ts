@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AdminDtoDelete } from "src/admin/dto";
+import { AdminDtoDelete, AdminDtoUpdateSong } from "src/admin/dto";
 
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -68,6 +68,30 @@ export class SongService {
 		await this.prisma.song.delete({
 			where: {
 				id: id,
+			},
+		});
+	}
+
+	async updateSong(dto: AdminDtoUpdateSong) {
+		if (dto.songNameNew === "") {
+			dto.songNameNew = dto.songName;
+		}
+		if (dto.songGenreNew === "") {
+			dto.songGenreNew = dto.songGenre;
+		}
+		if (dto.songFileNew === "") {
+			dto.songFileNew = dto.songFile;
+		}
+		await this.prisma.song.update({
+			where: {
+				name: dto.songName,
+				genre: dto.songGenre,
+				track: dto.songFile,
+			},
+			data: {
+				name: dto.songNameNew,
+				genre: dto.songGenreNew,
+				track: dto.songFileNew,
 			},
 		});
 	}

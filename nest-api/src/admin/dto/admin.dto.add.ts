@@ -27,5 +27,5 @@ export class AdminDtoAdd {
 
 	@IsString()
 	@IsNotEmpty()
-	albumImage?: string;
+	albumImage: string;
 }

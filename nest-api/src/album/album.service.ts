@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AdminDtoDelete } from "src/admin/dto";
+import { AdminDtoDelete, AdminDtoUpdateAlbum } from "src/admin/dto";
 
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -53,5 +53,26 @@ export class AlbumService {
 				},
 			});
 		}
+	}
+
+	async updateAlbum(dto: AdminDtoUpdateAlbum) {
+		if (dto.albumNameNew === "") {
+			dto.albumNameNew = dto.albumName;
+		}
+		if (dto.albumImageNew === "") {
+			dto.albumImageNew = dto.albumImage;
+		}
+		await this.prisma.album.update({
+			where: {
+				name_image: {
+					name: dto.albumName,
+					image: dto.albumImage,
+				},
+			},
+			data: {
+				name: dto.albumNameNew,
+				image: dto.albumImageNew,
+			},
+		});
 	}
 }

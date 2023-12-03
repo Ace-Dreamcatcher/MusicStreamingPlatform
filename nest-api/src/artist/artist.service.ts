@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { AdminDtoUpdateArtist } from "src/admin/dto";
 
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -24,5 +25,26 @@ export class ArtistService {
 				},
 			});
 		}
+	}
+
+	async updateArtist(dto: AdminDtoUpdateArtist) {
+		if (dto.artistNameNew === "") {
+			dto.artistNameNew = dto.artistName;
+		}
+		if (dto.artistImageNew === "") {
+			dto.artistImageNew = dto.artistImage;
+		}
+		await this.prisma.artist.update({
+			where: {
+				name_image: {
+					name: dto.artistName,
+					image: dto.artistImage,
+				},
+			},
+			data: {
+				name: dto.artistNameNew,
+				image: dto.artistImageNew,
+			},
+		});
 	}
 }
