@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { AdminDtoDelete } from "src/admin/dto";
 
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -26,6 +27,25 @@ export class AlbumService {
 						connect: { id: idArtist },
 					},
 					image: image,
+				},
+			});
+		}
+	}
+
+	async deleteAlbum(dto: AdminDtoDelete) {
+		const resultAlbum = await this.prisma
+			.$queryRaw`SELECT id FROM "Album" WHERE name = ${dto.albumName};`;
+		const idAlbum: string = await resultAlbum[0].id;
+
+		const count = await this.prisma.song.count({
+			where: {
+				albumId: idAlbum,
+			},
+		});
+		if (count === 0) {
+			await this.prisma.album.delete({
+				where: {
+					id: idAlbum,
 				},
 			});
 		}

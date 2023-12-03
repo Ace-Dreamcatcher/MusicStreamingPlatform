@@ -17,9 +17,9 @@ export class SongService {
 		const resultArtist = await this.prisma
 			.$queryRaw`SELECT id FROM "Artist" WHERE name = ${artistName};`;
 		const idArtist: string = await resultArtist[0].id;
-
+		console.log(idArtist);
 		const resultAlbum = await this.prisma
-			.$queryRaw`SELECT id FROM "Album" WHERE name = ${albumName};`;
+			.$queryRaw`SELECT id FROM "Album" WHERE (name = ${albumName} OR artistId = ${idArtist});`;
 		const idAlbum: string = await resultAlbum[0].id;
 
 		const songExists = await this.prisma.song.findFirst({
@@ -52,13 +52,8 @@ export class SongService {
 	}
 
 	async deleteSong(dto: AdminDtoDelete) {
-		const result = await this.prisma
-			.$queryRaw`SELECT id FROM "Song" WHERE name = ${dto.songName};`;
-		const id: string = await result[0].id;
-
-		await this.prisma.song.delete({
+		const song = await this.prisma.song.findFirst({
 			where: {
-				id: id,
 				name: dto.songName,
 				albums: {
 					name: dto.albumName,
@@ -66,6 +61,13 @@ export class SongService {
 				artists: {
 					name: dto.artistName,
 				},
+			},
+		});
+		const id: string = song.id;
+
+		await this.prisma.song.delete({
+			where: {
+				id: id,
 			},
 		});
 	}

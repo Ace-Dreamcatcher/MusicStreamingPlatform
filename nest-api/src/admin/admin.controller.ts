@@ -33,5 +33,6 @@ export class AdminController {
 	@Post("delete")
 	async delete(@Body() dto: AdminDtoDelete) {
 		await this.songService.deleteSong(dto);
+		await this.albumService.deleteAlbum(dto);
 	}
 }
