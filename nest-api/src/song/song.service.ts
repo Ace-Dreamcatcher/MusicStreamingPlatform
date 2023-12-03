@@ -6,7 +6,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class SongService {
 	constructor(private prisma: PrismaService) {}
 
-	async songInfo(
+	async addSong(
 		name: string,
 		genre: string,
 		track: string,
@@ -34,17 +34,5 @@ export class SongService {
 				},
 			},
 		});
-
-		const songFind = await this.prisma.song.findFirst({
-			where: {
-				name: name,
-			},
-			include: {
-				artist: true,
-				album: true,
-			},
-		});
-
-		return songFind;
 	}
 }

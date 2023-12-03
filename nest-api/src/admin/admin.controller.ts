@@ -15,13 +15,13 @@ export class AdminController {
 
 	@Post("adminAdd")
 	async adminAdd(@Body() dto: AdminDtoAdd) {
-		await this.artistService.artistInfo(dto.artistName);
-		await this.albumService.albumInfo(
+		await this.artistService.addArtist(dto.artistName);
+		await this.albumService.addAlbum(
 			dto.albumName,
 			dto.artistName,
 			dto?.albumImage,
 		);
-		return await this.songService.songInfo(
+		await this.songService.addSong(
 			dto.songName,
 			dto.songGenre,
 			dto.songTrack,

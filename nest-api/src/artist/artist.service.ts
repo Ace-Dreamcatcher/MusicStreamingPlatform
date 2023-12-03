@@ -6,7 +6,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class ArtistService {
 	constructor(private prisma: PrismaService) {}
 
-	async artistInfo(name: string) {
+	async addArtist(name: string) {
 		const artistExists = await this.prisma.artist.findUnique({
 			where: {
 				name: name,
@@ -20,13 +20,5 @@ export class ArtistService {
 				},
 			});
 		}
-
-		const artistFind = await this.prisma.artist.findFirst({
-			where: {
-				name: name,
-			},
-		});
-
-		return artistFind;
 	}
 }

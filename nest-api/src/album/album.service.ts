@@ -6,7 +6,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class AlbumService {
 	constructor(private prisma: PrismaService) {}
 
-	async albumInfo(name: string, artistName: string, image?: string) {
+	async addAlbum(name: string, artistName: string, image?: string) {
 		const result = await this.prisma
 			.$queryRaw`SELECT id FROM "Artist" WHERE name = ${artistName};`;
 		const artistId: string = await result[0].id;
@@ -29,16 +29,5 @@ export class AlbumService {
 				},
 			});
 		}
-
-		const albumFind = await this.prisma.album.findFirst({
-			where: {
-				name: name,
-			},
-			include: {
-				artist: true,
-			},
-		});
-
-		return albumFind;
 	}
 }
