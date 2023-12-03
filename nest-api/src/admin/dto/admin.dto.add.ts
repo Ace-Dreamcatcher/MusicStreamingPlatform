@@ -11,11 +11,15 @@ export class AdminDtoAdd {
 
 	@IsString()
 	@IsNotEmpty()
-	songTrack: string;
+	songFile: string;
 
 	@IsString()
 	@IsNotEmpty()
 	artistName: string;
+
+	@IsString()
+	@IsNotEmpty()
+	artistImage: string;
 
 	@IsString()
 	@IsNotEmpty()

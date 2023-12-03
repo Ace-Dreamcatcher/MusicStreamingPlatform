@@ -6,10 +6,13 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class ArtistService {
 	constructor(private prisma: PrismaService) {}
 
-	async addArtist(name: string) {
+	async addArtist(name: string, image: string) {
 		const artistExists = await this.prisma.artist.findUnique({
 			where: {
-				name: name,
+				name_image: {
+					name: name,
+					image: image,
+				},
 			},
 		});
 
@@ -17,6 +20,7 @@ export class ArtistService {
 			await this.prisma.artist.create({
 				data: {
 					name: name,
+					image: image,
 				},
 			});
 		}

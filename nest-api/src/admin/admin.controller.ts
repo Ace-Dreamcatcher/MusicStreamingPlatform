@@ -15,7 +15,7 @@ export class AdminController {
 
 	@Post("add")
 	async add(@Body() dto: AdminDtoAdd) {
-		await this.artistService.addArtist(dto.artistName);
+		await this.artistService.addArtist(dto.artistName, dto.artistImage);
 		await this.albumService.addAlbum(
 			dto.albumName,
 			dto.artistName,
@@ -24,7 +24,7 @@ export class AdminController {
 		return await this.songService.addSong(
 			dto.songName,
 			dto.songGenre,
-			dto.songTrack,
+			dto.songFile,
 			dto.artistName,
 			dto.albumName,
 		);

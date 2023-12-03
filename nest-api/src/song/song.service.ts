@@ -16,16 +16,16 @@ export class SongService {
 	) {
 		const resultArtist = await this.prisma
 			.$queryRaw`SELECT id FROM "Artist" WHERE name = ${artistName};`;
-		const artistId: string = await resultArtist[0].id;
+		const idArtist: string = await resultArtist[0].id;
 
 		const resultAlbum = await this.prisma
 			.$queryRaw`SELECT id FROM "Album" WHERE name = ${albumName};`;
-		const albumId: string = await resultAlbum[0].id;
+		const idAlbum: string = await resultAlbum[0].id;
 
 		const songExists = await this.prisma.song.findFirst({
 			where: {
-				idArtist: artistId,
-				idAlbum: albumId,
+				artistId: idArtist,
+				albumId: idAlbum,
 				name: name,
 			},
 		});
@@ -36,11 +36,11 @@ export class SongService {
 					name: name,
 					genre: genre,
 					track: track,
-					artist: {
-						connect: { id: artistId },
+					artists: {
+						connect: { id: idArtist },
 					},
-					album: {
-						connect: { id: albumId },
+					albums: {
+						connect: { id: idAlbum },
 					},
 				},
 			});
@@ -60,10 +60,10 @@ export class SongService {
 			where: {
 				id: id,
 				name: dto.songName,
-				album: {
+				albums: {
 					name: dto.albumName,
 				},
-				artist: {
+				artists: {
 					name: dto.artistName,
 				},
 			},
