@@ -7,6 +7,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
+import { Role } from '@prisma/client';
 
 @Injectable({})
 export class AuthService {
@@ -19,13 +20,9 @@ export class AuthService {
 	async signup(dto: AuthDto) {
 		try {
 			const hash = await argon.hash(dto.password);
-			let username: string = '';
 
-			if (dto.username.length === 0) {
-				username = 'user';
-			} else {
-				username = dto.username;
-			}
+			const username =
+				dto.username !== (undefined || '') ? dto.username : 'user';
 
 			const user = await this.prisma.user.create({
 				data: {
@@ -35,7 +32,14 @@ export class AuthService {
 				},
 			});
 
-			return this.signToken(user.id, user.email);
+			return this.signToken(
+				user.id,
+				user.email,
+				user.username,
+				user.hash,
+				user.createAt,
+				user.role,
+			);
 		} catch (e) {
 			if (e instanceof PrismaClientKnownRequestError) {
 				if (e.code === 'P2002') {
@@ -63,16 +67,33 @@ export class AuthService {
 			throw new ForbiddenException('Incorrect password!');
 		}
 
-		return this.signToken(user.id, user.email);
+		return this.signToken(
+			user.id,
+			user.email,
+			user.username,
+			user.hash,
+			user.createAt,
+			user.role,
+		);
 	}
 
+	async update(dto: AuthDto) {}
+
 	async signToken(
-		userId: string,
+		id: string,
 		email: string,
+		username: string,
+		hash: string,
+		createdAt: Date,
+		role: Role,
 	): Promise<{ accessToken: string }> {
 		const payload = {
-			id: userId,
+			id,
 			email,
+			username,
+			hash,
+			createdAt,
+			role,
 		};
 
 		const token = await this.jwt.signAsync(payload, {
