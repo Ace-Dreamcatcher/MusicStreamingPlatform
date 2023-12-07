@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 
 import {
 	AdminDtoAdd,
@@ -6,12 +6,14 @@ import {
 	AdminDtoUpdateAlbum,
 	AdminDtoUpdateArtist,
 	AdminDtoUpdateSong,
-} from "./dto";
-import { ArtistService } from "src/artist/artist.service";
-import { AlbumService } from "src/album/album.service";
-import { SongService } from "src/song/song.service";
+} from './dto';
+import { ArtistService } from 'src/artist/artist.service';
+import { AlbumService } from 'src/album/album.service';
+import { SongService } from 'src/song/song.service';
+import { GetArtist } from 'src/artist/decorator';
+import { Artist } from '@prisma/client';
 
-@Controller("admin")
+@Controller('admin')
 export class AdminController {
 	constructor(
 		private artistService: ArtistService,
@@ -19,7 +21,7 @@ export class AdminController {
 		private songService: SongService,
 	) {}
 
-	@Post("add")
+	@Post('add')
 	async add(@Body() dto: AdminDtoAdd) {
 		const artistMessage: string = await this.artistService.addArtist(
 			dto.artistName,
@@ -41,7 +43,7 @@ export class AdminController {
 		return { artistMessage, albumMessage, songMessage };
 	}
 
-	@Post("delete")
+	@Post('delete')
 	async delete(@Body() dto: AdminDtoDelete) {
 		const songMessage: string = await this.songService.deleteSong(dto);
 		const albumMessage: string = await this.albumService.deleteAlbum(dto);
@@ -49,21 +51,24 @@ export class AdminController {
 		return { songMessage, albumMessage };
 	}
 
-	@Post("updateSong")
+	@Post('updateSong')
 	async updateSong(@Body() dto: AdminDtoUpdateSong) {
 		const songMessage: string = await this.songService.updateSong(dto);
 
 		return { songMessage };
 	}
 
-	@Post("updateArtist")
-	async updateArtist(@Body() dto: AdminDtoUpdateArtist) {
-		const artistMessage: string = await this.artistService.updateArtist(dto);
+	@Post('updateArtist')
+	async updateArtist(
+		@Body() dto: AdminDtoUpdateArtist,
+		@GetArtist() artist: Artist,
+	) {
+		return await this.artistService.updateArtist(dto, artist);
 
-		return { artistMessage };
+		//return { artistMessage };
 	}
 
-	@Post("updateAlbum")
+	@Post('updateAlbum')
 	async updateAlbum(@Body() dto: AdminDtoUpdateAlbum) {
 		const albumMessage: string = await this.albumService.updateAlbum(dto);
 

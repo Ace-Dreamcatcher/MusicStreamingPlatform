@@ -1,4 +1,4 @@
-import { IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class AdminDtoUpdateSong {
 	@IsString()
@@ -22,16 +22,16 @@ export class AdminDtoUpdateSong {
 
 export class AdminDtoUpdateArtist {
 	@IsString()
-	artistName: string;
+	artistName?: string;
 
 	@IsString()
-	artistImage: string;
+	artistImage?: string;
 
-	@IsString()
+	/*@IsString()
 	artistNameNew: string;
 
 	@IsString()
-	artistImageNew: string;
+	artistImageNew: string;*/
 }
 
 export class AdminDtoUpdateAlbum {

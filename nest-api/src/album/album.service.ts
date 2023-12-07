@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { AdminDtoDelete, AdminDtoUpdateAlbum } from "src/admin/dto";
+import { Injectable } from '@nestjs/common';
+import { AdminDtoDelete, AdminDtoUpdateAlbum } from 'src/admin/dto';
 
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AlbumService {
@@ -30,10 +30,10 @@ export class AlbumService {
 				},
 			});
 
-			return "Album has been created!";
+			return 'Album has been created!';
 		}
 
-		return "Album already exists!";
+		return 'Album already exists!';
 	}
 
 	async deleteAlbum(dto: AdminDtoDelete) {
@@ -58,16 +58,16 @@ export class AlbumService {
 				},
 			});
 
-			return "Album has been deleted!";
+			return 'Album has been deleted!';
 		}
 	}
 
 	async updateAlbum(dto: AdminDtoUpdateAlbum) {
-		if (dto.albumNameNew === "") {
+		if (dto.albumNameNew === '') {
 			dto.albumNameNew = dto.albumName;
 		}
 
-		if (dto.albumImageNew === "") {
+		if (dto.albumImageNew === '') {
 			dto.albumImageNew = dto.albumImage;
 		}
 
@@ -84,6 +84,6 @@ export class AlbumService {
 			},
 		});
 
-		return "Album has been updated!";
+		return 'Album has been updated!';
 	}
 }

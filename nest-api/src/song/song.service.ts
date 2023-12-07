@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { AdminDtoDelete, AdminDtoUpdateSong } from "src/admin/dto";
+import { Injectable } from '@nestjs/common';
+import { AdminDtoDelete, AdminDtoUpdateSong } from 'src/admin/dto';
 
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class SongService {
@@ -45,10 +45,10 @@ export class SongService {
 				},
 			});
 
-			return "Song has been created!";
+			return 'Song has been created!';
 		}
 
-		return "Song already exists!";
+		return 'Song already exists!';
 	}
 
 	async deleteSong(dto: AdminDtoDelete) {
@@ -72,19 +72,19 @@ export class SongService {
 			},
 		});
 
-		return "Song has been deleted!";
+		return 'Song has been deleted!';
 	}
 
 	async updateSong(dto: AdminDtoUpdateSong) {
-		if (dto.songNameNew === "") {
+		if (dto.songNameNew === '') {
 			dto.songNameNew = dto.songName;
 		}
 
-		if (dto.songGenreNew === "") {
+		if (dto.songGenreNew === '') {
 			dto.songGenreNew = dto.songGenre;
 		}
 
-		if (dto.songFileNew === "") {
+		if (dto.songFileNew === '') {
 			dto.songFileNew = dto.songFile;
 		}
 
@@ -101,7 +101,7 @@ export class SongService {
 			},
 		});
 
-		return "Song has been updated!";
+		return 'Song has been updated!';
 	}
 
 	async printSongs() {

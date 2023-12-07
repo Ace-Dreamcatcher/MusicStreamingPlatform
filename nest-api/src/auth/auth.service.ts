@@ -1,12 +1,12 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { ConfigService } from "@nestjs/config";
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
-import { PrismaService } from "src/prisma/prisma.service";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-import { AuthDto } from "./dto";
-import * as argon from "argon2";
+import { AuthDto } from './dto';
+import * as argon from 'argon2';
 
 @Injectable({})
 export class AuthService {
@@ -19,10 +19,10 @@ export class AuthService {
 	async signup(dto: AuthDto) {
 		try {
 			const hash = await argon.hash(dto.password);
-			let username: string = "";
+			let username: string = '';
 
 			if (dto.username.length === 0) {
-				username = "user";
+				username = 'user';
 			} else {
 				username = dto.username;
 			}
@@ -38,8 +38,8 @@ export class AuthService {
 			return this.signToken(user.id, user.email);
 		} catch (e) {
 			if (e instanceof PrismaClientKnownRequestError) {
-				if (e.code === "P2002") {
-					throw new ForbiddenException("Email is already signed in!");
+				if (e.code === 'P2002') {
+					throw new ForbiddenException('Email is already signed in!');
 				}
 			}
 
@@ -55,12 +55,12 @@ export class AuthService {
 		});
 
 		if (!user) {
-			throw new ForbiddenException("Invalid email!");
+			throw new ForbiddenException('Invalid email!');
 		}
 
 		const passwordMatch = await argon.verify(user.hash, dto.password);
 		if (!passwordMatch) {
-			throw new ForbiddenException("Incorrect password!");
+			throw new ForbiddenException('Incorrect password!');
 		}
 
 		return this.signToken(user.id, user.email);
@@ -76,8 +76,8 @@ export class AuthService {
 		};
 
 		const token = await this.jwt.signAsync(payload, {
-			expiresIn: "15m",
-			secret: this.config.get("JWT_SECRET"),
+			expiresIn: '15m',
+			secret: this.config.get('JWT_SECRET'),
 		});
 
 		return {
