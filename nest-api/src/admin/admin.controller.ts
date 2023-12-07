@@ -21,39 +21,52 @@ export class AdminController {
 
 	@Post("add")
 	async add(@Body() dto: AdminDtoAdd) {
-		await this.artistService.addArtist(dto.artistName, dto.artistImage);
-		await this.albumService.addAlbum(
+		const artistMessage: string = await this.artistService.addArtist(
+			dto.artistName,
+			dto.artistImage,
+		);
+		const albumMessage: string = await this.albumService.addAlbum(
 			dto.albumName,
 			dto.artistName,
 			dto?.albumImage,
 		);
-		return await this.songService.addSong(
+		const songMessage: string = await this.songService.addSong(
 			dto.songName,
 			dto.songGenre,
 			dto.songFile,
 			dto.artistName,
 			dto.albumName,
 		);
+
+		return { artistMessage, albumMessage, songMessage };
 	}
 
 	@Post("delete")
 	async delete(@Body() dto: AdminDtoDelete) {
-		await this.songService.deleteSong(dto);
-		await this.albumService.deleteAlbum(dto);
+		const songMessage: string = await this.songService.deleteSong(dto);
+		const albumMessage: string = await this.albumService.deleteAlbum(dto);
+
+		return { songMessage, albumMessage };
 	}
 
 	@Post("updateSong")
 	async updateSong(@Body() dto: AdminDtoUpdateSong) {
-		await this.songService.updateSong(dto);
+		const songMessage: string = await this.songService.updateSong(dto);
+
+		return { songMessage };
 	}
 
 	@Post("updateArtist")
 	async updateArtist(@Body() dto: AdminDtoUpdateArtist) {
-		await this.artistService.updateArtist(dto);
+		const artistMessage: string = await this.artistService.updateArtist(dto);
+
+		return { artistMessage };
 	}
 
 	@Post("updateAlbum")
 	async updateAlbum(@Body() dto: AdminDtoUpdateAlbum) {
-		await this.albumService.updateAlbum(dto);
+		const albumMessage: string = await this.albumService.updateAlbum(dto);
+
+		return { albumMessage };
 	}
 }

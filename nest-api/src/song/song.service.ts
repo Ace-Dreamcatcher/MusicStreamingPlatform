@@ -45,10 +45,10 @@ export class SongService {
 				},
 			});
 
-			return "Song Created!";
+			return "Song has been created!";
 		}
 
-		return "Song Already Exists!";
+		return "Song already exists!";
 	}
 
 	async deleteSong(dto: AdminDtoDelete) {
@@ -63,6 +63,7 @@ export class SongService {
 				},
 			},
 		});
+
 		const id: string = song.id;
 
 		await this.prisma.song.delete({
@@ -70,18 +71,23 @@ export class SongService {
 				id: id,
 			},
 		});
+
+		return "Song has been deleted!";
 	}
 
 	async updateSong(dto: AdminDtoUpdateSong) {
 		if (dto.songNameNew === "") {
 			dto.songNameNew = dto.songName;
 		}
+
 		if (dto.songGenreNew === "") {
 			dto.songGenreNew = dto.songGenre;
 		}
+
 		if (dto.songFileNew === "") {
 			dto.songFileNew = dto.songFile;
 		}
+
 		await this.prisma.song.update({
 			where: {
 				name: dto.songName,
@@ -94,6 +100,8 @@ export class SongService {
 				track: dto.songFileNew,
 			},
 		});
+
+		return "Song has been updated!";
 	}
 
 	async printSongs() {

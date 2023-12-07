@@ -29,7 +29,11 @@ export class AlbumService {
 					image: image,
 				},
 			});
+
+			return "Album has been created!";
 		}
+
+		return "Album already exists!";
 	}
 
 	async deleteAlbum(dto: AdminDtoDelete) {
@@ -46,12 +50,15 @@ export class AlbumService {
 				albumId: idAlbum,
 			},
 		});
+
 		if (count === 0) {
 			await this.prisma.album.delete({
 				where: {
 					id: idAlbum,
 				},
 			});
+
+			return "Album has been deleted!";
 		}
 	}
 
@@ -59,9 +66,11 @@ export class AlbumService {
 		if (dto.albumNameNew === "") {
 			dto.albumNameNew = dto.albumName;
 		}
+
 		if (dto.albumImageNew === "") {
 			dto.albumImageNew = dto.albumImage;
 		}
+
 		await this.prisma.album.update({
 			where: {
 				name_image: {
@@ -74,5 +83,7 @@ export class AlbumService {
 				image: dto.albumImageNew,
 			},
 		});
+
+		return "Album has been updated!";
 	}
 }

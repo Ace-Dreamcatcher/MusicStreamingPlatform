@@ -24,16 +24,22 @@ export class ArtistService {
 					image: image,
 				},
 			});
+
+			return "Artist has been created!";
 		}
+
+		return "Artist already exists!";
 	}
 
 	async updateArtist(dto: AdminDtoUpdateArtist) {
 		if (dto.artistNameNew === "") {
 			dto.artistNameNew = dto.artistName;
 		}
+
 		if (dto.artistImageNew === "") {
 			dto.artistImageNew = dto.artistImage;
 		}
+
 		await this.prisma.artist.update({
 			where: {
 				name_image: {
@@ -46,5 +52,7 @@ export class ArtistService {
 				image: dto.artistImageNew,
 			},
 		});
+
+		return "Artist has been updated!";
 	}
 }
