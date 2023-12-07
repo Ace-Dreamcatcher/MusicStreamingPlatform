@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+import { AuthDto, AuthUpdateDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,7 +18,7 @@ export class AuthController {
 	}
 
 	@Post('update')
-	update(@Body() dto: AuthDto) {
+	update(@Body() dto: AuthUpdateDto) {
 		return this.authService.update(dto);
 	}
 }

@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-import { AuthDto } from './dto';
+import { AuthDto, AuthUpdateDto } from './dto';
 import * as argon from 'argon2';
 import { Role } from '@prisma/client';
 
@@ -77,7 +77,16 @@ export class AuthService {
 		);
 	}
 
-	async update(dto: AuthDto) {}
+	async update(dto: AuthUpdateDto) {
+		/*return this.signToken(
+			updated.id,
+			updated.email,
+			updated.username,
+			updated.hash,
+			updated.createAt,
+			updated.role,
+		);*/
+	}
 
 	async signToken(
 		id: string,
