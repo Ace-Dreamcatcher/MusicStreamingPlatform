@@ -10,8 +10,6 @@ import {
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
 import { SongService } from 'src/song/song.service';
-import { GetArtist } from 'src/artist/decorator';
-import { Artist } from '@prisma/client';
 
 @Controller('admin')
 export class AdminController {
@@ -59,13 +57,10 @@ export class AdminController {
 	}
 
 	@Post('updateArtist')
-	async updateArtist(
-		@Body() dto: AdminDtoUpdateArtist,
-		@GetArtist() artist: Artist,
-	) {
-		return await this.artistService.updateArtist(dto, artist);
+	async updateArtist(@Body() dto: AdminDtoUpdateArtist) {
+		const artistMessage = await this.artistService.updateArtist(dto);
 
-		//return { artistMessage };
+		return { artistMessage };
 	}
 
 	@Post('updateAlbum')

@@ -32,14 +32,16 @@ export class ArtistService {
 		return 'Artist already exists!';
 	}
 
-	async updateArtist(dto: AdminDtoUpdateArtist, artist: Artist) {
-		/*if (dto.artistNameNew === "") {
-			dto.artistNameNew = dto.artistName;
-		}
+	async updateArtist(dto: AdminDtoUpdateArtist) {
+		const newName =
+			dto.artistNameNew !== (undefined || '')
+				? dto.artistNameNew
+				: dto.artistName;
 
-		if (dto.artistImageNew === "") {
-			dto.artistImageNew = dto.artistImage;
-		}
+		const newImage =
+			dto.artistImageNew !== (undefined || '')
+				? dto.artistImageNew
+				: dto.artistImage;
 
 		await this.prisma.artist.update({
 			where: {
@@ -47,19 +49,6 @@ export class ArtistService {
 					name: dto.artistName,
 					image: dto.artistImage,
 				},
-			},
-			data: {
-				name: dto.artistNameNew,
-				image: dto.artistImageNew,
-			},
-		});*/
-		const newName = dto.artistName !== undefined ? dto.artistName : artist.name;
-		const newImage =
-			dto.artistImage !== undefined ? dto.artistImage : artist.image;
-
-		await this.prisma.artist.update({
-			where: {
-				id: artist.id,
 			},
 			data: {
 				name: newName,

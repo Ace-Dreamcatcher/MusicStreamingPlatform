@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class AdminDtoUpdateSong {
 	@IsString()
@@ -10,28 +10,33 @@ export class AdminDtoUpdateSong {
 	@IsString()
 	songFile: string;
 
+	@IsOptional()
 	@IsString()
-	songNameNew: string;
+	songNameNew?: string;
 
+	@IsOptional()
 	@IsString()
-	songGenreNew: string;
+	songGenreNew?: string;
 
+	@IsOptional()
 	@IsString()
-	songFileNew: string;
+	songFileNew?: string;
 }
 
 export class AdminDtoUpdateArtist {
 	@IsString()
-	artistName?: string;
+	artistName: string;
 
 	@IsString()
-	artistImage?: string;
+	artistImage: string;
 
-	/*@IsString()
-	artistNameNew: string;
-
+	@IsOptional()
 	@IsString()
-	artistImageNew: string;*/
+	artistNameNew?: string;
+
+	@IsOptional()
+	@IsString()
+	artistImageNew?: string;
 }
 
 export class AdminDtoUpdateAlbum {
@@ -41,9 +46,11 @@ export class AdminDtoUpdateAlbum {
 	@IsString()
 	albumImage: string;
 
+	@IsOptional()
 	@IsString()
-	albumNameNew: string;
+	albumNameNew?: string;
 
+	@IsOptional()
 	@IsString()
-	albumImageNew: string;
+	albumImageNew?: string;
 }

@@ -76,17 +76,14 @@ export class SongService {
 	}
 
 	async updateSong(dto: AdminDtoUpdateSong) {
-		if (dto.songNameNew === '') {
-			dto.songNameNew = dto.songName;
-		}
+		const newName =
+			dto.songNameNew !== (undefined || '') ? dto.songNameNew : dto.songName;
 
-		if (dto.songGenreNew === '') {
-			dto.songGenreNew = dto.songGenre;
-		}
+		const newGenre =
+			dto.songGenreNew !== (undefined || '') ? dto.songGenreNew : dto.songGenre;
 
-		if (dto.songFileNew === '') {
-			dto.songFileNew = dto.songFile;
-		}
+		const newFile =
+			dto.songFileNew !== (undefined || '') ? dto.songGenreNew : dto.songFile;
 
 		await this.prisma.song.update({
 			where: {
@@ -95,9 +92,9 @@ export class SongService {
 				track: dto.songFile,
 			},
 			data: {
-				name: dto.songNameNew,
-				genre: dto.songGenreNew,
-				track: dto.songFileNew,
+				name: newName,
+				genre: newGenre,
+				track: newFile,
 			},
 		});
 

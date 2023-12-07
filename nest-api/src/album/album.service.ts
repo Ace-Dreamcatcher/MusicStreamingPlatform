@@ -63,13 +63,13 @@ export class AlbumService {
 	}
 
 	async updateAlbum(dto: AdminDtoUpdateAlbum) {
-		if (dto.albumNameNew === '') {
-			dto.albumNameNew = dto.albumName;
-		}
+		const newName =
+			dto.albumNameNew !== (undefined || '') ? dto.albumNameNew : dto.albumName;
 
-		if (dto.albumImageNew === '') {
-			dto.albumImageNew = dto.albumImage;
-		}
+		const newImage =
+			dto.albumImageNew !== (undefined || '')
+				? dto.albumImageNew
+				: dto.albumImage;
 
 		await this.prisma.album.update({
 			where: {
@@ -79,8 +79,8 @@ export class AlbumService {
 				},
 			},
 			data: {
-				name: dto.albumNameNew,
-				image: dto.albumImageNew,
+				name: newName,
+				image: newImage,
 			},
 		});
 
