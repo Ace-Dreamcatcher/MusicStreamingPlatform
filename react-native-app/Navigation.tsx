@@ -21,7 +21,7 @@ function StartScreenStackGroup() {
             <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal'}} />
             <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal'}} />
             <Stack.Screen name='TabGroup' component={TabGroup} options={{
-                headerShown: true,
+                headerShown: false,
             }}/>
         </Stack.Navigator>
     )
