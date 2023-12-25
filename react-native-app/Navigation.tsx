@@ -21,7 +21,7 @@ function StartScreenStackGroup() {
             <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal'}} />
             <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal'}} />
             <Stack.Screen name='TabGroup' component={TabGroup} options={{
-                headerShown: false,
+                headerShown: true,
             }}/>
         </Stack.Navigator>
     )
@@ -53,11 +53,11 @@ function TabGroup() {
 }
 
 export default function Navigation() {
-    const currentTheme = useColorScheme();
+    //const currentTheme = useColorScheme();
     //theme={currentTheme === "dark" ? DarkTheme : DefaultTheme}
 
     return (
-        <NavigationContainer theme={currentTheme === "dark" ? DarkTheme : DefaultTheme}>
+        <NavigationContainer>
             <StartScreenStackGroup />
             <StatusBar style='auto' />
         </NavigationContainer>
