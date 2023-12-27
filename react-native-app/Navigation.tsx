@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, NavigationContainer, ThemeProvider, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +16,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 function StartScreenStackGroup() {
+    const colorScheme = useColorScheme();
+    
     return (
         <Stack.Navigator screenOptions={{gestureEnabled: true, gestureDirection: 'vertical'}}>
             <Stack.Screen name='AudioAlcove' component={Starting} />
@@ -54,9 +56,6 @@ function TabGroup() {
 }
 
 export default function Navigation() {
-    //const currentTheme = useColorScheme();
-    //theme={currentTheme === "dark" ? DarkTheme : DefaultTheme}
-
     return (
         <NavigationContainer>
             <StartScreenStackGroup />

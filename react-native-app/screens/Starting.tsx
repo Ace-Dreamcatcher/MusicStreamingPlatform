@@ -1,6 +1,7 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
+import { View } from '../components/Theme';
 
 export default function Starting() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();

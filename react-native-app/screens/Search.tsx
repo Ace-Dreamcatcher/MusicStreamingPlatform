@@ -1,9 +1,10 @@
-import { SafeAreaView, Text, View } from 'react-native';
+import { Text, View } from "../components/Theme";
+
 
 export default function Search() {
     return (
-        <SafeAreaView>
+        <View>
             <Text>Search</Text>
-        </SafeAreaView>
+        </View>
     )
 }
