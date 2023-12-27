@@ -1,9 +1,10 @@
-import { DarkTheme, DefaultTheme, NavigationContainer, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer, ThemeProvider, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import Home from './screens/Home';
 import Search from './screens/Search';
 import Library from './screens/Library';
@@ -16,7 +17,7 @@ const Stack = createStackNavigator();
 
 function StartScreenStackGroup() {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{gestureEnabled: true, gestureDirection: 'vertical'}}>
             <Stack.Screen name='AudioAlcove' component={Starting} />
             <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal'}} />
             <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal'}} />

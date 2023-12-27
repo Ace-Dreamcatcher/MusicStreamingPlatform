@@ -1,8 +1,9 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Text, View, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import GestureRecognizer from 'react-native-swipe-gestures';
 
 export default function SignUp() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -11,38 +12,40 @@ export default function SignUp() {
     const [textPassword, setTextPassword] = useState('');
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}> Email: </Text>
-            <View style={styles.gap} />
-            <TextInput
-                style={styles.textInput}
-                placeholder='example@gmail.com'
-                placeholderTextColor='gray'
-                onChangeText={newText => setTextEmail(newText)}
-                defaultValue={textEmail}
-            />
-            <View style={styles.space} />
-            <Text style={styles.text}> Username: </Text>
-            <View style={styles.gap} />
-            <TextInput
-                style={styles.textInput}
-                placeholder='user'
-                placeholderTextColor='gray'
-                onChangeText={newText => setTextUsername(newText)}
-                defaultValue={textUsername}
-            />
-            <View style={styles.space} />
-            <Text style={styles.text}> Password: </Text>
-            <View style={styles.gap} />
-            <TextInput
-                style={styles.textInput}
-                secureTextEntry={true}
-                onChangeText={newText => setTextPassword(newText)}
-                defaultValue={textPassword}
-            />
-            <View style={styles.space} />
-            <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
-        </View>
+        <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
+            <View style={styles.container}>
+                <Text style={styles.text}> Email: </Text>
+                <View style={styles.gap} />
+                <TextInput
+                    style={styles.textInput}
+                    placeholder='example@gmail.com'
+                    placeholderTextColor='gray'
+                    onChangeText={newText => setTextEmail(newText)}
+                    defaultValue={textEmail}
+                />
+                <View style={styles.space} />
+                <Text style={styles.text}> Username: </Text>
+                <View style={styles.gap} />
+                <TextInput
+                    style={styles.textInput}
+                    placeholder='user'
+                    placeholderTextColor='gray'
+                    onChangeText={newText => setTextUsername(newText)}
+                    defaultValue={textUsername}
+                />
+                <View style={styles.space} />
+                <Text style={styles.text}> Password: </Text>
+                <View style={styles.gap} />
+                <TextInput
+                    style={styles.textInput}
+                    secureTextEntry={true}
+                    onChangeText={newText => setTextPassword(newText)}
+                    defaultValue={textPassword}
+                />
+                <View style={styles.space} />
+                <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
+            </View> 
+        </GestureRecognizer>
     )
 }
 
