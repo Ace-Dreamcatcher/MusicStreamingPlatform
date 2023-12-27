@@ -4,8 +4,7 @@ import React, { useState } from 'react';
 import { Button, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import GestureRecognizer from 'react-native-swipe-gestures';
-import { Text, View } from '../components/Theme';
-import { Keyboard } from 'react-native'
+import { Text, View } from '../components/Theme'
 
 export default function SignUp() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -15,6 +14,7 @@ export default function SignUp() {
 
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
+<<<<<<< HEAD
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.container}>
                     <Text style={styles.text}> Email: </Text>
@@ -50,6 +50,41 @@ export default function SignUp() {
                     <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
                 </View> 
             </TouchableWithoutFeedback>
+=======
+            <View style={styles.container} lightColor='#eee' darkColor='rgba(255,255,255,0.1)'>
+                <Text style={styles.text}> Email: </Text>
+                <View style={styles.gap} />
+                <TextInput
+                    style={styles.textInput}
+                    placeholder='example@gmail.com'
+                    placeholderTextColor='gray'
+                    onChangeText={newText => setTextEmail(newText)}
+                    defaultValue={textEmail}
+                />
+                
+                <View style={styles.space} />
+                <Text style={styles.text}> Username: </Text>
+                <View style={styles.gap} />
+                <TextInput
+                    style={styles.textInput}
+                    placeholder='user'
+                    placeholderTextColor='gray'
+                    onChangeText={newText => setTextUsername(newText)}
+                    defaultValue={textUsername}
+                />
+                <View style={styles.space} />
+                <Text style={styles.text}> Password: </Text>
+                <View style={styles.gap} />
+                <TextInput
+                    style={styles.textInput}
+                    secureTextEntry={true}
+                    onChangeText={newText => setTextPassword(newText)}
+                    defaultValue={textPassword}
+                />
+                <View style={styles.space} />
+                <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
+            </View> 
+>>>>>>> 75694bd6fae6155514a2c4e24863b441d560fa65
         </GestureRecognizer>
     )
 }

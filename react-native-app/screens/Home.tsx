@@ -1,9 +1,9 @@
-import { SafeAreaView, Text } from 'react-native';
+import { Text, View } from '../components/Theme';
 
 export default function Home() {
     return (
-        <SafeAreaView>
+        <View>
             <Text> Home </Text>
-        </SafeAreaView>
+        </View>
     )
 }
