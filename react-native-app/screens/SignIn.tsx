@@ -9,7 +9,7 @@ export default function SignIn() {
     
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
-            <View>
+            <View style={styles.container}>
                 <Button title='Sign In' onPress={() => navigation.navigate('TabGroup')} />
             </View>
         </GestureRecognizer>

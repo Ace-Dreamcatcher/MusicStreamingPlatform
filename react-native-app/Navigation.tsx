@@ -11,6 +11,7 @@ import Library from './screens/Library';
 import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
 import Starting from './screens/Starting';
+import Colors from './constants/Colors';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -19,7 +20,7 @@ function StartScreenStackGroup() {
     const colorScheme = useColorScheme();
     
     return (
-        <Stack.Navigator screenOptions={{gestureEnabled: true, gestureDirection: 'vertical'}}>
+        <Stack.Navigator screenOptions={{gestureEnabled: true, gestureDirection: 'vertical', headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint}}}>
             <Stack.Screen name='AudioAlcove' component={Starting} />
             <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal'}} />
             <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal'}} />
