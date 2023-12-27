@@ -16,39 +16,39 @@ export default function SignUp() {
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.container}>
-                <Text style={styles.text}> Email: </Text>
-                <View style={styles.gap} />
-                <TextInput
-                    style={styles.textInput}
-                    placeholder='example@gmail.com'
-                    placeholderTextColor='gray'
-                    onChangeText={newText => setTextEmail(newText)}
-                    defaultValue={textEmail}
-                />
-                
-                <View style={styles.space} />
-                <Text style={styles.text}> Username: </Text>
-                <View style={styles.gap} />
-                <TextInput
-                    style={styles.textInput}
-                    placeholder='user'
-                    placeholderTextColor='gray'
-                    onChangeText={newText => setTextUsername(newText)}
-                    defaultValue={textUsername}
-                />
-                <View style={styles.space} />
-                <Text style={styles.text}> Password: </Text>
-                <View style={styles.gap} />
-                <TextInput
-                    style={styles.textInput}
-                    secureTextEntry={true}
-                    onChangeText={newText => setTextPassword(newText)}
-                    defaultValue={textPassword}
-                />
-                <View style={styles.space} />
-                <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
-            </View> 
+                <View style={styles.container}>
+                    <Text style={styles.text}> Email: </Text>
+                    <View style={styles.gap} />
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder='example@gmail.com'
+                        placeholderTextColor='gray'
+                        onChangeText={newText => setTextEmail(newText)}
+                        defaultValue={textEmail}
+                    />
+                    
+                    <View style={styles.space} />
+                    <Text style={styles.text}> Username: </Text>
+                    <View style={styles.gap} />
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder='user'
+                        placeholderTextColor='gray'
+                        onChangeText={newText => setTextUsername(newText)}
+                        defaultValue={textUsername}
+                    />
+                    <View style={styles.space} />
+                    <Text style={styles.text}> Password: </Text>
+                    <View style={styles.gap} />
+                    <TextInput
+                        style={styles.textInput}
+                        secureTextEntry={true}
+                        onChangeText={newText => setTextPassword(newText)}
+                        defaultValue={textPassword}
+                    />
+                    <View style={styles.space} />
+                    <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
+                </View> 
             </TouchableWithoutFeedback>
         </GestureRecognizer>
     )
