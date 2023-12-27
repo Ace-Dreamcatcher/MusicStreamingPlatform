@@ -47,7 +47,6 @@ export default function SignUp() {
                 <View style={styles.space} />
                 <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
             </View> 
-            </TouchableWithoutFeedback>
         </GestureRecognizer>
     )
 }
