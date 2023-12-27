@@ -14,7 +14,7 @@ export default function SignUp() {
 
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
-            <View style={styles.container} lightColor='#eee' darkColor='rgba(255,255,255,0.1)'>
+            <View style={styles.container}>
                 <Text style={styles.text}> Email: </Text>
                 <View style={styles.gap} />
                 <TextInput
