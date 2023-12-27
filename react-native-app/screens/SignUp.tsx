@@ -25,6 +25,7 @@ export default function SignUp() {
                         placeholderTextColor='gray'
                         onChangeText={newText => setTextEmail(newText)}
                         defaultValue={textEmail}
+                        
                     />
                     
                     <View style={styles.space} />
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginLeft: 5,
         marginRight: 5,
+        color: 'green',
         //backgroundColor: 'gray',
     },
     gap: {
