@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { Button, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import GestureRecognizer from 'react-native-swipe-gestures';
+import { Keyboard } from 'react-native';
 import { Text, View } from '../components/Theme';
-import { Keyboard } from 'react-native'
 
 export default function SignUp() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
