@@ -1,9 +1,10 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { Button, Text, View, StyleSheet } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import GestureRecognizer from 'react-native-swipe-gestures';
+import { Text, View } from '../components/Theme'
 
 export default function SignUp() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -13,7 +14,7 @@ export default function SignUp() {
 
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
-            <View style={styles.container}>
+            <View style={styles.container} lightColor='#eee' darkColor='rgba(255,255,255,0.1)'>
                 <Text style={styles.text}> Email: </Text>
                 <View style={styles.gap} />
                 <TextInput
