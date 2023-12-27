@@ -5,5 +5,5 @@ export default function App() {
 }
 
 
-//fix theme color text
-//fix status bar color change
+//fix password position
+//fix text input color
