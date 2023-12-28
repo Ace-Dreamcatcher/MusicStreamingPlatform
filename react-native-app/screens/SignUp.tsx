@@ -1,10 +1,9 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Button, StyleSheet, TouchableWithoutFeedback, useColorScheme, Keyboard, TextInput } from 'react-native';
 import React, { useState } from 'react';
-import { Button, StyleSheet, TouchableWithoutFeedback, useColorScheme } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 import GestureRecognizer from 'react-native-swipe-gestures';
-import { Keyboard } from 'react-native';
+
 import { Text, View } from '../components/Theme';
 
 export default function SignUp() {
@@ -49,7 +48,9 @@ export default function SignUp() {
                         defaultValue={textPassword}
                     />
                     <View style={styles.space} />
-                    <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
+                    <View style={styles.buttonContainer}>
+                        <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
+                    </View>
                 </View> 
             </TouchableWithoutFeedback>
         </GestureRecognizer>
@@ -81,6 +82,9 @@ const getStyles = (colorScheme: string | null | undefined) => {
         },
         text: {
             fontSize: 17,
-        }
+        },
+        buttonContainer: {
+            alignItems: 'center',
+        },
     });
 };

@@ -3,8 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+
 import Home from './screens/Home';
 import Search from './screens/Search';
 import Library from './screens/Library';
@@ -65,7 +64,6 @@ export default function Navigation() {
     return (
         <NavigationContainer>
             <StartScreenStackGroup />
-            <StatusBar style='auto' />
         </NavigationContainer>
     );
 }
