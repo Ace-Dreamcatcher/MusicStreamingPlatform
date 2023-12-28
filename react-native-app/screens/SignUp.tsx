@@ -1,7 +1,7 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { Button, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Button, StyleSheet, TouchableWithoutFeedback, useColorScheme } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { Keyboard } from 'react-native';
@@ -9,6 +9,8 @@ import { Text, View } from '../components/Theme';
 
 export default function SignUp() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+    const colorScheme = useColorScheme();
+    const styles = getStyles(colorScheme);
     const [textEmail, setTextEmail] = useState('');
     const [textUsername, setTextUsername] = useState('');
     const [textPassword, setTextPassword] = useState('');
@@ -54,28 +56,31 @@ export default function SignUp() {
     )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 25,
-    },
-    space: {
-        height: 100,
-    },
-    textInput: {
-        height: 25,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 5,
-        marginTop: 5,
-        marginLeft: 5,
-        marginRight: 5,
-        //backgroundColor: 'gray',
-    },
-    gap: {
-        width: 20,
-    },
-    text: {
-        fontSize: 17,
-    }
-})
+const getStyles = (colorScheme: string | null | undefined) => {
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+            padding: 25,
+        },
+        space: {
+            height: 100,
+        },
+        textInput: {
+            height: 25,
+            borderWidth: 1,
+            borderColor: 'gray',
+            borderRadius: 5,
+            marginTop: 5,
+            marginLeft: 5,
+            marginRight: 5,
+            color: colorScheme === 'light' ? 'black' : 'white',
+            //backgroundColor: 'gray',
+        },
+        gap: {
+            width: 20,
+        },
+        text: {
+            fontSize: 17,
+        }
+    });
+};
