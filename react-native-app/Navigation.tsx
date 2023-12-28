@@ -20,10 +20,15 @@ function StartScreenStackGroup() {
     const colorScheme = useColorScheme();
     
     return (
-        <Stack.Navigator screenOptions={{gestureEnabled: true, gestureDirection: 'vertical', headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint}}}>
+        <Stack.Navigator screenOptions={{
+            gestureEnabled: true,
+            gestureDirection: 'vertical',
+            headerTintColor: colorScheme === 'light' ? 'black' : 'white',
+            headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
+            }}>
             <Stack.Screen name='AudioAlcove' component={Starting} />
-            <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal'}} />
-            <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal'}} />
+            <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: null}} />
+            <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: null}} />
             <Stack.Screen name='TabGroup' component={TabGroup} options={{
                 headerShown: true,
             }}/>
