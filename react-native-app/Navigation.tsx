@@ -25,7 +25,9 @@ function StartScreenStackGroup() {
             headerTintColor: colorScheme === 'light' ? 'black' : 'white',
             headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
             }}>
-            <Stack.Screen name='AudioAlcove' component={Starting} />
+            <Stack.Screen name='AudioAlcove' component={Starting} options={{
+                headerShown: false,
+            }}/>
             <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: null}} />
             <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: null}} />
             <Stack.Screen name='TabGroup' component={TabGroup} options={{

@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Text, View } from '../components/Theme';
 
 
@@ -8,19 +8,12 @@ export default function Starting() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     
     return (
-        // <View style={styles.container}>
-        //     <View style={styles.padding}>
-        //         <Image source={require('../assets/logo.png')} style={styles.image} />
-        //     </View>
-        //     <View style={styles.buttons}>
-        //         <Button title='Sign Up' onPress={() => navigation.navigate('Sign Up')} />
-        //         <View style={styles.space} />
-        //         <Button title='Sign In' onPress={() => navigation.navigate('Sign In')} />
-        //     </View>
-        // </View>
         <View style={styles.container}>
             <View style={styles.padding}>
-                <Image source={require('../assets/logo.png')} style={styles.image} />
+                <Image source={require('../assets/logo/logo.png')} style={styles.image} />
+                <View style={styles.imagePosition}>
+                    <Text style={styles.imageText}>Audio Alcove</Text>
+                </View>
             </View>
             <View style={styles.buttons}>
                 <TouchableOpacity style={[styles.button]} onPress={() => navigation.navigate('Sign Up')}>
@@ -36,30 +29,6 @@ export default function Starting() {
 }
 
 const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    // },
-    // buttons: {
-    //     flexDirection: 'row',
-    // },
-    // padding: {
-    //     paddingBottom: 100,
-    // },
-    // logo: {
-    //     width: 200,
-    //     height: 100,
-    //     marginBottom: 20,
-    // },
-    // space: {
-    //     width: 50,
-    // },
-    // image: {
-    //     width: 300,
-    //     height: 300,
-    //     resizeMode: 'contain',
-    // }
     container: {
         flex: 1,
         alignItems: 'center',
@@ -69,7 +38,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     padding: {
-        paddingBottom: 100,
+        paddingBottom: 200,
     },
     logo: {
         width: 200,
@@ -80,9 +49,17 @@ const styles = StyleSheet.create({
         width: 50,
     },
     image: {
-        width: 300,
-        height: 300,
+        width: 350,
+        height: 200,
         resizeMode: 'contain',
+    },
+    imagePosition: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imageText: {
+        fontSize: 22,
+        fontWeight: '300',
     },
     button: {
         borderWidth: 1,
@@ -98,5 +75,3 @@ const styles = StyleSheet.create({
         color: 'white',
     },
 })
-
-
