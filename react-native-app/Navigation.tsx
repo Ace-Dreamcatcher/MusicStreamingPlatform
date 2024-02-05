@@ -50,7 +50,7 @@ function TabGroup() {
 
                 return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: "#1DA1F2",
+            tabBarActiveTintColor: "#19bfb7",
             tabBarInactiveTintColor: "gray",
         })}>
             <Tab.Screen name='Home' component={Home} />

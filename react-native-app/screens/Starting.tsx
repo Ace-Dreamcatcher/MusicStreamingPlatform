@@ -86,17 +86,16 @@ const styles = StyleSheet.create({
     },
     button: {
         borderWidth: 1,
-        borderColor: '#19bfb7', // You can set the border color as needed
+        borderColor: '#19bfb7',
         padding: 10,
         paddingLeft: 20,
         paddingRight: 20,
         borderRadius: 15,
         backgroundColor: '#19bfb7',
-        //13928c
     },
     buttonText: {
         fontSize: 16,
-        color: 'white', // You can set the text color as needed
+        color: 'white',
     },
 })
 
