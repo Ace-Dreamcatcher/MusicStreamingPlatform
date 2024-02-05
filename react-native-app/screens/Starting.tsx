@@ -38,19 +38,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     padding: {
-        paddingBottom: 200,
+        paddingBottom: 250,
+        paddingTop: 50,
     },
     logo: {
         width: 200,
         height: 100,
-        marginBottom: 20,
     },
     space: {
         width: 50,
     },
     image: {
-        width: 350,
-        height: 200,
+        width: 375,
+        height: 230,
         resizeMode: 'contain',
     },
     imagePosition: {
