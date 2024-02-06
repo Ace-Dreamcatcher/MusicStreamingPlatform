@@ -79,6 +79,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
         buttonText: {
             padding: 10,
             fontSize: 18,
+            fontWeight: 'bold',
             color: '#19bfb7',
         },
     });

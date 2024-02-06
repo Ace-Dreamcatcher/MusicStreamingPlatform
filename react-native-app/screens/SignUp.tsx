@@ -53,7 +53,7 @@ export default function SignUp() {
                             <Text style={styles.buttonText}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>
-                </View> 
+                </View>
             </TouchableWithoutFeedback>
         </GestureRecognizer>
     )
@@ -91,6 +91,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
         buttonText: {
             padding: 10,
             fontSize: 18,
+            fontWeight: 'bold',
             color: '#19bfb7',
         },
     });
