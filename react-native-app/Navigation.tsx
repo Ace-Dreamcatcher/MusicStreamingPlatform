@@ -12,8 +12,10 @@ import SignUp from './screens/SignUp';
 import Starting from './screens/Starting';
 import Colors from './constants/Colors';
 
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
 
 function StartScreenStackGroup() {
     const colorScheme = useColorScheme();
@@ -36,6 +38,7 @@ function StartScreenStackGroup() {
         </Stack.Navigator>
     )
 }
+
 
 function TabGroup() {
     return (
@@ -61,6 +64,7 @@ function TabGroup() {
         </Tab.Navigator>
     )
 }
+
 
 export default function Navigation() {
     return (

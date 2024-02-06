@@ -1,10 +1,10 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, StyleSheet, TouchableWithoutFeedback, useColorScheme, Keyboard, TextInput } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, useColorScheme, Keyboard, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import GestureRecognizer from 'react-native-swipe-gestures';
-
 import { Text, View } from '../components/Theme';
+
 
 export default function SignUp() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -18,7 +18,7 @@ export default function SignUp() {
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.container}>
-                    <Text style={styles.text}> Email: </Text>
+                    <Text style={styles.text}> Email </Text>
                     <View style={styles.gap} />
                     <TextInput
                         style={styles.textInput}
@@ -29,7 +29,7 @@ export default function SignUp() {
                     />
                     
                     <View style={styles.space} />
-                    <Text style={styles.text}> Username: </Text>
+                    <Text style={styles.text}> Username </Text>
                     <View style={styles.gap} />
                     <TextInput
                         style={styles.textInput}
@@ -39,7 +39,7 @@ export default function SignUp() {
                         defaultValue={textUsername}
                     />
                     <View style={styles.space} />
-                    <Text style={styles.text}> Password: </Text>
+                    <Text style={styles.text}> Password </Text>
                     <View style={styles.gap} />
                     <TextInput
                         style={styles.textInput}
@@ -49,7 +49,9 @@ export default function SignUp() {
                     />
                     <View style={styles.space} />
                     <View style={styles.buttonContainer}>
-                        <Button title='Sign Up' onPress={() => navigation.navigate('TabGroup')} />
+                        <TouchableOpacity onPress={() => navigation.navigate('TabGroup')}>
+                            <Text style={styles.buttonText}>Sign Up</Text>
+                        </TouchableOpacity>
                     </View>
                 </View> 
             </TouchableWithoutFeedback>
@@ -67,15 +69,15 @@ const getStyles = (colorScheme: string | null | undefined) => {
             height: 100,
         },
         textInput: {
-            height: 25,
+            height: 45,
             borderWidth: 1,
-            borderColor: 'gray',
-            borderRadius: 5,
+            borderColor: '#19bfb7',
+            borderRadius: 25,
             marginTop: 5,
-            marginLeft: 5,
-            marginRight: 5,
+            marginLeft: -10,
+            marginRight: -10,
+            paddingHorizontal: 17,
             color: colorScheme === 'light' ? 'black' : 'white',
-            //backgroundColor: 'gray',
         },
         gap: {
             width: 20,
@@ -85,6 +87,11 @@ const getStyles = (colorScheme: string | null | undefined) => {
         },
         buttonContainer: {
             alignItems: 'center',
+        },
+        buttonText: {
+            padding: 10,
+            fontSize: 18,
+            color: '#19bfb7',
         },
     });
 };
