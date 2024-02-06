@@ -10,7 +10,9 @@ export default function Starting() {
     return (
         <View style={styles.container}>
             <View style={styles.padding}>
-                <Image source={require('../assets/logo/logo.png')} style={styles.image} />
+                <View style={styles.imagePadding}>
+                    <Image source={require('../assets/logo/logo.png')} style={styles.image} />
+                </View>
                 <View style={styles.imagePosition}>
                     <Text style={styles.imageText}>Audio Alcove</Text>
                 </View>
@@ -52,6 +54,9 @@ const styles = StyleSheet.create({
         width: 375,
         height: 230,
         resizeMode: 'contain',
+    },
+    imagePadding: {
+        paddingRight: 5,
     },
     imagePosition: {
         alignItems: 'center',
