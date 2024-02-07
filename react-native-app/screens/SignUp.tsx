@@ -14,6 +14,30 @@ export default function SignUp() {
     const [textUsername, setTextUsername] = useState('');
     const [textPassword, setTextPassword] = useState('');
 
+    const handleSignUp = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: textEmail,
+                    username: textUsername,
+                    password: textPassword,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error signing up');
+            }
+
+            navigation.navigate('TabGroup');
+        } catch (error) {
+            console.error('Error signing up:', error);
+        }
+    }
+
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -49,7 +73,7 @@ export default function SignUp() {
                     />
                     <View style={styles.space} />
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => navigation.navigate('TabGroup')}>
+                        <TouchableOpacity onPress={handleSignUp}>
                             <Text style={styles.buttonText}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>
