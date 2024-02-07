@@ -83,7 +83,7 @@ export class SongService {
 			dto.songGenreNew !== (undefined || '') ? dto.songGenreNew : dto.songGenre;
 
 		const newFile =
-			dto.songFileNew !== (undefined || '') ? dto.songGenreNew : dto.songFile;
+			dto.songFileNew !== (undefined || '') ? dto.songFileNew : dto.songFile;
 
 		await this.prisma.song.update({
 			where: {
