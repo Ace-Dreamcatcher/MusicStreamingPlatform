@@ -16,12 +16,12 @@ export class AuthDto {
 	@IsString()
 	username?: string;
 
-	@IsString()
-	@IsNotEmpty({ message: 'Email is required!' })
-	@MinLength(8, { message: 'Password must be at least 8 characters long!' })
 	@Matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/, {
 		message:
 			'Password must contain at least one uppercase letter, one lowercase letter, and one number!',
 	})
+	@MinLength(8, { message: 'Password must be at least 8 characters long!' })
+	@IsString()
+	@IsNotEmpty({ message: 'Password is required!' })
 	password: string;
 }
