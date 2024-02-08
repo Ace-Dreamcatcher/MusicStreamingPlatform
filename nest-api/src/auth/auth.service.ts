@@ -41,12 +41,6 @@ export class AuthService {
 				user.role,
 			);
 		} catch (e) {
-			if (e instanceof PrismaClientKnownRequestError) {
-				if (e.code === 'P2002') {
-					throw new ForbiddenException('Email is already signed in!');
-				}
-			}
-
 			throw e;
 		}
 	}

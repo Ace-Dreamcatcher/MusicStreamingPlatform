@@ -5,6 +5,7 @@ import {
 	IsString,
 	Matches,
 	MinLength,
+	ValidateNested,
 } from 'class-validator';
 
 export class AuthDto {
