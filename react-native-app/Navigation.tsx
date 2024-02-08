@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 
 import Home from './screens/Home';
 import Search from './screens/Search';
@@ -30,8 +30,8 @@ function StartScreenStackGroup() {
             <Stack.Screen name='AudioAlcove' component={Starting} options={{
                 headerShown: false,
             }}/>
-            <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: null}} />
-            <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: null}} />
+            <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
+            <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
             <Stack.Screen name='TabGroup' component={TabGroup} options={{
                 headerShown: true,
             }}/>
@@ -41,27 +41,42 @@ function StartScreenStackGroup() {
 
 
 function TabGroup() {
+    const colorScheme = useColorScheme();
+    const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
+    const headerTitleColor = colorScheme === 'dark' ? 'white' : 'black';
+    const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
+    
     return (
-        <Tab.Navigator screenOptions={({route}) => ({
-            tabBarIcon: ({ color, focused, size }) => {
-                let iconName;
-                if (route.name === 'Home') {
-                    iconName = focused ? 'ios-home' : 'ios-home-outline';
-                } else if (route.name === 'Search') {
-                    iconName = focused ? 'ios-search' : 'ios-search-outline';
-                } else if (route.name === 'Library') {
-                    iconName = focused ? 'ios-musical-notes' : 'ios-musical-notes-outline';
-                }
+        <>
+            <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
+            <Tab.Navigator screenOptions={({route}) => ({
+                headerStyle: {
+                    backgroundColor: backgroundColor,
+                },
+                tabBarStyle: {
+                    backgroundColor: backgroundColor,
+                },
+                headerTintColor: headerTitleColor,
+                tabBarIcon: ({ color, focused, size }) => {
+                    let iconName;
+                    if (route.name === 'Home') {
+                        iconName = focused ? 'ios-home' : 'ios-home-outline';
+                    } else if (route.name === 'Search') {
+                        iconName = focused ? 'ios-search' : 'ios-search-outline';
+                    } else if (route.name === 'Library') {
+                        iconName = focused ? 'ios-musical-notes' : 'ios-musical-notes-outline';
+                    }
 
-                return <Ionicons name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: "#19bfb7",
-            tabBarInactiveTintColor: "gray",
-        })}>
-            <Tab.Screen name='Home' component={Home} />
-            <Tab.Screen name='Search' component={Search} />
-            <Tab.Screen name='Library' component={Library} />
-        </Tab.Navigator>
+                    return <Ionicons name={iconName} size={size} color={color} />;
+                },
+                tabBarActiveTintColor: '#19bfb7',
+                tabBarInactiveTintColor: 'gray',
+            })}>
+                <Tab.Screen name='Home' component={Home} />
+                <Tab.Screen name='Search' component={Search} />
+                <Tab.Screen name='Library' component={Library} />
+            </Tab.Navigator>
+        </>
     )
 }
 
