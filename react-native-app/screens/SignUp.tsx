@@ -18,9 +18,6 @@ export default function SignUp() {
         try {
             const response = await fetch('http://localhost:3000/auth/signup', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({
                     email: textEmail,
                     username: textUsername,
@@ -42,6 +39,7 @@ export default function SignUp() {
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.container}>
+                    
                     <Text style={styles.text}> Email </Text>
                     <View style={styles.gap} />
                     <TextInput
@@ -62,7 +60,9 @@ export default function SignUp() {
                         onChangeText={newText => setTextUsername(newText)}
                         defaultValue={textUsername}
                     />
+
                     <View style={styles.space} />
+
                     <Text style={styles.text}> Password </Text>
                     <View style={styles.gap} />
                     <TextInput
@@ -71,7 +71,9 @@ export default function SignUp() {
                         onChangeText={newText => setTextPassword(newText)}
                         defaultValue={textPassword}
                     />
+
                     <View style={styles.space} />
+
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity onPress={handleSignUp}>
                             <Text style={styles.buttonText}>Sign Up</Text>
