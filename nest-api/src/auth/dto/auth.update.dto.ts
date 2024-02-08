@@ -1,9 +1,6 @@
 import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class AuthUpdateDto {
-	@IsEmail()
-	email?: string;
-
 	@IsOptional()
 	@IsEmail()
 	newEmail?: string;
@@ -15,4 +12,7 @@ export class AuthUpdateDto {
 	@IsOptional()
 	@IsString()
 	newPassword?: string;
+
+	@IsString()
+	token?: string;
 }

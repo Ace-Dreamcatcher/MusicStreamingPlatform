@@ -67,7 +67,7 @@ export class AuthService {
 			throw new ForbiddenException('Incorrect password!');
 		}
 
-		return this.signToken(
+		const token = await this.signToken(
 			user.id,
 			user.email,
 			user.username,
@@ -75,32 +75,39 @@ export class AuthService {
 			user.createAt,
 			user.role,
 		);
+
+		return {
+			token,
+		};
 	}
 
 	async update(dto: AuthUpdateDto) {
+		const secret = 'preze';
+		const decodedToken = this.jwt.verify(dto.token);
+
 		const user = await this.prisma.user.findUnique({
 			where: {
-				email: dto.email,
+				email: decodedToken.email,
 			},
 		});
+
 		if (!user) {
-			throw new ForbiddenException('Invalid email!');
+			throw new ForbiddenException('Invalid user!');
 		}
 
-		const newEmail =
-			dto.newEmail !== (undefined || '') ? dto.newEmail : user.email;
+		const newEmail = dto.newEmail !== undefined ? dto.newEmail : user.email;
 
 		const newUsername =
-			dto.newUsername !== (undefined || '') ? dto.newUsername : user.username;
+			dto.newUsername !== undefined ? dto.newUsername : user.username;
 
 		const newPassword =
-			dto.newPassword !== (undefined || '') ? dto.newPassword : user.hash;
+			dto.newPassword !== undefined ? dto.newPassword : user.hash;
 
 		const hash = await argon.hash(newPassword);
 
 		await this.prisma.user.update({
 			where: {
-				email: dto.email,
+				email: decodedToken.email,
 			},
 			data: {
 				email: newEmail,
@@ -108,14 +115,10 @@ export class AuthService {
 				hash,
 			},
 		});
-		return this.signToken(
-			user.id,
-			user.email,
-			user.username,
-			user.hash,
-			user.createAt,
-			user.role,
-		);
+
+		return {
+			message: 'User updated successfully!',
+		};
 	}
 
 	async signToken(
@@ -137,7 +140,7 @@ export class AuthService {
 
 		const token = await this.jwt.signAsync(payload, {
 			expiresIn: '300m',
-			secret: this.config.get('JWT_SECRET'),
+			secret: this.config.get<string>('JWT_SECRET'),
 		});
 
 		return {
