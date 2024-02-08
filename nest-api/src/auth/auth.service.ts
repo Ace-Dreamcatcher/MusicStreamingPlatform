@@ -78,14 +78,44 @@ export class AuthService {
 	}
 
 	async update(dto: AuthUpdateDto) {
-		/*return this.signToken(
-			updated.id,
-			updated.email,
-			updated.username,
-			updated.hash,
-			updated.createAt,
-			updated.role,
-		);*/
+		const user = await this.prisma.user.findUnique({
+			where: {
+				email: dto.email,
+			},
+		});
+		if (!user) {
+			throw new ForbiddenException('Invalid email!');
+		}
+
+		const newEmail =
+			dto.newEmail !== (undefined || '') ? dto.newEmail : user.email;
+
+		const newUsername =
+			dto.newUsername !== (undefined || '') ? dto.newUsername : user.username;
+
+		const newPassword =
+			dto.newPassword !== (undefined || '') ? dto.newPassword : user.hash;
+
+		const hash = await argon.hash(newPassword);
+
+		await this.prisma.user.update({
+			where: {
+				email: dto.email,
+			},
+			data: {
+				email: newEmail,
+				username: newUsername,
+				hash,
+			},
+		});
+		return this.signToken(
+			user.id,
+			user.email,
+			user.username,
+			user.hash,
+			user.createAt,
+			user.role,
+		);
 	}
 
 	async signToken(
@@ -106,7 +136,7 @@ export class AuthService {
 		};
 
 		const token = await this.jwt.signAsync(payload, {
-			expiresIn: '15m',
+			expiresIn: '300m',
 			secret: this.config.get('JWT_SECRET'),
 		});
 
