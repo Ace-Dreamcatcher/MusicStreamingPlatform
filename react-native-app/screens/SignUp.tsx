@@ -33,16 +33,20 @@ export default function SignUp() {
             if (!response.ok) {
                 const errorResponse = await response.json();
                 if (errorResponse.message) {
-                    let emailFlag = 1;
-                    let passwordFlag = 1;
-                    for (let i = 0; i < errorResponse.message.length; i++) {
-                        if ((errorResponse.message[i].includes('Email') || errorResponse.message[i].includes('email')) && emailFlag) {
-                            setEmailError(errorResponse.message[i]);
-                            emailFlag = 0;
-                        }
-                        if ((errorResponse.message[i].includes('Password') || errorResponse.message[i].includes('password')) && passwordFlag) {
-                            setPasswordError(errorResponse.message[i]);
-                            passwordFlag = 0;
+                    if (response.status === 403) {
+                        setEmailError(errorResponse.message)
+                    } else {
+                        let emailFlag = 1;
+                        let passwordFlag = 1;
+                        for (let i = 0; i < errorResponse.message.length; i++) {
+                            if ((errorResponse.message[i].includes('Email') || errorResponse.message[i].includes('email')) && emailFlag) {
+                                setEmailError(errorResponse.message[i]);
+                                emailFlag = 0;
+                            }
+                            if ((errorResponse.message[i].includes('Password') || errorResponse.message[i].includes('password')) && passwordFlag) {
+                                setPasswordError(errorResponse.message[i]);
+                                passwordFlag = 0;
+                            }
                         }
                     }
                 } else {
@@ -60,7 +64,7 @@ export default function SignUp() {
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.container}>
-                    <Text style={styles.text}> Email </Text>
+                    <Text style={styles.text}> Email* </Text>
                     <View style={styles.gap} />
                     <TextInput
                         style={styles.textInput}
@@ -84,7 +88,7 @@ export default function SignUp() {
                         defaultValue={textUsername}
                     />
                     <View style={styles.space} />
-                    <Text style={styles.text}> Password </Text>
+                    <Text style={styles.text}> Password* </Text>
                     <View style={styles.gap} />
                     <TextInput
                         style={styles.textInput}

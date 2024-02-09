@@ -12,10 +12,9 @@ export default function SignIn() {
     const styles = getStyles(colorScheme);
     const [textEmail, setTextEmail] = useState('');
     const [textPassword, setTextPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    const [error, setError] = useState('');
 
-    const handleSignUp = async () => {
+    const handleSignIn = async () => {
         try {
             const response = await fetch('http://192.168.1.5:3000/auth/signin', {
                 method: 'POST',
@@ -31,26 +30,15 @@ export default function SignIn() {
             if (!response.ok) {
                 const errorResponse = await response.json();
                 if (errorResponse.message) {
-                    let emailFlag = 1;
-                    let passwordFlag = 1;
-                    for (let i = 0; i < errorResponse.message.length; i++) {
-                        if ((errorResponse.message[i].includes('Email') || errorResponse.message[i].includes('email')) && emailFlag) {
-                            setEmailError(errorResponse.message[i]);
-                            emailFlag = 0;
-                        }
-                        if ((errorResponse.message[i].includes('Password') || errorResponse.message[i].includes('password')) && passwordFlag) {
-                            setPasswordError(errorResponse.message[i]);
-                            passwordFlag = 0;
-                        }
-                    }
+                    setError(errorResponse.message);
                 } else {
-                    throw new Error('Error signing up');
+                    throw new Error('Error signing in');
                 }
             } else {
                 navigation.navigate('TabGroup');
             }
         } catch (error) {
-            console.error('Error signing up:', error);
+            console.error('Error signing in:', error);
         }
     }
     
@@ -66,11 +54,10 @@ export default function SignIn() {
                         placeholderTextColor='gray'
                         onChangeText={newText => {
                             setTextEmail(newText);
-                            setEmailError('');
+                            setError('');
                         }}
                         defaultValue={textEmail}
                     />
-                    {emailError && <Text style={styles.errorText}>{emailError}</Text>}
                     <View style={styles.space} />
                     <Text style={styles.text}> Password </Text>
                     <View style={styles.gap} />
@@ -79,14 +66,14 @@ export default function SignIn() {
                         secureTextEntry={true}
                         onChangeText={newText => {
                             setTextPassword(newText);
-                            setPasswordError('');
+                            setError('');
                         }}
                         defaultValue={textPassword}
                     />
-                    {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
+                    {error && <Text style={styles.errorText}>{error}</Text>}
                     <View style={styles.space} />
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => navigation.navigate('TabGroup')}>
+                        <TouchableOpacity onPress={handleSignIn}>
                             <Text style={styles.buttonText}>Sign In</Text>
                         </TouchableOpacity>
                     </View>

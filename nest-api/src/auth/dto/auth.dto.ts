@@ -5,10 +5,9 @@ import {
 	IsString,
 	Matches,
 	MinLength,
-	ValidateNested,
 } from 'class-validator';
 
-export class AuthDto {
+export class SignUpDto {
 	@IsEmail({}, { message: '*Please provide a valid email address!' })
 	@IsNotEmpty({ message: '*Email is required!' })
 	email: string;
@@ -24,5 +23,13 @@ export class AuthDto {
 	@MinLength(8, { message: '*Password must be at least 8 characters long!' })
 	@IsString()
 	@IsNotEmpty({ message: '*Password is required!' })
+	password: string;
+}
+
+export class SignInDto {
+	@IsString()
+	email: string;
+
+	@IsString()
 	password: string;
 }

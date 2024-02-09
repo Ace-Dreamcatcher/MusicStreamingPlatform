@@ -1,11 +1,15 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+	BadRequestException,
+	ForbiddenException,
+	Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-import { AuthDto, AuthUpdateDto } from './dto';
+import { AuthUpdateDto, SignInDto, SignUpDto } from './dto';
 import * as argon from 'argon2';
 import { Role } from '@prisma/client';
 
@@ -17,7 +21,7 @@ export class AuthService {
 		private config: ConfigService,
 	) {}
 
-	async signup(dto: AuthDto) {
+	async signup(dto: SignUpDto) {
 		try {
 			const hash = await argon.hash(dto.password);
 
@@ -45,34 +49,33 @@ export class AuthService {
 		}
 	}
 
-	async signin(dto: AuthDto) {
-		const user = await this.prisma.user.findUnique({
-			where: {
-				email: dto.email,
-			},
-		});
+	async signin(dto: SignInDto) {
+		try {
+			const user = await this.prisma.user.findUnique({
+				where: {
+					email: dto.email,
+				},
+			});
+			if (!user) {
+				throw new BadRequestException();
+			}
 
-		if (!user) {
-			throw new ForbiddenException('Invalid email!');
+			const passwordMatch = await argon.verify(user.hash, dto.password);
+			if (!passwordMatch) {
+				throw new BadRequestException();
+			}
+
+			return this.signToken(
+				user.id,
+				user.email,
+				user.username,
+				user.hash,
+				user.createAt,
+				user.role,
+			);
+		} catch (e) {
+			throw e;
 		}
-
-		const passwordMatch = await argon.verify(user.hash, dto.password);
-		if (!passwordMatch) {
-			throw new ForbiddenException('Incorrect password!');
-		}
-
-		const token = await this.signToken(
-			user.id,
-			user.email,
-			user.username,
-			user.hash,
-			user.createAt,
-			user.role,
-		);
-
-		return {
-			token,
-		};
 	}
 
 	async update(dto: AuthUpdateDto) {
