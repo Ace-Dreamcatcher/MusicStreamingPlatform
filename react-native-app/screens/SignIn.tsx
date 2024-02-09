@@ -73,7 +73,8 @@ export default function SignIn() {
                     {error && <Text style={styles.errorText}>{error}</Text>}
                     <View style={styles.space} />
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={handleSignIn}>
+                        {/* <TouchableOpacity onPress={handleSignIn}> */}
+                        <TouchableOpacity onPress={() => navigation.navigate('TabGroup')}>
                             <Text style={styles.buttonText}>Sign In</Text>
                         </TouchableOpacity>
                     </View>

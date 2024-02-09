@@ -33,7 +33,7 @@ function StartScreenStackGroup() {
             <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
             <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
             <Stack.Screen name='TabGroup' component={TabGroup} options={{
-                headerShown: true,
+                headerShown: false,
             }}/>
         </Stack.Navigator>
     )
@@ -52,6 +52,7 @@ function TabGroup() {
             <Tab.Navigator screenOptions={({route}) => ({
                 headerStyle: {
                     backgroundColor: backgroundColor,
+                    shadowColor: 'transparent',
                 },
                 tabBarStyle: {
                     backgroundColor: backgroundColor,
