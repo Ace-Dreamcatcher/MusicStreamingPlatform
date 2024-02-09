@@ -18,7 +18,7 @@ export default function SignUp() {
 
     const handleSignUp = async () => {
         try {
-            const response = await fetch('http://localhost:3000/auth/signup', {
+            const response = await fetch('http://192.168.1.5:3000/auth/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,21 +33,17 @@ export default function SignUp() {
             if (!response.ok) {
                 const errorResponse = await response.json();
                 if (errorResponse.message) {
-                    let i = 0;
-                    while (i < 3) {
-                        if (errorResponse.message[i].includes('Email') || errorResponse.message[i].includes('email')) {
+                    let emailFlag = 1;
+                    let passwordFlag = 1;
+                    for (let i = 0; i < errorResponse.message.length; i++) {
+                        if ((errorResponse.message[i].includes('Email') || errorResponse.message[i].includes('email')) && emailFlag) {
                             setEmailError(errorResponse.message[i]);
-                            break;
+                            emailFlag = 0;
                         }
-                        i++;
-                    }
-                    i = 0;
-                    while (i < 3) {
-                        if (errorResponse.message[i].includes('Password') || errorResponse.message[i].includes('password')) {
+                        if ((errorResponse.message[i].includes('Password') || errorResponse.message[i].includes('password')) && passwordFlag) {
                             setPasswordError(errorResponse.message[i]);
-                            break;
+                            passwordFlag = 0;
                         }
-                        i++;
                     }
                 } else {
                     throw new Error('Error signing up');
@@ -119,7 +115,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             padding: 25,
         },
         space: {
-            height: 100,
+            height: 55,
         },
         textInput: {
             height: 45,
@@ -148,6 +144,9 @@ const getStyles = (colorScheme: string | null | undefined) => {
             color: '#19bfb7',
         },
         errorText: {
+            marginTop: 5,
+            marginLeft: 5,
+            fontSize: 12,
             color: 'red',
         }
     });

@@ -54,7 +54,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             padding: 25,
         },
         space: {
-            height: 100,
+            height: 112,
         },
         textInput: {
             height: 45,
