@@ -148,6 +148,6 @@ const getStyles = (colorScheme: string | null | undefined) => {
             marginLeft: 5,
             fontSize: 12,
             color: 'red',
-        }
+        },
     });
 };
