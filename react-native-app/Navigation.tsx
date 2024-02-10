@@ -19,23 +19,28 @@ const Stack = createStackNavigator();
 
 function StartScreenStackGroup() {
     const colorScheme = useColorScheme();
+    const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
+    const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
     
     return (
-        <Stack.Navigator screenOptions={{
-            gestureEnabled: true,
-            gestureDirection: 'vertical',
-            headerTintColor: colorScheme === 'light' ? 'black' : 'white',
-            headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
-            }}>
-            <Stack.Screen name='AudioAlcove' component={Starting} options={{
-                headerShown: false,
-            }}/>
-            <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
-            <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
-            <Stack.Screen name='TabGroup' component={TabGroup} options={{
-                headerShown: false,
-            }}/>
-        </Stack.Navigator>
+        <>
+            <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
+            <Stack.Navigator screenOptions={{
+                gestureEnabled: true,
+                gestureDirection: 'vertical',
+                headerTintColor: colorScheme === 'light' ? 'black' : 'white',
+                headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
+                }}>
+                <Stack.Screen name='AudioAlcove' component={Starting} options={{
+                    headerShown: false,
+                }}/>
+                <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
+                <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
+                <Stack.Screen name='TabGroup' component={TabGroup} options={{
+                    headerShown: false,
+                }}/>
+            </Stack.Navigator>
+        </>
     )
 }
 
