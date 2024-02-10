@@ -56,6 +56,7 @@ function TabGroup() {
                 },
                 tabBarStyle: {
                     backgroundColor: backgroundColor,
+                    borderTopWidth: 0,
                 },
                 headerTintColor: headerTitleColor,
                 tabBarIcon: ({ color, focused, size }) => {
