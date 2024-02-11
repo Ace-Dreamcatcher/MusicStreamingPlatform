@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar, useColorScheme } from 'react-native';
+import { useContext } from 'react';
 
 import Home from './screens/Home';
 import Search from './screens/Search';
@@ -16,12 +17,11 @@ import Colors from './constants/Colors';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-
-function StartScreenStackGroup() {
+function StartScreens() {
     const colorScheme = useColorScheme();
     const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
     const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
-    
+
     return (
         <>
             <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
@@ -30,15 +30,37 @@ function StartScreenStackGroup() {
                 gestureDirection: 'vertical',
                 headerTintColor: colorScheme === 'light' ? 'black' : 'white',
                 headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
-                }}>
-                <Stack.Screen name='AudioAlcove' component={Starting} options={{
-                    headerShown: false,
-                }}/>
-                <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
-                <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
-                <Stack.Screen name='TabGroup' component={TabGroup} options={{
-                    headerShown: false,
-                }}/>
+            }}>
+            <Stack.Screen name='AudioAlcove' component={Starting} options={{
+                headerShown: false,
+            }}/>
+            <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
+            <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
+            <Stack.Screen name='TabGroup' component={TabGroup} options={{
+                headerShown: false,
+            }}/>
+            </Stack.Navigator>
+        </>
+    )
+}
+
+function TabGroupScreens() {
+    const colorScheme = useColorScheme();
+    const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
+    const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
+
+    return (
+        <>
+            <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
+            <Stack.Navigator screenOptions={{
+                gestureEnabled: true,
+                gestureDirection: 'vertical',
+                headerTintColor: colorScheme === 'light' ? 'black' : 'white',
+                headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
+            }}>
+            <Stack.Screen name='TabGroup' component={TabGroup} options={{
+                headerShown: false,
+            }}/>
             </Stack.Navigator>
         </>
     )
@@ -48,8 +70,8 @@ function StartScreenStackGroup() {
 function TabGroup() {
     const colorScheme = useColorScheme();
     const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
-    const headerTitleColor = colorScheme === 'dark' ? 'white' : 'black';
     const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
+    const headerTitleColor = colorScheme === 'dark' ? 'white' : 'black';
     
     return (
         <>
@@ -89,9 +111,12 @@ function TabGroup() {
 
 
 export default function Navigation() {
+    //const token = useContext(AuthProvider);
+
     return (
         <NavigationContainer>
-            <StartScreenStackGroup />
+            <StartScreens />
+            {/* { token ? <TabGroupScreens /> : <StartScreens /> } */}
         </NavigationContainer>
     );
 }

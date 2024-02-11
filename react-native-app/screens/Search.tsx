@@ -23,7 +23,6 @@ export default function Search() {
 
     const handleOutofFocus = () => {
         setIsFocused(false);
-        setSearchQuery('');
         Animated.timing(widthAnimation, {
           toValue: Dimensions.get('window').width,
           duration: 200,
