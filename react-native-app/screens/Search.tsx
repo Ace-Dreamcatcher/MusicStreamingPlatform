@@ -117,13 +117,16 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             paddingHorizontal: 10,
             paddingVertical: 5,
+            height: 50,
         },
         searchContainer: {
             flexDirection: 'row',
             alignItems: 'center',
-            borderRadius: 5,
+            borderRadius: 10,
             paddingHorizontal: 10,
             backgroundColor: colorScheme === 'light' ? '#e4e6eb' : '#404040',
+            width: '100%',
+            height: '100%',
         },
         input: {
             flex: 1,
