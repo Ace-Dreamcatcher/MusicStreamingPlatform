@@ -1,5 +1,6 @@
 import { Animated, Dimensions, StyleSheet, TextInput, TouchableOpacity, useColorScheme } from 'react-native';
-import { Text, View } from "../components/Theme";
+import { View } from '../components/Theme';
+import { Text } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -154,10 +155,12 @@ const getStyles = (colorScheme: string | null | undefined) => {
             marginTop: 50,
             marginBottom: 5,
             marginLeft: 5,
+            color: colorScheme === 'light' ? 'black' : 'white',
         },
         buttonText: {
             fontSize: 16,
             fontWeight: 'bold',
+            color: 'white',
         },
         buttonFlex: {
             flexDirection: 'row',
@@ -167,7 +170,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'orange',
+            backgroundColor: '#ea522c',
             width: (Dimensions.get('window').width / 2) - 10,
             height: 70,
             marginHorizontal: 5,
@@ -176,7 +179,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'cyan',
+            backgroundColor: '#5782ee',
             width: (Dimensions.get('window').width / 2) - 10,
             height: 70,
             marginHorizontal: 5,
@@ -185,7 +188,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'red',
+            backgroundColor: '#ec333c',
             alignSelf: 'stretch',
             width: (Dimensions.get('window').width / 2) - 10,
             height: 70,
@@ -195,7 +198,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'green',
+            backgroundColor: '#059635',
             alignSelf: 'stretch',
             width: (Dimensions.get('window').width / 2) - 10,
             height: 70,
@@ -205,7 +208,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'purple',
+            backgroundColor: '#85429f',
             alignSelf: 'stretch',
             width: (Dimensions.get('window').width / 2) - 10,
             height: 70,
@@ -215,7 +218,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'blue',
+            backgroundColor: '#2a0f8c',
             alignSelf: 'stretch',
             width: (Dimensions.get('window').width / 2) - 10,
             height: 70,
@@ -225,7 +228,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'pink',
+            backgroundColor: '#f44d80',
             alignSelf: 'stretch',
             width: (Dimensions.get('window').width / 2) - 10,
             height: 70,
@@ -235,7 +238,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'brown',
+            backgroundColor: '#702906',
             alignSelf: 'stretch',
             width: (Dimensions.get('window').width / 2) - 10,
             height: 70,
@@ -245,7 +248,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 10,
-            backgroundColor: 'gold',
+            backgroundColor: '#e2ae03',
             alignSelf: 'stretch',
             width: Dimensions.get('window').width - 10,
             height: 70,
