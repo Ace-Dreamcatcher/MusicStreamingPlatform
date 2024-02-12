@@ -76,7 +76,7 @@ export class AuthService {
 	}
 
 	async update(dto: AuthUpdateDto) {
-		const decodedToken = this.jwt.verify(dto.token);
+		const decodedToken = this.jwt.decode(dto.token);
 
 		const user = await this.prisma.user.findUnique({
 			where: {

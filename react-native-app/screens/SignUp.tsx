@@ -53,6 +53,8 @@ export default function SignUp() {
                     throw new Error('Error signing up');
                 }
             } else {
+                const token = await response.json();
+                console.log(token);
                 navigation.navigate('TabGroup');
             }
         } catch (error) {
