@@ -117,7 +117,8 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             paddingHorizontal: 10,
             paddingVertical: 5,
-            height: 50,
+            marginVertical: 5,
+            height: 45,
         },
         searchContainer: {
             flexDirection: 'row',
