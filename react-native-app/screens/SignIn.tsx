@@ -4,6 +4,7 @@ import { Keyboard, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeed
 import { useState } from 'react';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { Text, View } from '../components/Theme';
+import { useAuth } from '../AuthContext';
 
 
 export default function SignIn() {
@@ -13,32 +14,20 @@ export default function SignIn() {
     const [textEmail, setTextEmail] = useState('');
     const [textPassword, setTextPassword] = useState('');
     const [error, setError] = useState('');
+    const { onSignIn } = useAuth();
 
     const handleSignIn = async () => {
-        try {
-            const response = await fetch('http://192.168.1.5:3000/auth/signin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: textEmail,
-                    password: textPassword,
-                }),
-            });
+        const response = await onSignIn!(textEmail, textPassword);
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                if (errorResponse.message) {
-                    setError(errorResponse.message);
-                } else {
-                    throw new Error('Error signing in');
-                }
+        if (response.statusCode === 400) {
+            const errorResponse = await response.message;
+            if (errorResponse) {
+                setError(errorResponse);
             } else {
-                navigation.navigate('TabGroup');
+                throw new Error('Error signing in');
             }
-        } catch (error) {
-            console.error('Error signing in:', error);
+        } else {
+            navigation.navigate('TabGroup');
         }
     }
     
@@ -73,8 +62,7 @@ export default function SignIn() {
                     {error && <Text style={styles.errorText}>{error}</Text>}
                     <View style={styles.space} />
                     <View style={styles.buttonContainer}>
-                        {/* <TouchableOpacity onPress={handleSignIn}> */}
-                        <TouchableOpacity onPress={() => navigation.navigate('TabGroup')}>
+                        <TouchableOpacity onPress={handleSignIn}>
                             <Text style={styles.buttonText}>Sign In</Text>
                         </TouchableOpacity>
                     </View>

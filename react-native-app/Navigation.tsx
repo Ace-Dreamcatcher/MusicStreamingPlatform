@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
-import { StatusBar, useColorScheme } from 'react-native';
+import { Button, StatusBar, useColorScheme } from 'react-native';
 import { useContext } from 'react';
 
 import Home from './screens/Home';
@@ -12,6 +12,7 @@ import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
 import Starting from './screens/Starting';
 import Colors from './constants/Colors';
+import { useAuth } from './AuthContext';
 
 
 const Tab = createBottomTabNavigator();
@@ -31,20 +32,17 @@ function StartScreens() {
                 headerTintColor: colorScheme === 'light' ? 'black' : 'white',
                 headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
             }}>
-            <Stack.Screen name='AudioAlcove' component={Starting} options={{
+                <Stack.Screen name='AudioAlcove' component={Starting} options={{
                 headerShown: false,
-            }}/>
-            <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
-            <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
-            <Stack.Screen name='TabGroup' component={TabGroup} options={{
-                headerShown: false,
-            }}/>
+                }}/>
+                <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
+                <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
             </Stack.Navigator>
         </>
     )
 }
 
-function TabGroupScreens() {
+function TabScreens() {
     const colorScheme = useColorScheme();
     const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
     const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
@@ -58,9 +56,9 @@ function TabGroupScreens() {
                 headerTintColor: colorScheme === 'light' ? 'black' : 'white',
                 headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
             }}>
-            <Stack.Screen name='TabGroup' component={TabGroup} options={{
-                headerShown: false,
-            }}/>
+                <Stack.Screen name='TabGroup' component={TabGroup} options={{
+                    headerShown: false,
+                }}/>
             </Stack.Navigator>
         </>
     )
@@ -72,6 +70,7 @@ function TabGroup() {
     const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
     const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
     const headerTitleColor = colorScheme === 'dark' ? 'white' : 'black';
+    const { onSignOut } = useAuth();
     
     return (
         <>
@@ -101,9 +100,15 @@ function TabGroup() {
                 tabBarActiveTintColor: '#19bfb7',
                 tabBarInactiveTintColor: 'gray',
             })}>
-                <Tab.Screen name='Home' component={Home} />
-                <Tab.Screen name='Search' component={Search} />
-                <Tab.Screen name='Library' component={Library} />
+                <Tab.Screen name='Home' component={Home} options={{
+                    headerRight: () => <Button onPress={onSignOut} title='Sign Out' />,
+                }} />
+                <Tab.Screen name='Search' component={Search} options={{
+                    headerRight: () => <Button onPress={onSignOut} title='Sign Out' />,
+                }} />
+                <Tab.Screen name='Library' component={Library} options={{
+                    headerRight: () => <Button onPress={onSignOut} title='Sign Out' />,
+                }} />
             </Tab.Navigator>
         </>
     )
@@ -111,12 +116,11 @@ function TabGroup() {
 
 
 export default function Navigation() {
-    //const token = useContext(AuthProvider);
+    const { authState } = useAuth();
 
     return (
         <NavigationContainer>
-            <StartScreens />
-            {/* { token ? <TabGroupScreens /> : <StartScreens /> } */}
+            {authState?.isAuthenticated ? <TabScreens /> : <StartScreens />}
         </NavigationContainer>
     );
 }

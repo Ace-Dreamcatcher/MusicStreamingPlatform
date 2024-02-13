@@ -4,6 +4,7 @@ import { StyleSheet, TouchableWithoutFeedback, useColorScheme, Keyboard, TextInp
 import React, { useState } from 'react';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { Text, View } from '../components/Theme';
+import { useAuth } from '../AuthContext';
 
 
 export default function SignUp() {
@@ -15,50 +16,35 @@ export default function SignUp() {
     const [textPassword, setTextPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const { onSignUp } = useAuth();
 
     const handleSignUp = async () => {
-        try {
-            const response = await fetch('http://192.168.1.5:3000/auth/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: textEmail,
-                    username: textUsername,
-                    password: textPassword,
-                }),
-            });
-
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                if (errorResponse.message) {
-                    if (response.status === 403) {
-                        setEmailError(errorResponse.message)
-                    } else {
-                        let emailFlag = 1;
-                        let passwordFlag = 1;
-                        for (let i = 0; i < errorResponse.message.length; i++) {
-                            if ((errorResponse.message[i].includes('Email') || errorResponse.message[i].includes('email')) && emailFlag) {
-                                setEmailError(errorResponse.message[i]);
-                                emailFlag = 0;
-                            }
-                            if ((errorResponse.message[i].includes('Password') || errorResponse.message[i].includes('password')) && passwordFlag) {
-                                setPasswordError(errorResponse.message[i]);
-                                passwordFlag = 0;
-                            }
+        const response = await onSignUp!(textEmail, textUsername, textPassword);
+        
+        if (response.statusCode === 400 || response.statusCode === 403) {
+            const errorResponse = await response.message;
+            if (errorResponse) {
+                if (response.statusCode === 403) {
+                    setEmailError(errorResponse)
+                } else {
+                    let emailFlag = 1;
+                    let passwordFlag = 1;
+                    for (let i = 0; i < errorResponse.length; i++) {
+                        if ((errorResponse[i].includes('Email') || errorResponse[i].includes('email')) && emailFlag) {
+                            setEmailError(errorResponse[i]);
+                            emailFlag = 0;
+                        }
+                        if ((errorResponse[i].includes('Password') || errorResponse[i].includes('password')) && passwordFlag) {
+                            setPasswordError(errorResponse[i]);
+                            passwordFlag = 0;
                         }
                     }
-                } else {
-                    throw new Error('Error signing up');
                 }
             } else {
-                const token = await response.json();
-                console.log(token);
-                navigation.navigate('TabGroup');
+                throw new Error('Error signing up');
             }
-        } catch (error) {
-            console.error('Error signing up:', error);
+        } else {
+            navigation.navigate('TabGroup');
         }
     }
 
