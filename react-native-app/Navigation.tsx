@@ -1,11 +1,9 @@
-import { DrawerActions, NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { StatusBar, useColorScheme, StyleSheet, View, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StatusBar, useColorScheme } from 'react-native';
 import { useAuth } from './AuthContext';
 
 import Home from './screens/Home';
@@ -18,8 +16,8 @@ import Colors from './constants/Colors';
 import EditUser from './screens/EditUser';
 
 
-const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
@@ -66,19 +64,6 @@ function TabScreens() {
 }
 
 
-function UserButton() {
-    const navigation = useNavigation();
-    
-    return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-                <FontAwesome name='user-circle-o' size={25} color='#19bfb7' />
-            </TouchableOpacity>
-        </View>
-    )
-}
-
-
 function TabGroup() {
     const colorScheme = useColorScheme();
     const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
@@ -113,15 +98,9 @@ function TabGroup() {
                 tabBarActiveTintColor: '#19bfb7',
                 tabBarInactiveTintColor: 'gray',
             })}>
-                <Tab.Screen name='Home' component={Home} options={{
-                    headerRight: () => UserButton(),
-                }}/>
-                <Tab.Screen name='Search' component={Search} options={{
-                    headerRight: () => UserButton(),
-                }}/>
-                <Tab.Screen name='Library' component={Library} options={{
-                    headerRight: () => UserButton(),
-                }}/>
+                <Tab.Screen name='Home' component={Home}/>
+                <Tab.Screen name='Search' component={Search}/>
+                <Tab.Screen name='Library' component={Library}/>
             </Tab.Navigator>
         </>
     )
@@ -131,7 +110,7 @@ function TabGroup() {
 function DrawerGroup() {
     return (
         <Drawer.Navigator>
-            <Drawer.Screen name='EditUser' component={EditUser}/>
+            <Drawer.Screen name='StartScreens' component={StartScreens}/>
         </Drawer.Navigator>
     )
 }
@@ -142,15 +121,7 @@ export default function Navigation() {
 
     return (
         <NavigationContainer>
-            <DrawerGroup />
-            {/* { authState?.isAuthenticated ? <TabScreens /> : <StartScreens /> } */}
+            { authState?.isAuthenticated ? <TabScreens /> : <StartScreens /> }
         </NavigationContainer>
     );
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        marginRight: 27,
-    },
-})

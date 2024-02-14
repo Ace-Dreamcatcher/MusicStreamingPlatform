@@ -1,8 +1,10 @@
-import { Animated, Dimensions, StyleSheet, TextInput, TouchableOpacity, useColorScheme } from 'react-native';
+import { Animated, Dimensions, Pressable, StyleSheet, TextInput, TouchableOpacity, useColorScheme } from 'react-native';
 import { View } from '../components/Theme';
 import { Text } from 'react-native';
-import React, { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 
 export default function Search() {
@@ -12,6 +14,17 @@ export default function Search() {
     const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef<TextInput>(null);
     const widthAnimation = useRef(new Animated.Value(Dimensions.get('window').width)).current;
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                    <FontAwesome name='user-circle-o' size={25} color='#19bfb7' style={{marginRight: 27}}/>
+                </Pressable>
+            ),
+        });
+    }, []);
 
     const handleFocus = () => {
         setIsFocused(true);

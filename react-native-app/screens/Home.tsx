@@ -1,10 +1,25 @@
-import { Button, StyleSheet } from 'react-native';
+import { Button, Pressable, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Theme';
 import { useAuth } from '../AuthContext';
+import { useLayoutEffect } from 'react';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 export default function Home() {
     const { onSignOut } = useAuth();
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                    <FontAwesome name='user-circle-o' size={25} color='#19bfb7' style={{marginRight: 27}}/>
+                </Pressable>
+            ),
+        });
+    }, []);
+
     return (
         <View style={styles.container}>
             <Text> Home </Text>
