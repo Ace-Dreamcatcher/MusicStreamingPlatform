@@ -116,11 +116,14 @@ function TabGroup() {
 
 
 export default function Navigation() {
-    const { authState } = useAuth();
+    const { authState} = useAuth();
+
 
     return (
         <NavigationContainer>
-            {authState?.isAuthenticated ? <TabScreens /> : <StartScreens />}
+            {authState?.isAuthenticated ? <TabScreens /> : <StartScreens /> }
+            
+            
         </NavigationContainer>
     );
 }
