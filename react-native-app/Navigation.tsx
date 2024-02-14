@@ -1,8 +1,11 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { DrawerActions, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { Button, StatusBar, useColorScheme } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { StatusBar, useColorScheme, StyleSheet, View, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useAuth } from './AuthContext';
 
 import Home from './screens/Home';
@@ -12,10 +15,13 @@ import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
 import Starting from './screens/Starting';
 import Colors from './constants/Colors';
+import EditUser from './screens/EditUser';
 
 
-const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
+
 
 function StartScreens() {
     const colorScheme = useColorScheme();
@@ -41,6 +47,7 @@ function StartScreens() {
     )
 }
 
+
 function TabScreens() {
     const colorScheme = useColorScheme();
     const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
@@ -49,17 +56,26 @@ function TabScreens() {
     return (
         <>
             <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
-            <Stack.Navigator screenOptions={{
-                gestureEnabled: true,
-                gestureDirection: 'vertical',
-                headerTintColor: colorScheme === 'light' ? 'black' : 'white',
-                headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
-            }}>
+            <Stack.Navigator>
                 <Stack.Screen name='TabGroup' component={TabGroup} options={{
                     headerShown: false,
                 }}/>
+                <Stack.Screen name='DrawerGroup' component={DrawerGroup}/>
             </Stack.Navigator>
         </>
+    )
+}
+
+
+function UserButton() {
+    const navigation = useNavigation();
+    
+    return (
+        <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                <FontAwesome name='user-circle-o' size={30} color='#19bfb7' />
+            </TouchableOpacity>
+        </View>
     )
 }
 
@@ -69,7 +85,6 @@ function TabGroup() {
     const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
     const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
     const headerTitleColor = colorScheme === 'dark' ? 'white' : 'black';
-    const { onSignOut } = useAuth();
     
     return (
         <>
@@ -100,16 +115,25 @@ function TabGroup() {
                 tabBarInactiveTintColor: 'gray',
             })}>
                 <Tab.Screen name='Home' component={Home} options={{
-                    headerRight: () => <Button onPress={onSignOut} title='Sign Out' />,
-                }} />
+                    headerRight: () => UserButton(),
+                }}/>
                 <Tab.Screen name='Search' component={Search} options={{
-                    headerRight: () => <Button onPress={onSignOut} title='Sign Out' />,
-                }} />
+                    headerRight: () => UserButton(),
+                }}/>
                 <Tab.Screen name='Library' component={Library} options={{
-                    headerRight: () => <Button onPress={onSignOut} title='Sign Out' />,
-                }} />
+                    headerRight: () => UserButton(),
+                }}/>
             </Tab.Navigator>
         </>
+    )
+}
+
+
+function DrawerGroup() {
+    return (
+        <Drawer.Navigator>
+            <Drawer.Screen name='EditUser' component={EditUser}/>
+        </Drawer.Navigator>
     )
 }
 
@@ -123,3 +147,10 @@ export default function Navigation() {
         </NavigationContainer>
     );
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        marginRight: 26,
+    },
+})

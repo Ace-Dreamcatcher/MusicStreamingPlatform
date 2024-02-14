@@ -30,7 +30,7 @@ export default function SignIn() {
         } else {
             navigation.navigate('TabGroup');
         }
-    }
+    };
     
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
