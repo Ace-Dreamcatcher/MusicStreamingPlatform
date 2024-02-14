@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, StatusBar, useColorScheme } from 'react-native';
-import { useContext } from 'react';
+import { useAuth } from './AuthContext';
 
 import Home from './screens/Home';
 import Search from './screens/Search';
@@ -12,7 +12,6 @@ import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
 import Starting from './screens/Starting';
 import Colors from './constants/Colors';
-import { useAuth } from './AuthContext';
 
 
 const Tab = createBottomTabNavigator();
@@ -116,14 +115,11 @@ function TabGroup() {
 
 
 export default function Navigation() {
-    const { authState} = useAuth();
-
+    const { authState } = useAuth();
 
     return (
         <NavigationContainer>
-            {authState?.isAuthenticated ? <TabScreens /> : <StartScreens /> }
-            
-            
+            { authState?.isAuthenticated ? <TabScreens /> : <StartScreens /> }
         </NavigationContainer>
     );
 }

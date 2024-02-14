@@ -5,13 +5,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthProps {
     authState?: { accessToken: string | null; isAuthenticated: boolean | null };
+    loadingState?: { isLoading: boolean };
     onSignUp?: (email: string, username: string, password: string) => Promise<any>;
     onSignIn?: (email: string, password: string) => Promise<any>;
     onSignOut?: () => Promise<any>;
-    loadingState?: { isLoading: boolean };
 }
 
-export const URL = 'http://192.168.1.4:3000/auth/';
+export const URL = 'http://192.168.1.5:3000/auth/';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -36,8 +36,10 @@ export const AuthProvider = ({children}: any) => {
         const loadToken = async () => {
             setLoadingState({
                 isLoading: true,
-            })
+            });
+
             const token = await AsyncStorage.getItem('accessToken');
+
             if (token) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 setAuthState({
@@ -45,9 +47,10 @@ export const AuthProvider = ({children}: any) => {
                     isAuthenticated: true,
                 });
             }
+
             setLoadingState({
                 isLoading: false,
-            })
+            });
         };
 
         loadToken();
@@ -57,7 +60,8 @@ export const AuthProvider = ({children}: any) => {
         try {
             setLoadingState({
                 isLoading: true,
-            })
+            });
+
             const result = await axios.post(`${URL}signup`, { email, username, password });
 
             setAuthState({
@@ -71,12 +75,14 @@ export const AuthProvider = ({children}: any) => {
 
             setLoadingState({
                 isLoading: false,
-            })
+            });
+
             return result;
         } catch (error) {
             setLoadingState({
                 isLoading: false,
-            })
+            });
+
             return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode}
         }
     };
@@ -85,7 +91,8 @@ export const AuthProvider = ({children}: any) => {
         try {
             setLoadingState({
                 isLoading: true,
-            })
+            });
+
             const result = await axios.post(`${URL}signin`, { email, password });
 
             setAuthState({
@@ -99,12 +106,14 @@ export const AuthProvider = ({children}: any) => {
 
             setLoadingState({
                 isLoading: false,
-            })
+            });
+
             return result;
         } catch (error) {
             setLoadingState({
                 isLoading: false,
-            })
+            });
+
             return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode };
         }
     };
@@ -112,7 +121,8 @@ export const AuthProvider = ({children}: any) => {
     const signout = async () => {
         setLoadingState({
             isLoading: true,
-        })
+        });
+
         await AsyncStorage.removeItem('accessToken');
 
         axios.defaults.headers.common['Authorization'] = '';
@@ -121,9 +131,10 @@ export const AuthProvider = ({children}: any) => {
             accessToken: null,
             isAuthenticated: false,
         });
+
         setLoadingState({
             isLoading: false,
-        })
+        });
     };
 
     const value = {
@@ -131,7 +142,7 @@ export const AuthProvider = ({children}: any) => {
         onSignIn: signin,
         onSignOut: signout,
         authState,
-        loadingState
+        loadingState,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -15,7 +15,7 @@ export default function SignIn() {
     const [textEmail, setTextEmail] = useState('');
     const [textPassword, setTextPassword] = useState('');
     const [error, setError] = useState('');
-    const { onSignIn , loadingState} = useAuth();
+    const { onSignIn , loadingState } = useAuth();
 
     const handleSignIn = async () => {
         const response = await onSignIn!(textEmail, textPassword);
@@ -36,7 +36,7 @@ export default function SignIn() {
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.container}>
-                    <Spinner visible = {loadingState?.isLoading} />
+                    <Spinner visible={loadingState?.isLoading} />
                     <Text style={styles.text}> Email </Text>
                     <View style={styles.gap} />
                     <TextInput

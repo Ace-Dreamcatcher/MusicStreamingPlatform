@@ -17,7 +17,7 @@ export default function SignUp() {
     const [textPassword, setTextPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const { onSignUp, loadingState} = useAuth();
+    const { onSignUp, loadingState } = useAuth();
 
     const handleSignUp = async () => {
         const response = await onSignUp!(textEmail, textUsername, textPassword);
@@ -53,7 +53,7 @@ export default function SignUp() {
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.container}>
-                    <Spinner visible = {loadingState?.isLoading} />
+                    <Spinner visible={loadingState?.isLoading} />
                     <Text style={styles.text}> Email* </Text>
                     <View style={styles.gap} />
                     <TextInput
