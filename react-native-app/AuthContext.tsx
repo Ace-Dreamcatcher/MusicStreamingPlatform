@@ -8,9 +8,10 @@ interface AuthProps {
     onSignUp?: (email: string, username: string, password: string) => Promise<any>;
     onSignIn?: (email: string, password: string) => Promise<any>;
     onSignOut?: () => Promise<any>;
+    loadingState?: { isLoading: boolean };
 }
 
-export const URL = 'http://localhost:3000/auth/';
+export const URL = 'http://192.168.1.4:3000/auth/';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -22,22 +23,31 @@ export const AuthProvider = ({children}: any) => {
         accessToken: string | null;
         isAuthenticated: boolean | null;
     }>({
-        accessToken: '',
+        accessToken: null,
         isAuthenticated: false,
+    })
+    const [loadingState, setLoadingState] = useState<{
+        isLoading: boolean
+    }>({
+        isLoading: false,
     })
 
     useEffect(() => {
         const loadToken = async () => {
+            setLoadingState({
+                isLoading: true,
+            })
             const token = await AsyncStorage.getItem('accessToken');
-
             if (token) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                setAuthState({
+                    accessToken: token,
+                    isAuthenticated: true,
+                });
             }
-
-            setAuthState({
-                accessToken: token,
-                isAuthenticated: true,
-            });
+            setLoadingState({
+                isLoading: false,
+            })
         };
 
         loadToken();
@@ -45,6 +55,9 @@ export const AuthProvider = ({children}: any) => {
 
     const signup = async (email: string, username: string, password: string) => {
         try {
+            setLoadingState({
+                isLoading: true,
+            })
             const result = await axios.post(`${URL}signup`, { email, username, password });
 
             setAuthState({
@@ -56,14 +69,23 @@ export const AuthProvider = ({children}: any) => {
 
             await AsyncStorage.setItem('accessToken', result.data.accessToken);
 
+            setLoadingState({
+                isLoading: false,
+            })
             return result;
         } catch (error) {
+            setLoadingState({
+                isLoading: false,
+            })
             return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode}
         }
     };
 
     const signin = async (email: string, password: string) => {
         try {
+            setLoadingState({
+                isLoading: true,
+            })
             const result = await axios.post(`${URL}signin`, { email, password });
 
             setAuthState({
@@ -75,13 +97,22 @@ export const AuthProvider = ({children}: any) => {
 
             await AsyncStorage.setItem('accessToken', result.data.accessToken);
 
+            setLoadingState({
+                isLoading: false,
+            })
             return result;
         } catch (error) {
+            setLoadingState({
+                isLoading: false,
+            })
             return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode };
         }
     };
 
     const signout = async () => {
+        setLoadingState({
+            isLoading: true,
+        })
         await AsyncStorage.removeItem('accessToken');
 
         axios.defaults.headers.common['Authorization'] = '';
@@ -90,13 +121,17 @@ export const AuthProvider = ({children}: any) => {
             accessToken: null,
             isAuthenticated: false,
         });
+        setLoadingState({
+            isLoading: false,
+        })
     };
 
     const value = {
         onSignUp: signup,
         onSignIn: signin,
         onSignOut: signout,
-        authState
+        authState,
+        loadingState
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

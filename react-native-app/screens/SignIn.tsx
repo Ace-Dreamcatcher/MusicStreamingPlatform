@@ -5,6 +5,7 @@ import { useState } from 'react';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { Text, View } from '../components/Theme';
 import { useAuth } from '../AuthContext';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 export default function SignIn() {
@@ -14,7 +15,7 @@ export default function SignIn() {
     const [textEmail, setTextEmail] = useState('');
     const [textPassword, setTextPassword] = useState('');
     const [error, setError] = useState('');
-    const { onSignIn } = useAuth();
+    const { onSignIn , loadingState} = useAuth();
 
     const handleSignIn = async () => {
         const response = await onSignIn!(textEmail, textPassword);
@@ -35,6 +36,7 @@ export default function SignIn() {
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.container}>
+                    <Spinner visible = {loadingState?.isLoading} />
                     <Text style={styles.text}> Email </Text>
                     <View style={styles.gap} />
                     <TextInput

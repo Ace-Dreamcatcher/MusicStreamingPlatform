@@ -17,7 +17,7 @@ export default function Search() {
         setIsFocused(true);
         Animated.timing(widthAnimation, {
           toValue: Dimensions.get('window').width - 70,
-          duration: 200,
+          duration: 300,
           useNativeDriver: false,
         }).start();
     };
@@ -26,7 +26,7 @@ export default function Search() {
         setIsFocused(false);
         Animated.timing(widthAnimation, {
           toValue: Dimensions.get('window').width,
-          duration: 200,
+          duration: 300,
           useNativeDriver: false,
         }).start();
     };

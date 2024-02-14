@@ -3331,10 +3331,10 @@ expo-modules-autolinking@1.5.1:
     find-up "^5.0.0"
     fs-extra "^9.1.0"
 
-expo-modules-core@1.5.12:
-  version "1.5.12"
-  resolved "https://registry.npmjs.org/expo-modules-core/-/expo-modules-core-1.5.12.tgz"
-  integrity sha512-mY4wTDU458dhwk7IVxLNkePlYXjs9BTgk4NQHBUXf0LapXsvr+i711qPZaFNO4egf5qq6fQV+Yfd/KUguHstnQ==
+expo-modules-core@1.5.13:
+  version "1.5.13"
+  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-1.5.13.tgz#abe00502b1b622ff8ef37bc7516180595a0fc4e3"
+  integrity sha512-cKRsiHKwpDPRkBgMW3XdUWmEUDzihEPWXAyeo629BXpJ6uX6a66Zbz63SEXhlgsbLq8FB77gvYku3ceBqb+hHg==
   dependencies:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
@@ -3344,10 +3344,10 @@ expo-status-bar@~1.6.0:
   resolved "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.6.0.tgz"
   integrity sha512-e//Oi2WPdomMlMDD3skE4+1ZarKCJ/suvcB4Jo/nO427niKug5oppcPNYO+csR6y3ZglGuypS+3pp/hJ+Xp6fQ==
 
-expo@~49.0.15:
-  version "49.0.21"
-  resolved "https://registry.npmjs.org/expo/-/expo-49.0.21.tgz"
-  integrity sha512-JpHL6V0yt8/fzsmkAdPdtsah+lU6Si4ac7MDklLYvzEil7HAFEsN/pf06wQ21ax4C+BL27hI6JJoD34tzXUCJA==
+expo@^49.0.0:
+  version "49.0.22"
+  resolved "https://registry.yarnpkg.com/expo/-/expo-49.0.22.tgz#e5f1a37d10c2196790971e9e9cfdfdd14de01635"
+  integrity sha512-1hhcphaKN74gDqEmGzU4sqxnusLi/i8SsWZ04rRn7b6zdyEchyudVLN3SOzeIUgfGmn7AcXm78JAQ7+e0WqSyw==
   dependencies:
     "@babel/runtime" "^7.20.0"
     "@expo/cli" "0.10.16"
@@ -3362,7 +3362,7 @@ expo@~49.0.15:
     expo-font "~11.4.0"
     expo-keep-awake "~12.3.0"
     expo-modules-autolinking "1.5.1"
-    expo-modules-core "1.5.12"
+    expo-modules-core "1.5.13"
     fbemitter "^3.0.0"
     invariant "^2.2.4"
     md5-file "^3.2.3"
@@ -5631,6 +5631,11 @@ react-native-gesture-handler@^2.14.0:
     invariant "^2.2.4"
     lodash "^4.17.21"
     prop-types "^15.7.2"
+
+react-native-loading-spinner-overlay@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-loading-spinner-overlay/-/react-native-loading-spinner-overlay-3.0.1.tgz#092481b8cce157d3af5ef942f845ad981f96bd36"
+  integrity sha512-4GdR54HQnKg2HPSSisVizfTLuyhSh4splY9eb8mKiYF1Ihjn/5EmdNo5bN3S7uKPFRC3WLzIZIouX6G6fXfnjw==
 
 react-native-reanimated@^3.6.1:
   version "3.6.1"
