@@ -60,7 +60,6 @@ function TabScreens() {
                 <Stack.Screen name='TabGroup' component={TabGroup} options={{
                     headerShown: false,
                 }}/>
-                <Stack.Screen name='DrawerGroup' component={DrawerGroup}/>
             </Stack.Navigator>
         </>
     )
@@ -73,7 +72,7 @@ function UserButton() {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-                <FontAwesome name='user-circle-o' size={30} color='#19bfb7' />
+                <FontAwesome name='user-circle-o' size={25} color='#19bfb7' />
             </TouchableOpacity>
         </View>
     )
@@ -143,7 +142,8 @@ export default function Navigation() {
 
     return (
         <NavigationContainer>
-            { authState?.isAuthenticated ? <TabScreens /> : <StartScreens /> }
+            <DrawerGroup />
+            {/* { authState?.isAuthenticated ? <TabScreens /> : <StartScreens /> } */}
         </NavigationContainer>
     );
 }
@@ -151,6 +151,6 @@ export default function Navigation() {
 
 const styles = StyleSheet.create({
     container: {
-        marginRight: 26,
+        marginRight: 27,
     },
 })
