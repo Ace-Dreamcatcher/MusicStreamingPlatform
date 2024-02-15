@@ -62,50 +62,50 @@ export default function EditUser() {
                 <View style={styles.userButtonContainer}>
                     <TouchableOpacity style={styles.userButton}>
                         <View style={styles.directionForUserButton}>
-                            <FontAwesome name='user-circle-o' size={45} color='#19bfb7'/>
+                            <FontAwesome name='user-circle-o' size={50} color='#19bfb7'/>
                             <View style={styles.userInfo}>
                                 <Text style={styles.username}>Username</Text>
                                 <Text style={styles.changeInfo}>Change Info</Text>
                             </View>
                         </View>
-                        <FontAwesome name='angle-right' size={24} color='gray'/>
+                        <FontAwesome name='angle-right' size={28} color='gray'/>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.losslessButtonContainer}>
                     <View style={styles.losslessButton}>
                         <View style={styles.directionForLossLessButton}>
-                            <Text style={{fontSize: 17}}>Lossless Audio</Text>
+                            <Text style={{fontSize: 19}}>Lossless Audio</Text>
                             <View style={styles.losslessIcon}>
-                                <MaterialIcons name='multitrack-audio' size={18} color={colorScheme === 'light' ? 'black' : 'white'} />
+                                <MaterialIcons name='multitrack-audio' size={20} color={colorScheme === 'light' ? 'black' : 'white'} />
                             </View>
                         </View>
                         <TouchableOpacity onPress={handleToggleLossless}>
-                            {toggleLossless ? <FontAwesome name='toggle-on' size={35} color='#19bfb7' />
-                            : <FontAwesome name='toggle-off' size={35} color='#19bfb7' />}
+                            {toggleLossless ? <FontAwesome name='toggle-on' size={37} color='#19bfb7' />
+                            : <FontAwesome name='toggle-off' size={37} color='#19bfb7' />}
                         </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.losslessText}>
-                    <Text style={{fontSize: 10}}>High audio quality up to 24-bit/48kHz.</Text>
-                    <Text style={{fontSize: 10}}>Turning this on will consume significally more data.</Text>
+                    <Text style={{fontSize: 11}}>High audio quality up to 24-bit/48kHz.</Text>
+                    <Text style={{fontSize: 11}}>Turning this on will consume significally more data.</Text>
                 </View>
                 <View style={styles.dolbyAtmosButtonContainer}>
                     <View style={styles.dolbyAtmosButton}>
                         <View style={styles.directionForDolbyButton}>
-                            <Text style={{fontSize: 17}}>Dolby Atmos</Text>
+                            <Text style={{fontSize: 19}}>Dolby Atmos</Text>
                             <View style={styles.dolbyIcon}>
-                            <MaterialCommunityIcons name='dolby' size={18} color={colorScheme === 'light' ? 'black' : 'white'} />
+                            <MaterialCommunityIcons name='dolby' size={20} color={colorScheme === 'light' ? 'black' : 'white'} />
                             </View>
                         </View>
                         <TouchableOpacity onPress={handleToggleDolby}>
-                            {toggleDolby ? <FontAwesome name='toggle-on' size={35} color='#19bfb7' />
-                            : <FontAwesome name='toggle-off' size={35} color='#19bfb7' />}
+                            {toggleDolby ? <FontAwesome name='toggle-on' size={37} color='#19bfb7' />
+                            : <FontAwesome name='toggle-off' size={37} color='#19bfb7' />}
                         </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.dolbyText}>
-                    <Text style={{fontSize: 10}}>Play supported songs in Dolby Atmos and other Dolby Audio formats.</Text>
-                    <Text style={{fontSize: 10}}>Enables automatically Spatial Audio features.</Text>
+                    <Text style={{fontSize: 11}}>Play supported songs in Dolby Atmos and other Dolby Audio formats.</Text>
+                    <Text style={{fontSize: 11}}>Enables automatically Spatial Audio features.</Text>
                 </View>
             </View>
         </GestureRecognizer>
@@ -122,7 +122,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             paddingHorizontal: 10,
             paddingVertical: 5,
             marginVertical: 20,
-            height: 70,
+            height: 90,
         },
         userButton: {
             flexDirection: 'row',
@@ -146,12 +146,12 @@ const getStyles = (colorScheme: string | null | undefined) => {
         },
         username: {
             paddingBottom: 1,
-            fontSize: 17,
+            fontSize: 20,
             fontWeight: 'bold',
             backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
         },
         changeInfo: {
-            fontSize: 12,
+            fontSize: 13,
             color: 'gray',
             backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
         },
@@ -160,7 +160,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             paddingHorizontal: 10,
             paddingVertical: 5,
             marginTop: 50,
-            height: 50,
+            height: 60,
         },
         directionForLossLessButton: {
             alignItems: 'center',
@@ -189,7 +189,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             paddingHorizontal: 10,
             paddingVertical: 5,
             marginTop: 50,
-            height: 50,
+            height: 60,
         },
         directionForDolbyButton: {
             alignItems: 'center',
