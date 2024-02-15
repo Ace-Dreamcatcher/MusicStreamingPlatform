@@ -9,7 +9,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 export default function Home() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-    const { onSignOut } = useAuth();
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -24,7 +23,6 @@ export default function Home() {
     return (
         <View style={styles.container}>
             <Text> Home </Text>
-            <Button title='Sign Out' onPress={onSignOut}/>
         </View>
     )
 }
