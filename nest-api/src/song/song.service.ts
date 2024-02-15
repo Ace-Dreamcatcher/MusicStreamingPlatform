@@ -103,7 +103,11 @@ export class SongService {
 
 	async printSongs() {
 		const resultSong = await this.prisma.song.findMany({
-			select: { name: true },
+			select: {
+				name: true,
+				albums: { select: { name: true, image: true } },
+				artists: { select: { name: true, image: true } },
+			},
 		});
 		return resultSong;
 	}
