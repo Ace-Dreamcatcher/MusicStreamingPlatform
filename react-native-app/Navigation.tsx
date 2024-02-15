@@ -1,7 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar, useColorScheme } from 'react-native';
 import { useAuth } from './AuthContext';
@@ -13,10 +12,8 @@ import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
 import Starting from './screens/Starting';
 import Colors from './constants/Colors';
-import EditUser from './screens/EditUser';
 
 
-const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -103,15 +100,6 @@ function TabGroup() {
                 <Tab.Screen name='Library' component={Library}/>
             </Tab.Navigator>
         </>
-    )
-}
-
-
-function DrawerGroup() {
-    return (
-        <Drawer.Navigator>
-            <Drawer.Screen name='StartScreens' component={StartScreens}/>
-        </Drawer.Navigator>
     )
 }
 

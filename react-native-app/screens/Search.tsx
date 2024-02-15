@@ -4,7 +4,7 @@ import { Text } from 'react-native';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function Search() {
@@ -19,7 +19,7 @@ export default function Search() {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                <Pressable onPress={}>
                     <FontAwesome name='user-circle-o' size={25} color='#19bfb7' style={{marginRight: 27}}/>
                 </Pressable>
             ),
