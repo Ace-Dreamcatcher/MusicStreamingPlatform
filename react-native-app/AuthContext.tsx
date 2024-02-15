@@ -6,6 +6,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface AuthProps {
     authState?: { accessToken: string | null; isAuthenticated: boolean | null };
     loadingState?: { isLoading: boolean };
+    toggleLossLess?: { isToggleLossLess: boolean };
     onSignUp?: (email: string, username: string, password: string) => Promise<any>;
     onSignIn?: (email: string, password: string) => Promise<any>;
     onSignOut?: () => Promise<any>;
@@ -27,7 +28,7 @@ export const AuthProvider = ({children}: any) => {
         isAuthenticated: false,
     })
     const [loadingState, setLoadingState] = useState<{
-        isLoading: boolean
+        isLoading: boolean;
     }>({
         isLoading: false,
     })
