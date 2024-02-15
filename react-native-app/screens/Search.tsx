@@ -4,22 +4,23 @@ import { Text } from 'react-native';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 
 export default function Search() {
+    const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     const colorScheme = useColorScheme();
     const styles = getStyles(colorScheme);
     const [searchQuery, setSearchQuery] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef<TextInput>(null);
     const widthAnimation = useRef(new Animated.Value(Dimensions.get('window').width)).current;
-    const navigation = useNavigation();
 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <Pressable>
+                <Pressable onPress={() => navigation.navigate('Account')}>
                     <FontAwesome name='user-circle-o' size={25} color='#19bfb7' style={{marginRight: 27}}/>
                 </Pressable>
             ),

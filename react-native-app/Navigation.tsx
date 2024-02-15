@@ -12,6 +12,7 @@ import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
 import Starting from './screens/Starting';
 import Colors from './constants/Colors';
+import Account from './screens/Account';
 
 
 const Stack = createStackNavigator();
@@ -34,7 +35,7 @@ function StartScreens() {
             }}>
                 <Stack.Screen name='AudioAlcove' component={Starting} options={{
                 headerShown: false,
-                }}/>
+                }} />
                 <Stack.Screen name='Sign In' component={SignIn} options={{presentation: 'modal', headerLeft: () => null}} />
                 <Stack.Screen name='Sign Up' component={SignUp} options={{presentation: 'modal', headerLeft: () => null}} />
             </Stack.Navigator>
@@ -51,10 +52,16 @@ function TabScreens() {
     return (
         <>
             <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
-            <Stack.Navigator>
+            <Stack.Navigator screenOptions={{
+                gestureEnabled: true,
+                gestureDirection: 'vertical',
+                headerTintColor: colorScheme === 'light' ? 'black' : 'white',
+                headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
+            }}>
                 <Stack.Screen name='TabGroup' component={TabGroup} options={{
                     headerShown: false,
-                }}/>
+                }} />
+                <Stack.Screen name='Account' component={Account} options={{presentation: 'modal', headerLeft: () => null}} />
             </Stack.Navigator>
         </>
     )
@@ -63,7 +70,7 @@ function TabScreens() {
 
 function TabGroup() {
     const colorScheme = useColorScheme();
-    const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
+    const backgroundColor = colorScheme === 'dark' ? '#202123' : '#f5f5f5';
     const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
     const headerTitleColor = colorScheme === 'dark' ? 'white' : 'black';
     
@@ -95,9 +102,9 @@ function TabGroup() {
                 tabBarActiveTintColor: '#19bfb7',
                 tabBarInactiveTintColor: 'gray',
             })}>
-                <Tab.Screen name='Home' component={Home}/>
-                <Tab.Screen name='Search' component={Search}/>
-                <Tab.Screen name='Library' component={Library}/>
+                <Tab.Screen name='Home' component={Home} />
+                <Tab.Screen name='Search' component={Search} />
+                <Tab.Screen name='Library' component={Library} />
             </Tab.Navigator>
         </>
     )

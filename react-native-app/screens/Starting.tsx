@@ -1,11 +1,13 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity, useColorScheme } from 'react-native';
 import { Text, View } from '../components/Theme';
 
 
 export default function Starting() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+    const colorScheme = useColorScheme();
+    const styles = getStyles(colorScheme);
     
     return (
         <View style={styles.container}>
@@ -30,49 +32,57 @@ export default function Starting() {
     )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    buttons: {
-        flexDirection: 'row',
-    },
-    padding: {
-        paddingBottom: 250,
-        paddingTop: 50,
-    },
-    space: {
-        width: 50,
-    },
-    image: {
-        width: 375,
-        height: 230,
-        resizeMode: 'contain',
-    },
-    imagePadding: {
-        paddingRight: 5,
-    },
-    imagePosition: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    imageText: {
-        fontSize: 22,
-        fontWeight: '300',
-    },
-    button: {
-        borderWidth: 1,
-        borderColor: '#19bfb7',
-        padding: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        borderRadius: 15,
-        backgroundColor: '#19bfb7',
-    },
-    buttonText: {
-        fontSize: 16,
-        color: 'white',
-    },
-})
+const getStyles = (colorScheme: string | null | undefined) => {
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        buttons: {
+            flexDirection: 'row',
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        padding: {
+            paddingBottom: 250,
+            paddingTop: 50,
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        space: {
+            width: 50,
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        image: {
+            width: 375,
+            height: 230,
+            resizeMode: 'contain',
+        },
+        imagePadding: {
+            paddingRight: 5,
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        imagePosition: {
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        imageText: {
+            fontSize: 22,
+            fontWeight: '300',
+        },
+        button: {
+            borderWidth: 1,
+            borderColor: '#19bfb7',
+            padding: 10,
+            paddingLeft: 20,
+            paddingRight: 20,
+            borderRadius: 15,
+            backgroundColor: '#19bfb7',
+        },
+        buttonText: {
+            fontSize: 16,
+            color: 'white',
+        },
+    })
+}
