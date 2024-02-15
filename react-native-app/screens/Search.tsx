@@ -19,7 +19,7 @@ export default function Search() {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <Pressable onPress={}>
+                <Pressable>
                     <FontAwesome name='user-circle-o' size={25} color='#19bfb7' style={{marginRight: 27}}/>
                 </Pressable>
             ),
