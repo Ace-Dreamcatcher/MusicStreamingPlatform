@@ -6,10 +6,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface AuthProps {
     authState?: { accessToken: string | null; isAuthenticated: boolean | null };
     loadingState?: { isLoading: boolean };
-    toggleLossLess?: { isToggleLossLess: boolean };
     onSignUp?: (email: string, username: string, password: string) => Promise<any>;
     onSignIn?: (email: string, password: string) => Promise<any>;
     onSignOut?: () => Promise<any>;
+    onRole?: (token: string) => Promise<any>;
 }
 
 export const URL = 'http://192.168.1.5:3000/auth/';
@@ -65,13 +65,13 @@ export const AuthProvider = ({children}: any) => {
 
             const result = await axios.post(`${URL}signup`, { email, username, password });
 
+            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
+
             setAuthState({
                 accessToken: result.data.accessToken,
                 isAuthenticated: true,
             });
-
-            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
-
+            
             await AsyncStorage.setItem('accessToken', result.data.accessToken);
 
             setLoadingState({
@@ -96,12 +96,12 @@ export const AuthProvider = ({children}: any) => {
 
             const result = await axios.post(`${URL}signin`, { email, password });
 
+            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
+
             setAuthState({
                 accessToken: result.data.accessToken,
                 isAuthenticated: true,
             });
-
-            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
 
             await AsyncStorage.setItem('accessToken', result.data.accessToken);
 
@@ -138,10 +138,39 @@ export const AuthProvider = ({children}: any) => {
         });
     };
 
+    const role = async (token: string) => {
+        try {
+            setLoadingState({
+                isLoading: true,
+            });
+
+            const result = await axios.post(`${URL}role`, { token });
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
+
+            setAuthState({
+                accessToken: result.data.accessToken,
+                isAuthenticated: true,
+            });
+
+            await AsyncStorage.setItem('accessToken', result.data.accessToken);
+
+            setLoadingState({
+                isLoading: false,
+            });
+            console.log(result.data.accessToken.role)
+
+            return result;
+        } catch (error) {
+            return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode };
+        }
+    };
+
     const value = {
         onSignUp: signup,
         onSignIn: signin,
         onSignOut: signout,
+        onRole: role,
         authState,
         loadingState,
     };

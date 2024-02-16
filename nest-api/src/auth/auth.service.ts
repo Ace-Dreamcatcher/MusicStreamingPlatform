@@ -7,8 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthUpdateDto, SignInDto, SignUpDto } from './dto';
-import * as argon from 'argon2';
 import { Role } from '@prisma/client';
+import * as argon from 'argon2';
 
 @Injectable({})
 export class AuthService {
@@ -72,6 +72,39 @@ export class AuthService {
 			);
 		} catch (e) {
 			throw e;
+		}
+	}
+
+	async role(token: string) {
+		try {
+			const decodedToken = this.jwt.decode(token);
+			let changeRole: Role;
+
+			if (decodedToken.role === 'FREE') {
+				changeRole = Role.PREMIUM;
+			} else if (decodedToken.role === 'PREMIUM') {
+				changeRole = Role.FREE;
+			}
+
+			const user = await this.prisma.user.update({
+				where: {
+					id: decodedToken.id,
+				},
+				data: {
+					role: changeRole,
+				},
+			});
+
+			return this.signToken(
+				user.id,
+				user.email,
+				user.username,
+				user.hash,
+				user.createAt,
+				user.role,
+			);
+		} catch (error) {
+			throw new BadRequestException();
 		}
 	}
 

@@ -9,6 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { AuthUpdateDto, SignInDto, SignUpDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { RoleDto } from './dto/auth.role.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -36,6 +37,15 @@ export class AuthController {
 			return await this.authService.signin(dto);
 		} catch (error) {
 			throw new BadRequestException('*Incorrect email or password!');
+		}
+	}
+
+	@Post('role')
+	async role(token: string) {
+		try {
+			return await this.authService.role(token);
+		} catch (error) {
+			throw new BadRequestException('*Failed to change status role!');
 		}
 	}
 

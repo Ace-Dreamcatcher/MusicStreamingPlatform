@@ -9,6 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../AuthContext';
 
 
 export default function EditUser() {
@@ -17,17 +18,24 @@ export default function EditUser() {
     const styles = getStyles(colorScheme);
     const [toggleLossless, setToggleLossless] = useState(false);
     const [toggleDolby, setToggleDolby] = useState(false);
+    const [membership, setMembership] = useState(false);
+    const { onRole } = useAuth();
 
     useEffect(() => {
         const loadToggleState = async () => {
             try {
-                const storedToggleState = await AsyncStorage.getItem('toggleLossless');
+                const storedLossLessState = await AsyncStorage.getItem('toggleLossless');
                 const storedDolbyState = await AsyncStorage.getItem('toggleDolby');
-                if (storedToggleState !== null) {
-                    setToggleLossless(JSON.parse(storedToggleState));
+                const storedMembershipState = await AsyncStorage.getItem('membership');
+
+                if (storedLossLessState !== null) {
+                    setToggleLossless(JSON.parse(storedLossLessState));
                 }
                 if (storedDolbyState !== null) {
                     setToggleDolby(JSON.parse(storedDolbyState));
+                }
+                if (storedMembershipState !== null) {
+                    setMembership(JSON.parse(storedMembershipState));
                 }
             } catch (error) {
                 console.error('Error loading toggle state:', error);
@@ -40,9 +48,10 @@ export default function EditUser() {
         const newToggleState = !toggleLossless;
         setToggleLossless(newToggleState);
         try {
+            await AsyncStorage.removeItem('toggleLossLess');
             await AsyncStorage.setItem('toggleLossless', JSON.stringify(newToggleState));
         } catch (error) {
-            console.error('Error saving toggle state:', error);
+            console.error('Error saving lossless state:', error);
         }
     };
 
@@ -50,11 +59,21 @@ export default function EditUser() {
         const newToggleState = !toggleDolby;
         setToggleDolby(newToggleState);
         try {
+            await AsyncStorage.removeItem('toggleDolby');
             await AsyncStorage.setItem('toggleDolby', JSON.stringify(newToggleState));
         } catch (error) {
-            console.error('Error saving toggle state:', error);
+            console.error('Error saving dolby state:', error);
         }
     };
+
+    const handleMembership = async () => {
+        try {
+            const token = await AsyncStorage.getItem('accessToken');
+            const response = await onRole!(token);
+        } catch (error) {
+            
+        }
+    }
     
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
@@ -94,7 +113,7 @@ export default function EditUser() {
                         <View style={styles.directionForDolbyButton}>
                             <Text style={{fontSize: 19}}>Dolby Atmos</Text>
                             <View style={styles.dolbyIcon}>
-                            <MaterialCommunityIcons name='dolby' size={20} color={colorScheme === 'light' ? 'black' : 'white'} />
+                                <MaterialCommunityIcons name='dolby' size={20} color={colorScheme === 'light' ? 'black' : 'white'} />
                             </View>
                         </View>
                         <TouchableOpacity onPress={handleToggleDolby}>
@@ -106,6 +125,25 @@ export default function EditUser() {
                 <View style={styles.dolbyText}>
                     <Text style={{fontSize: 11}}>Play supported songs in Dolby Atmos and other Dolby Audio formats.</Text>
                     <Text style={{fontSize: 11}}>Enables automatically Spatial Audio features.</Text>
+                </View>
+                <View style={styles.membershipContainer}>
+                    <View style={styles.membership}>
+                        <View style={styles.directionForMembership}>
+                            <Text style={{fontSize: 19}}>Membership</Text>
+                            <View style={styles.membershipIcon}>
+                                <MaterialIcons name='card-membership' size={20} color={colorScheme === 'light' ? 'black' : 'white'} />
+                            </View>
+                        </View>
+                        {membership ? <Text style={{fontSize: 18}}>Premium</Text>
+                        : <Text style={{fontSize: 18}}>Free</Text>}
+                    </View>
+                </View>
+                <View style={styles.membershipText}>
+                    <Text style={{fontSize: 11}}>Just 6,99 € per month.</Text>
+                    <TouchableOpacity onPress={handleMembership}>
+                        {membership ? <Text style={{fontSize: 11, color: '#19bfb7'}}> Cancel</Text>
+                        : <Text style={{fontSize: 11, color: '#19bfb7'}}> Get it now</Text>}
+                    </TouchableOpacity>
                 </View>
             </View>
         </GestureRecognizer>
@@ -159,7 +197,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             paddingHorizontal: 10,
             paddingVertical: 5,
-            marginTop: 50,
+            marginTop: 30,
             height: 60,
         },
         directionForLossLessButton: {
@@ -188,7 +226,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             alignItems: 'center',
             paddingHorizontal: 10,
             paddingVertical: 5,
-            marginTop: 50,
+            marginTop: 15,
             height: 60,
         },
         directionForDolbyButton: {
@@ -212,6 +250,39 @@ const getStyles = (colorScheme: string | null | undefined) => {
         },
         dolbyText: {
             paddingHorizontal: 35,
+        },
+        membershipContainer: {
+            alignItems: 'center',
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginTop: 15,
+            height: 60,
+        },
+        membership: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderRadius: 10,
+            paddingHorizontal: 20,
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+            width: Dimensions.get('window').width - 30,
+            height: '100%',
+        },
+        directionForMembership: {
+            alignItems: 'center',
+            flexDirection: 'row',
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        membershipIcon: {
+            marginLeft: 3,
+            backgroundColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        membershipText: {
+            flexDirection: 'row',
+            paddingHorizontal: 35,
+        },
+        membeshipLabel: {
+
         },
         signOutButton: {
 
