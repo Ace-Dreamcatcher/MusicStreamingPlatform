@@ -19,7 +19,7 @@ export default function EditUser() {
     const [toggleLossless, setToggleLossless] = useState(false);
     const [toggleDolby, setToggleDolby] = useState(false);
     const [membership, setMembership] = useState(false);
-    const { onRole } = useAuth();
+    const { onRole, onSignOut } = useAuth();
 
     useEffect(() => {
         const loadToggleState = async () => {
@@ -149,6 +149,13 @@ export default function EditUser() {
                     <TouchableOpacity onPress={handleMembership}>
                         {membership ? <Text style={{fontSize: 11, color: '#19bfb7'}}> Cancel</Text>
                         : <Text style={{fontSize: 11, color: '#19bfb7'}}> Get it now</Text>}
+                    </TouchableOpacity>
+                </View>
+                <View style={{alignItems: 'center'}}>
+                    <TouchableOpacity onPress={onSignOut}>
+                        <View style={styles.signOutButton}>
+                            <Text style={styles.signOutButtonText}>Sign Out</Text>
+                        </View>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -287,11 +294,20 @@ const getStyles = (colorScheme: string | null | undefined) => {
             flexDirection: 'row',
             paddingHorizontal: 35,
         },
-        membeshipLabel: {
-
-        },
         signOutButton: {
-
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: Dimensions.get('window').width / 2,
+            height: 50,
+            marginTop: 70,
+            borderWidth: 1,
+            borderColor: '#19bfb7',
+            borderRadius: 15,
+            backgroundColor: '#19bfb7',
+        },
+        signOutButtonText: {
+            fontSize: 18,
+            color: 'white',
         },
     })
 }
