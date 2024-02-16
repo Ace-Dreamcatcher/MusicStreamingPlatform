@@ -3,7 +3,6 @@ import {
 	Body,
 	Controller,
 	ForbiddenException,
-	Get,
 	Post,
 	ValidationPipe,
 } from '@nestjs/common';
