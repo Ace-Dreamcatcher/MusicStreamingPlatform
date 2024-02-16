@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthUpdateDto, SignInDto, SignUpDto } from './dto';
 import { Role } from '@prisma/client';
+import { RoleDto } from './dto/auth.role.dto';
 import * as argon from 'argon2';
 
 @Injectable({})
@@ -75,9 +76,9 @@ export class AuthService {
 		}
 	}
 
-	async role(token: string) {
+	async role(dto: RoleDto) {
 		try {
-			const decodedToken = this.jwt.decode(token);
+			const decodedToken = this.jwt.decode(dto.token);
 			let changeRole: Role;
 
 			if (decodedToken.role === 'FREE') {
@@ -165,7 +166,7 @@ export class AuthService {
 		};
 
 		const token = await this.jwt.signAsync(payload, {
-			expiresIn: '2m',
+			expiresIn: '60m',
 			secret: this.config.get<string>('JWT_SECRET'),
 		});
 

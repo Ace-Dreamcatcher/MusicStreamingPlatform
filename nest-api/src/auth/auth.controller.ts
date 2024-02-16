@@ -3,6 +3,7 @@ import {
 	Body,
 	Controller,
 	ForbiddenException,
+	Get,
 	Post,
 	ValidationPipe,
 } from '@nestjs/common';
@@ -41,9 +42,9 @@ export class AuthController {
 	}
 
 	@Post('role')
-	async role(token: string) {
+	async role(@Body(new ValidationPipe()) dto: RoleDto) {
 		try {
-			return await this.authService.role(token);
+			return await this.authService.role(dto);
 		} catch (error) {
 			throw new BadRequestException('*Failed to change status role!');
 		}

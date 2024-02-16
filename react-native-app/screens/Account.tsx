@@ -68,10 +68,16 @@ export default function EditUser() {
 
     const handleMembership = async () => {
         try {
-            const token = await AsyncStorage.getItem('accessToken');
+            const newMembership = !membership
+            const token = (await AsyncStorage.getItem('accessToken')) || '';
             const response = await onRole!(token);
+            if (response.data !== undefined) {
+                setMembership(newMembership);
+                await AsyncStorage.removeItem('membership');
+                await AsyncStorage.setItem('membership', JSON.stringify(newMembership));
+            }
         } catch (error) {
-            
+            throw new Error('Error changing role');
         }
     }
     

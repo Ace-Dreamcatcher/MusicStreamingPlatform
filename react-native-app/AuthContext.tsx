@@ -158,7 +158,6 @@ export const AuthProvider = ({children}: any) => {
             setLoadingState({
                 isLoading: false,
             });
-            console.log(result.data.accessToken.role)
 
             return result;
         } catch (error) {
