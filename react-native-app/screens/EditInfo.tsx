@@ -6,6 +6,7 @@ import { useLayoutEffect, useState } from "react";
 import { useAuth } from "../AuthContext";
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EditInfo() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -18,6 +19,7 @@ export default function EditInfo() {
     const [textPassword, setTextPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const { onUpdate, loadingState } = useAuth();
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -39,6 +41,33 @@ export default function EditInfo() {
             ),
         });
     }, [navigation]);
+
+    const handleUpdate = async () => {
+        const token = (await AsyncStorage.getItem('accessToken')) || '';
+        const response = await onUpdate!(token);
+        
+        if (response.statusCode === 400) {
+            const errorResponse = await response.message;
+            if (errorResponse) {
+                let emailFlag = 1;
+                let passwordFlag = 1;
+                for (let i = 0; i < errorResponse.length; i++) {
+                    if ((errorResponse[i].includes('Email') || errorResponse[i].includes('email')) && emailFlag) {
+                        setEmailError(errorResponse[i]);
+                        emailFlag = 0;
+                    }
+                    if ((errorResponse[i].includes('Password') || errorResponse[i].includes('password')) && passwordFlag) {
+                        setPasswordError(errorResponse[i]);
+                        passwordFlag = 0;
+                    }
+                }
+            } else {
+                throw new Error('Error signing up');
+            }
+        } else {
+            navigation.goBack();
+        }
+    };
     
     return (
         <>
