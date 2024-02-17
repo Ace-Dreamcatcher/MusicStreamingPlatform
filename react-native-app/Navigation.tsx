@@ -11,7 +11,6 @@ import Library from "./screens/Library";
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import Starting from "./screens/Starting";
-import Colors from "./constants/Colors";
 import Account from "./screens/Account";
 import EditInfo from "./screens/EditInfo";
 
