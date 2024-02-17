@@ -22,28 +22,6 @@ export default function Account() {
   const [username, setUsername] = useState("Username");
   const { onRole, onSignOut, loadingState, getRole, getUsername } = useAuth();
 
-  useEffect(() => {
-    const loadToggleState = async () => {
-      try {
-        const storedLossLessState =
-          await AsyncStorage.getItem("toggleLossless");
-        const storedDolbyState = await AsyncStorage.getItem("toggleDolby");
-
-        if (storedLossLessState !== null) {
-          setToggleLossless(JSON.parse(storedLossLessState));
-        }
-        if (storedDolbyState !== null) {
-          setToggleDolby(JSON.parse(storedDolbyState));
-        }
-      } catch (error) {
-        console.error("Error loading toggle state:", error);
-      }
-    };
-    loadToggleState();
-    showUsername();
-    showRole();
-  }, []);
-
   const handleToggleLossless = async () => {
     const newToggleState = !toggleLossless;
     setToggleLossless(newToggleState);
@@ -102,6 +80,28 @@ export default function Account() {
       console.error("Error retrieving role:", error);
     }
   };
+
+  useEffect(() => {
+    const loadToggleState = async () => {
+      try {
+        const storedLossLessState =
+          await AsyncStorage.getItem("toggleLossless");
+        const storedDolbyState = await AsyncStorage.getItem("toggleDolby");
+
+        if (storedLossLessState !== null) {
+          setToggleLossless(JSON.parse(storedLossLessState));
+        }
+        if (storedDolbyState !== null) {
+          setToggleDolby(JSON.parse(storedDolbyState));
+        }
+      } catch (error) {
+        console.error("Error loading toggle state:", error);
+      }
+    };
+    loadToggleState();
+    showUsername();
+    showRole();
+  }, [showUsername, showRole, toggleDolby, toggleLossless]);
 
   return (
     <GestureRecognizer

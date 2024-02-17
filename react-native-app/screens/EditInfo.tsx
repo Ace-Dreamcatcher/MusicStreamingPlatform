@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   useColorScheme,
   StatusBar,
+  Alert,
 } from "react-native";
 import { View, Text } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
@@ -15,6 +16,7 @@ import { useAuth } from "../AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Spinner from "react-native-loading-spinner-overlay";
 
 export default function EditInfo() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -26,12 +28,49 @@ export default function EditInfo() {
   const [textEmail, setTextEmail] = useState("");
   const [textUsername, setTextUsername] = useState("");
   const [textPassword, setTextPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const { onUpdate, loadingState } = useAuth();
-  console.log(textUsername);
-  console.log(textEmail);
-  console.log(textPassword);
+
+  const handleUpdate = async () => {
+    if (textEmail === "" && textUsername === "" && textPassword === "") {
+      Alert.alert("Failed to update info:", "Nothing to update!", [
+        { text: "OK", onPress: () => navigation.navigate("Edit Info") },
+      ]);
+    } else {
+      const token = (await AsyncStorage.getItem("accessToken")) || "";
+
+      const response = await onUpdate!(
+        textEmail,
+        textUsername,
+        textPassword,
+        token,
+      );
+
+      if (response.statusCode === 400) {
+        const errorResponse = await response.message;
+        if (errorResponse) {
+          if (
+            errorResponse[0].includes("Email") ||
+            errorResponse[0].includes("email")
+          ) {
+            Alert.alert("Failed to update info:", errorResponse[0], [
+              { text: "OK", onPress: () => navigation.navigate("Edit Info") },
+            ]);
+          } else if (
+            errorResponse[0].includes("Password") ||
+            errorResponse[0].includes("password")
+          ) {
+            Alert.alert("Failed to update info:", errorResponse[0], [
+              { text: "OK", onPress: () => navigation.navigate("Edit Info") },
+            ]);
+          }
+        } else {
+          throw new Error("Error updating user");
+        }
+      } else {
+        navigation.goBack();
+      }
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -64,54 +103,20 @@ export default function EditInfo() {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
-
-  const handleUpdate = async () => {
-    const token = (await AsyncStorage.getItem("accessToken")) || "";
-    const response = await onUpdate!(
-      textEmail,
-      textUsername,
-      textPassword,
-      token,
-    );
-    console.log(response.data);
-
-    if (response.statusCode === 400) {
-      const errorResponse = await response.message;
-      if (errorResponse) {
-        if (
-          errorResponse[0].includes("Email") ||
-          errorResponse[0].includes("email")
-        ) {
-          setEmailError(errorResponse[0]);
-          console.log(errorResponse[0]);
-        } else if (
-          errorResponse[0].includes("Password") ||
-          errorResponse[0].includes("password")
-        ) {
-          setPasswordError(errorResponse[0]);
-          console.log(errorResponse[0]);
-        }
-      } else {
-        throw new Error("Error updating user");
-      }
-    } else {
-      navigation.goBack();
-    }
-  };
+  }, [navigation, handleUpdate]);
 
   return (
     <>
       <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
+          <Spinner visible={loadingState?.isLoading} />
           <Text style={styles.text}> Email </Text>
           <View style={styles.gap} />
           <TextInput
             style={styles.textInput}
             onChangeText={(newText) => {
               setTextEmail(newText);
-              setEmailError("");
             }}
             defaultValue={textEmail}
           />
@@ -131,12 +136,17 @@ export default function EditInfo() {
             secureTextEntry={true}
             onChangeText={(newText) => {
               setTextPassword(newText);
-              setPasswordError("");
             }}
             defaultValue={textPassword}
           />
           <View style={styles.space} />
           <View style={styles.buttonContainer}></View>
+          <View style={{ marginTop: -20 }}>
+            <Text style={{ fontSize: 11 }}>
+              *Input the information you wish to update and leave blank any
+              field you don't want to alter.
+            </Text>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </>

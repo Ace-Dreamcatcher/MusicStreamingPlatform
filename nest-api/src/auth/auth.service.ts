@@ -1,8 +1,4 @@
-import {
-	BadRequestException,
-	ForbiddenException,
-	Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -118,15 +114,15 @@ export class AuthService {
 				},
 			});
 
-			const newEmail = dto.newEmail !== undefined ? dto.newEmail : user.email;
+			const newEmail = dto.newEmail !== '' ? dto.newEmail : user.email;
 
 			const newUsername =
-				dto.newUsername !== undefined ? dto.newUsername : user.username;
+				dto.newUsername !== '' ? dto.newUsername : user.username;
 
-			const newPassword =
-				dto.newPassword !== undefined ? dto.newPassword : user.hash;
+			const newPassword = dto.newPassword !== '' ? dto.newPassword : user.hash;
 
-			const hash = await argon.hash(newPassword);
+			const hash =
+				newPassword !== user.hash ? await argon.hash(newPassword) : user.hash;
 
 			await this.prisma.user.update({
 				where: {

@@ -13,9 +13,9 @@ interface AuthProps {
   onSignIn?: (email: string, password: string) => Promise<any>;
   onSignOut?: () => Promise<any>;
   onUpdate?: (
-    email: string,
-    username: string,
-    password: string,
+    newEmail: string,
+    newUsername: string,
+    newPassword: string,
     token: string,
   ) => Promise<any>;
   onRole?: (token: string) => Promise<any>;
@@ -165,9 +165,9 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const update = async (
-    email: string,
-    username: string,
-    password: string,
+    newEmail: string,
+    newUsername: string,
+    newPassword: string,
     token: string,
   ) => {
     try {
@@ -176,9 +176,9 @@ export const AuthProvider = ({ children }: any) => {
       });
 
       const result = await axios.post(`${URL_AUTH}update`, {
-        email,
-        username,
-        password,
+        newEmail,
+        newUsername,
+        newPassword,
         token,
       });
 
@@ -198,6 +198,10 @@ export const AuthProvider = ({ children }: any) => {
 
       return result;
     } catch (error) {
+      setLoadingState({
+        isLoading: false,
+      });
+
       return {
         error: true,
         message: (error as any).response.data.message,
