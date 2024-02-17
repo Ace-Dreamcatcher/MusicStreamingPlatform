@@ -7,7 +7,6 @@ import axios from 'axios';
 import React, { useLayoutEffect, useState } from 'react';
 import { Audio } from 'expo-av';
 
-
 interface Song {
     name: string;
     albums: {
@@ -37,84 +36,76 @@ export default function Home() {
 
     const fetchSongs = async () => {
         try {
-            const response = await axios.get<Song[]>('http://192.168.1.5:3000/song/songs');
+            const response = await axios.get<Song[]>('http://192.168.1.4:3000/song/songs');
             setSongs(response.data);
         } catch (error) {
             console.error('Error fetching songs:', error);
         }
     };
 
-    // const songsData: { [key: string]: any } = {
-    //     'Hey_Gringo.mp3': require('/Users/stavrostsoukalas/Documents/GitHub/MusicStreamingPlatform/react-native-app/assets/Songs/Hey_Gringo.mp3'),
-    //     // Add other songs as needed
-    // };
-    
-    
     const playSong = async (songPath: string) => {
-        // try {
-        //     const selectedSong = songsData[songPath]; // Use the dynamic songPath parameter
-        //     const { sound } = await Audio.Sound.createAsync(selectedSong);
-        //     setSound(sound);
-        //     await sound.playAsync(); 
-        // } catch (error) {
-        //     console.error('Error playing song:', error);
-        // }
-        console.log(songPath);
+        // Implement your playSong function
     };
     
     return (
-            <View style={styles.container}>
-                <Text style={styles.heading}>Songs</Text>
-                <Button onPress={fetchSongs} title='Fetch Songs' />
-                <ScrollView>
-                    {songs.map((song, index) => (
-                        <View key={index} style={styles.songContainer}>
-                            <TouchableOpacity onPress={() => playSong('../assets/Songs/Hey_Gringo.mp3')}>
-                                <Image source={require('../assets/Songs/SurfaceSounds.jpeg')} style={styles.albumImage} />
-                            </TouchableOpacity>
-                            <View style={styles.songInfo}>
-                                <Text style={styles.songTitle}>{song.name}</Text>
-                                <Text>Album: {song.albums.name}</Text>
-                                <Text>Artist: {song.artists.name}</Text>
-                            </View>
+        <View style={styles.container}>
+            <Text style={styles.heading}>Songs</Text>
+            <Button onPress={fetchSongs} title='Fetch Songs' />
+            <ScrollView>
+                {songs.map((song, index) => (
+                    <View key={index} style={styles.songContainer}>
+                        <TouchableOpacity onPress={() => playSong('../assets/Songs/Hey_Gringo.mp3')}>
+                        <Image
+                                source={{ uri: song.albums.image }}
+                                style={styles.albumImage}
+                                onError={() => console.log('Error loading image')} 
+                                defaultSource={require('../assets/Songs/Toothless.png')} 
+                                resizeMode="cover"
+                            />
+
+                        </TouchableOpacity>
+                        <View style={styles.songInfo}>
+                            <Text style={styles.songTitle}>{song.name}</Text>
+                            <Text style={styles.artist}> {song.artists.name}</Text>
                         </View>
-                    ))}
-                </ScrollView>
-            </View>
-        );
+                    </View>
+                ))}
+            </ScrollView>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 5,
+    },
+    heading: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginLeft: 5,
+    },
+    songContainer: {
+        flexDirection: 'row',
+        marginBottom: 10,
+    },
+    songTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    albumImage: {
+        width: 70,
+        height: 70,
+        resizeMode: 'cover',
+        marginRight: 30,
+    },
+    songInfo: {
+        flex: 1,  
+        marginTop: 7,
+    },
+    artist: {
+        fontSize: 14,
+        fontWeight: '200',
     }
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            padding: 20,
-        },
-        heading: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginBottom: 10,
-        },
-        songContainer: {
-            flexDirection: 'row',
-            marginBottom: 10,
-            padding: 10,
-
-        },
-        songTitle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-            marginBottom: 5,
-        },
-        albumImage: {
-            width: 100,
-            height: 100,
-            resizeMode: 'cover',
-            marginRight: 10,
-        },
-        songInfo: {
-            flex: 1,
-            
-        },
-    });
-    
-    
+});
