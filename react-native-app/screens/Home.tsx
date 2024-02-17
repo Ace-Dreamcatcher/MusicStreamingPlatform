@@ -23,6 +23,7 @@ export default function Home() {
     const navigation = useNavigation<StackNavigationProp<any>>();
     const [songs, setSongs] = useState<Song[]>([]);
     const [sound, setSound] = useState<Audio.Sound | null>(null);
+    const [likedSongs, setLikedSongs] = useState<string[]>([]);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -46,6 +47,16 @@ export default function Home() {
     const playSong = async (songPath: string) => {
         // Implement your playSong function
     };
+
+    const toggleLike = (index: number) => {
+        const newLikedSongs = [...likedSongs];
+        if (newLikedSongs.includes(songs[index].name)) {
+            newLikedSongs.splice(newLikedSongs.indexOf(songs[index].name), 1);
+        } else {
+            newLikedSongs.push(songs[index].name);
+        }
+        setLikedSongs(newLikedSongs);
+    };
     
     return (
         <View style={styles.container}>
@@ -53,22 +64,33 @@ export default function Home() {
             <Button onPress={fetchSongs} title='Fetch Songs' />
             <ScrollView>
                 {songs.map((song, index) => (
-                    <View key={index} style={styles.songContainer}>
-                        <TouchableOpacity onPress={() => playSong('../assets/Songs/Hey_Gringo.mp3')}>
-                        <Image
+                    <TouchableOpacity 
+                        key={index} 
+                        style={styles.songContainer} 
+                        onPress={() => playSong('../assets/Songs/Hey_Gringo.mp3')}
+                    >
+                        <View style={styles.songInnerContainer}>
+                            <Image
                                 source={{ uri: song.albums.image }}
                                 style={styles.albumImage}
                                 onError={() => console.log('Error loading image')} 
                                 defaultSource={require('../assets/Songs/Toothless.png')} 
                                 resizeMode="cover"
                             />
-
-                        </TouchableOpacity>
-                        <View style={styles.songInfo}>
-                            <Text style={styles.songTitle}>{song.name}</Text>
-                            <Text style={styles.artist}> {song.artists.name}</Text>
+                            <View style={styles.songInfo}>
+                                <Text style={styles.songTitle}>{song.name}</Text>
+                                <Text style={styles.artist}>{song.artists.name}</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => toggleLike(index)}>
+                                <FontAwesome
+                                    name={likedSongs.includes(song.name) ? 'heart' : 'heart-o'}
+                                    size={20}
+                                    color={likedSongs.includes(song.name) ? 'red' : '#19bfb7'}
+                                />
+                            </TouchableOpacity>
                         </View>
-                    </View>
+                        
+                    </TouchableOpacity>
                 ))}
             </ScrollView>
         </View>
@@ -86,8 +108,16 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     songContainer: {
+        marginBottom: 0,
+        marginEnd: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#d4d4d4',
+    },
+    songInnerContainer: {
         flexDirection: 'row',
-        marginBottom: 10,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+
     },
     songTitle: {
         fontSize: 16,
@@ -95,10 +125,10 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     albumImage: {
-        width: 70,
-        height: 70,
+        width: 65,
+        height: 65,
         resizeMode: 'cover',
-        marginRight: 30,
+        marginRight: 10,
     },
     songInfo: {
         flex: 1,  
@@ -107,5 +137,6 @@ const styles = StyleSheet.create({
     artist: {
         fontSize: 14,
         fontWeight: '200',
-    }
+    },
+    
 });
