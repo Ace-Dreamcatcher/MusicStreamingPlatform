@@ -32,7 +32,10 @@ function StartScreens() {
                 gestureEnabled: true,
                 gestureDirection: 'vertical',
                 headerTintColor: colorScheme === 'light' ? 'black' : 'white',
-                headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
+                headerStyle: {
+                    backgroundColor: backgroundColor,
+                    shadowColor: 'transparent',
+                },
             }}>
                 <Stack.Screen name='AudioAlcove' component={Starting} options={{
                 headerShown: false,
@@ -57,13 +60,18 @@ function TabScreens() {
                 gestureEnabled: true,
                 gestureDirection: 'vertical',
                 headerTintColor: colorScheme === 'light' ? 'black' : 'white',
-                headerStyle: {backgroundColor: Colors[colorScheme ?? 'light'].tint},
+                headerStyle: {
+                    backgroundColor: backgroundColor,
+                    shadowColor: 'transparent',
+                },
             }}>
                 <Stack.Screen name='TabGroup' component={TabGroup} options={{
                     headerShown: false,
                 }} />
                 <Stack.Screen name='Account' component={Account} options={{presentation: 'modal', headerLeft: () => null}} />
                 <Stack.Screen name='Edit Info' component={EditInfo} options={{
+                    gestureEnabled: true,
+                    gestureDirection: 'horizontal',
                     headerShown: true,
                 }} />
             </Stack.Navigator>
@@ -122,5 +130,5 @@ export default function Navigation() {
         <NavigationContainer>
             { authState?.isAuthenticated ? <TabScreens /> : <StartScreens /> }
         </NavigationContainer>
-    );
+    )
 }

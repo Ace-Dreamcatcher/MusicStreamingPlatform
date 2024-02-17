@@ -1,13 +1,16 @@
-import { StyleSheet, Keyboard, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, Pressable } from "react-native";
+import { StyleSheet, Keyboard, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, Pressable, StatusBar } from "react-native";
 import { View, Text } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useLayoutEffect, useState } from "react";
 import { useAuth } from "../AuthContext";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function EditInfo() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     const colorScheme = useColorScheme();
+    const backgroundColor = colorScheme === 'dark' ? 'black' : 'white';
+    const statusBarStyle = colorScheme === 'dark' ? 'light-content' : 'dark-content';
     const styles = getStyles(colorScheme);
     const [textEmail, setTextEmail] = useState('');
     const [textUsername, setTextUsername] = useState('');
@@ -19,7 +22,10 @@ export default function EditInfo() {
         navigation.setOptions({
             headerLeft: () => (
                 <Pressable onPress={() => navigation.goBack()}>
-                    <Text>{'<'} Go Back</Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <Ionicons name='arrow-back' size={20} color='#19bfb7' />
+                        <Text style={{fontSize: 18, color: '#19bfb7'}}> Back</Text>
+                    </View>
                 </Pressable>
             ),
             headerRight: () => (
@@ -31,7 +37,9 @@ export default function EditInfo() {
     }, [navigation]);
     
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <>
+            <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.container}>
                     <Text style={styles.text}> Email </Text>
                     <View style={styles.gap} />
@@ -75,6 +83,7 @@ export default function EditInfo() {
                     </View>
                 </View>
             </TouchableWithoutFeedback>
+        </>
     )
 }
 
