@@ -139,13 +139,19 @@ export class AuthService {
 				},
 			});
 
+			const updatedUser = await this.prisma.user.findUnique({
+				where: {
+					id: decodedToken.id,
+				},
+			});
+
 			return this.signToken(
-				user.id,
-				user.email,
-				user.username,
-				user.hash,
-				user.createAt,
-				user.role,
+				updatedUser.id,
+				updatedUser.email,
+				updatedUser.username,
+				updatedUser.hash,
+				updatedUser.createAt,
+				updatedUser.role,
 			);
 		} catch (error) {
 			throw new BadRequestException();
