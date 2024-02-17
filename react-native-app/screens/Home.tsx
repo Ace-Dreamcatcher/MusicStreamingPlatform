@@ -39,7 +39,7 @@ export default function Home() {
 
     const fetchSongs = async () => {
         try {
-            const response = await axios.get<Song[]>('http://192.168.1.5:3000/song/songs');
+            const response = await axios.get<Song[]>('http://192.168.1.4:3000/song/songs');
             setSongs(response.data);
         } catch (error) {
             console.error('Error fetching songs:', error);
@@ -86,7 +86,7 @@ export default function Home() {
                             <TouchableOpacity onPress={() => toggleLike(index)}>
                                 <FontAwesome
                                     name={likedSongs.includes(song.name) ? 'heart' : 'heart-o'}
-                                    size={20}
+                                    size={28}
                                     color={likedSongs.includes(song.name) ? '#19bfb7' : '#19bfb7'}
                                 />
                             </TouchableOpacity>
@@ -120,6 +120,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
+            paddingBottom: 5,
 
         },
         songTitle: {
