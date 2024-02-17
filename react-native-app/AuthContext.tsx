@@ -176,7 +176,7 @@ export const AuthProvider = ({children}: any) => {
         } catch (error) {
             return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode };
         }
-    }
+    };
 
     const username = async () => {
         try {
