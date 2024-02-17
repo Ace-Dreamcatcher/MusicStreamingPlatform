@@ -1,4 +1,4 @@
-import { StyleSheet, Keyboard, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, Pressable, StatusBar } from "react-native";
+import { StyleSheet, Keyboard, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, Pressable, StatusBar, Alert } from "react-native";
 import { View, Text } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -32,7 +32,7 @@ export default function EditInfo() {
                 </TouchableOpacity>
             ),
             headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity onPress={handleUpdate}>
                     <View style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5}}>
                         <Text style={{fontSize: 20, color: '#19bfb7'}}>Done </Text>
                         <MaterialIcons name='done' size={24} color='#19bfb7' />
@@ -44,25 +44,21 @@ export default function EditInfo() {
 
     const handleUpdate = async () => {
         const token = (await AsyncStorage.getItem('accessToken')) || '';
-        const response = await onUpdate!(token);
+        const response = await onUpdate!(textEmail, textUsername, textPassword, token);
+        console.log(response.data)
         
         if (response.statusCode === 400) {
             const errorResponse = await response.message;
             if (errorResponse) {
-                let emailFlag = 1;
-                let passwordFlag = 1;
-                for (let i = 0; i < errorResponse.length; i++) {
-                    if ((errorResponse[i].includes('Email') || errorResponse[i].includes('email')) && emailFlag) {
-                        setEmailError(errorResponse[i]);
-                        emailFlag = 0;
-                    }
-                    if ((errorResponse[i].includes('Password') || errorResponse[i].includes('password')) && passwordFlag) {
-                        setPasswordError(errorResponse[i]);
-                        passwordFlag = 0;
-                    }
+                if (errorResponse[0].includes('Email') || errorResponse[0].includes('email')) {
+                    setEmailError(errorResponse[0]);
+                    console.log(errorResponse[0])
+                } else if (errorResponse[0].includes('Password') || errorResponse[0].includes('password')) {
+                    setPasswordError(errorResponse[0]);
+                    console.log(errorResponse[0])
                 }
             } else {
-                throw new Error('Error signing up');
+                throw new Error('Error updating user');
             }
         } else {
             navigation.goBack();

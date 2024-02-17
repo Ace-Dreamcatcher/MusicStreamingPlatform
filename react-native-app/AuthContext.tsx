@@ -9,7 +9,7 @@ interface AuthProps {
     onSignUp?: (email: string, username: string, password: string) => Promise<any>;
     onSignIn?: (email: string, password: string) => Promise<any>;
     onSignOut?: () => Promise<any>;
-    onUpdate?: (token: string) => Promise<any>;
+    onUpdate?: (email: string, username: string, password: string, token: string) => Promise<any>;
     onRole?: (token: string) => Promise<any>;
     getRole?: () => Promise<any>;
     getUsername?: () => Promise<any>;
@@ -142,13 +142,13 @@ export const AuthProvider = ({children}: any) => {
         });
     };
 
-    const update = async (token: string) => {
+    const update = async (email: string, username: string, password: string, token: string) => {
         try {
             setLoadingState({
                 isLoading: true,
             });
 
-            const result = await axios.post(`${URL_AUTH}update`, { token });
+            const result = await axios.post(`${URL_AUTH}update`, { email, username, password, token });
 
             axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
 
