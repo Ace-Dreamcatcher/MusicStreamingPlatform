@@ -10,11 +10,12 @@ interface AuthProps {
     onSignIn?: (email: string, password: string) => Promise<any>;
     onSignOut?: () => Promise<any>;
     onRole?: (token: string) => Promise<any>;
-    getRole?: (token: string) => Promise<any>;
-    getUsername?: (token: string) => Promise<any>;
+    getRole?: () => Promise<any>;
+    getUsername?: () => Promise<any>;
 }
 
-export const URL = 'http://192.168.1.5:3000/auth/';
+export const URL_AUTH = 'http://192.168.1.5:3000/auth/';
+export const URL_USER = 'http://192.168.1.5:3000/user/me/';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -65,7 +66,7 @@ export const AuthProvider = ({children}: any) => {
                 isLoading: true,
             });
 
-            const result = await axios.post(`${URL}signup`, { email, username, password });
+            const result = await axios.post(`${URL_AUTH}signup`, { email, username, password });
 
             axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
 
@@ -96,7 +97,7 @@ export const AuthProvider = ({children}: any) => {
                 isLoading: true,
             });
 
-            const result = await axios.post(`${URL}signin`, { email, password });
+            const result = await axios.post(`${URL_AUTH}signin`, { email, password });
 
             axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
 
@@ -146,7 +147,7 @@ export const AuthProvider = ({children}: any) => {
                 isLoading: true,
             });
 
-            const result = await axios.post(`${URL}role`, { token });
+            const result = await axios.post(`${URL_AUTH}role`, { token });
 
             axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
 
@@ -167,13 +168,9 @@ export const AuthProvider = ({children}: any) => {
         }
     };
 
-    const role = async (token: string) => {
+    const role = async () => {
         try {
-            const result = await axios.get(`${URL}role`, {
-                params: {
-                    token: token,
-                },
-            });
+            const result = await axios.get(`${URL_USER}`);
 
             return result;
         } catch (error) {
@@ -181,13 +178,9 @@ export const AuthProvider = ({children}: any) => {
         }
     }
 
-    const username = async (token: string) => {
+    const username = async () => {
         try {
-            const result = await axios.get(`${URL}username`, {
-                params: {
-                    token: token,
-                },
-            });
+            const result = await axios.get(`${URL_USER}`);
 
             return result;
         } catch (error) {

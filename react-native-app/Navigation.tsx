@@ -13,6 +13,7 @@ import SignUp from './screens/SignUp';
 import Starting from './screens/Starting';
 import Colors from './constants/Colors';
 import Account from './screens/Account';
+import EditInfo from './screens/EditInfo';
 
 
 const Stack = createStackNavigator();
@@ -62,6 +63,9 @@ function TabScreens() {
                     headerShown: false,
                 }} />
                 <Stack.Screen name='Account' component={Account} options={{presentation: 'modal', headerLeft: () => null}} />
+                <Stack.Screen name='Edit Info' component={EditInfo} options={{
+                    headerShown: true,
+                }} />
             </Stack.Navigator>
         </>
     )

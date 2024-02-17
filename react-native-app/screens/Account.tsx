@@ -13,7 +13,7 @@ import { useAuth } from '../AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
-export default function EditUser() {
+export default function Account() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     const colorScheme = useColorScheme();
     const styles = getStyles(colorScheme);
@@ -37,15 +37,6 @@ export default function EditUser() {
                 }
             } catch (error) {
                 console.error('Error loading toggle state:', error);
-            }
-        };
-        const showUsername = async () => {
-            try {
-                const token = (await AsyncStorage.getItem('accessToken')) || '';
-                const response = await getUsername!(token);
-                setUsername(response.data);
-            } catch (error) {
-                console.error('Error retrieving username:', error);
             }
         };
         loadToggleState();
@@ -87,13 +78,25 @@ export default function EditUser() {
         }
     }
 
-    const showRole = async () => {
+    const showUsername = async () => {
         try {
-            const token = (await AsyncStorage.getItem('accessToken')) || '';
-            const response = await getRole!(token);
-            setMembership(response.data);
+            const response = await getUsername!();
+            if (response.data.username !== undefined) {
+                setUsername(response.data.username);
+            }
         } catch (error) {
             console.error('Error retrieving username:', error);
+        }
+    };
+
+    const showRole = async () => {
+        try {
+            const response = await getRole!();
+            if (response.data.role !== undefined) {
+                setMembership(response.data.role);
+            }
+        } catch (error) {
+            console.error('Error retrieving role:', error);
         }
     };
     
@@ -102,12 +105,12 @@ export default function EditUser() {
             <View style={styles.container}>
                 <Spinner visible={loadingState?.isLoading} />
                 <View style={styles.userButtonContainer}>
-                    <TouchableOpacity style={styles.userButton}>
+                    <TouchableOpacity style={styles.userButton} onPress={() => navigation.navigate('Edit Info')}>
                         <View style={styles.directionForUserButton}>
                             <FontAwesome name='user-circle-o' size={50} color='#19bfb7'/>
                             <View style={styles.userInfo}>
                                 <Text style={styles.username}>{username}</Text>
-                                <Text style={styles.changeInfo}>Change Info</Text>
+                                <Text style={styles.changeInfo}>Edit Info</Text>
                             </View>
                         </View>
                         <FontAwesome name='angle-right' size={28} color='gray'/>

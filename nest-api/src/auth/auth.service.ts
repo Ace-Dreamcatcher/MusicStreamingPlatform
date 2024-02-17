@@ -109,38 +109,6 @@ export class AuthService {
 		}
 	}
 
-	async getRole(token: string) {
-		try {
-			const decodedToken = await this.jwt.decode(token);
-
-			const user = await this.prisma.user.findUnique({
-				where: {
-					id: decodedToken.id,
-				},
-			});
-
-			return user.role;
-		} catch (error) {
-			throw new BadRequestException();
-		}
-	}
-
-	async getUsername(token: string) {
-		try {
-			const decodedToken = await this.jwt.decode(token);
-
-			const user = await this.prisma.user.findUnique({
-				where: {
-					id: decodedToken.id,
-				},
-			});
-
-			return user.username;
-		} catch (error) {
-			throw new BadRequestException();
-		}
-	}
-
 	async update(dto: AuthUpdateDto) {
 		const decodedToken = await this.jwt.decode(dto.token);
 
