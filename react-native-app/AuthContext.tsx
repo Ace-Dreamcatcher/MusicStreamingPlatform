@@ -9,13 +9,14 @@ interface AuthProps {
     onSignUp?: (email: string, username: string, password: string) => Promise<any>;
     onSignIn?: (email: string, password: string) => Promise<any>;
     onSignOut?: () => Promise<any>;
+    onUpdate?: (token: string) => Promise<any>;
     onRole?: (token: string) => Promise<any>;
     getRole?: () => Promise<any>;
     getUsername?: () => Promise<any>;
 }
 
-export const URL_AUTH = 'http://192.168.1.4:3000/auth/';
-export const URL_USER = 'http://192.168.1.4:3000/user/me/';
+export const URL_AUTH = 'http://192.168.1.5:3000/auth/';
+export const URL_USER = 'http://192.168.1.5:3000/user/me/';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -141,6 +142,33 @@ export const AuthProvider = ({children}: any) => {
         });
     };
 
+    const update = async (token: string) => {
+        try {
+            setLoadingState({
+                isLoading: true,
+            });
+
+            const result = await axios.post(`${URL_AUTH}update`, { token });
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.accessToken}`;
+
+            setAuthState({
+                accessToken: result.data.accessToken,
+                isAuthenticated: true,
+            });
+
+            await AsyncStorage.setItem('accessToken', result.data.accessToken);
+
+            setLoadingState({
+                isLoading: false,
+            });
+
+            return result;
+        } catch (error) {
+            return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode };
+        }
+    }
+
     const Role = async (token: string) => {
         try {
             setLoadingState({
@@ -192,6 +220,7 @@ export const AuthProvider = ({children}: any) => {
         onSignUp: signup,
         onSignIn: signin,
         onSignOut: signout,
+        onUpdate: update,
         onRole: Role,
         getRole: role,
         getUsername: username,

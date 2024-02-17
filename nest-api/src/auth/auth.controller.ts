@@ -7,9 +7,8 @@ import {
 	ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthUpdateDto, SignInDto, SignUpDto } from './dto';
+import { UpdateDto, SignInDto, SignUpDto, TokenDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { TokenDto } from './dto/auth.token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -50,7 +49,11 @@ export class AuthController {
 	}
 
 	@Post('update')
-	update(@Body() dto: AuthUpdateDto) {
-		return this.authService.update(dto);
+	async update(@Body(new ValidationPipe()) dto: UpdateDto, dtoToken: TokenDto) {
+		try {
+			return await this.authService.update(dto, dtoToken);
+		} catch (error) {
+			throw new BadRequestException('*Failed to update informaton!');
+		}
 	}
 }

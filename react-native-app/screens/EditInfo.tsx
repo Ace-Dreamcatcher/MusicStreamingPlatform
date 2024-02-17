@@ -5,6 +5,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useLayoutEffect, useState } from "react";
 import { useAuth } from "../AuthContext";
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function EditInfo() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -21,17 +22,20 @@ export default function EditInfo() {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: () => (
-                <Pressable onPress={() => navigation.goBack()}>
-                    <View style={{flexDirection: 'row'}}>
-                        <Ionicons name='arrow-back' size={20} color='#19bfb7' />
-                        <Text style={{fontSize: 18, color: '#19bfb7'}}> Back</Text>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5}}>
+                        <Ionicons name='arrow-back' size={24} color='#19bfb7' />
+                        <Text style={{fontSize: 20, color: '#19bfb7'}}> Back</Text>
                     </View>
-                </Pressable>
+                </TouchableOpacity>
             ),
             headerRight: () => (
-                <Pressable onPress={() => navigation.goBack()}>
-                    <Text>Done</Text>
-                </Pressable>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5}}>
+                        <Text style={{fontSize: 20, color: '#19bfb7'}}>Done </Text>
+                        <MaterialIcons name='done' size={24} color='#19bfb7' />
+                    </View>
+                </TouchableOpacity>
             ),
         });
     }, [navigation]);
@@ -45,8 +49,6 @@ export default function EditInfo() {
                     <View style={styles.gap} />
                     <TextInput
                         style={styles.textInput}
-                        placeholder='example@gmail.com'
-                        placeholderTextColor='gray'
                         onChangeText={newText => {
                             setTextEmail(newText);
                             setEmailError('');
@@ -58,8 +60,6 @@ export default function EditInfo() {
                     <View style={styles.gap} />
                     <TextInput
                         style={styles.textInput}
-                        placeholder='user'
-                        placeholderTextColor='gray'
                         onChangeText={newText => setTextUsername(newText)}
                         defaultValue={textUsername}
                     />
@@ -77,9 +77,6 @@ export default function EditInfo() {
                     />
                     <View style={styles.space} />
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity>
-                            <Text style={styles.buttonText}>Sign Up</Text>
-                        </TouchableOpacity>
                     </View>
                 </View>
             </TouchableWithoutFeedback>

@@ -6,9 +6,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthUpdateDto, SignInDto, SignUpDto } from './dto';
+import { UpdateDto, SignInDto, SignUpDto, TokenDto } from './dto';
 import { Role } from '@prisma/client';
-import { TokenDto } from './dto/auth.token.dto';
 import * as argon from 'argon2';
 
 @Injectable({})
@@ -78,7 +77,7 @@ export class AuthService {
 
 	async role(dto: TokenDto) {
 		try {
-			const decodedToken = this.jwt.decode(dto.token);
+			const decodedToken = await this.jwt.decode(dto.token);
 			let changeRole: Role;
 
 			if (decodedToken.role === 'FREE') {
@@ -109,43 +108,48 @@ export class AuthService {
 		}
 	}
 
-	async update(dto: AuthUpdateDto) {
-		const decodedToken = await this.jwt.decode(dto.token);
+	async update(dto: UpdateDto, dtoToken: TokenDto) {
+		try {
+			const decodedToken = await this.jwt.decode(dtoToken.token);
 
-		const user = await this.prisma.user.findUnique({
-			where: {
-				email: decodedToken.email,
-			},
-		});
+			const user = await this.prisma.user.findUnique({
+				where: {
+					id: decodedToken.id,
+				},
+			});
 
-		if (!user) {
-			throw new ForbiddenException('Invalid user!');
+			const newEmail = dto.newEmail !== undefined ? dto.newEmail : user.email;
+
+			const newUsername =
+				dto.newUsername !== undefined ? dto.newUsername : user.username;
+
+			const newPassword =
+				dto.newPassword !== undefined ? dto.newPassword : user.hash;
+
+			const hash = await argon.hash(newPassword);
+
+			await this.prisma.user.update({
+				where: {
+					id: decodedToken.id,
+				},
+				data: {
+					email: newEmail,
+					username: newUsername,
+					hash,
+				},
+			});
+
+			return this.signToken(
+				user.id,
+				user.email,
+				user.username,
+				user.hash,
+				user.createAt,
+				user.role,
+			);
+		} catch (error) {
+			throw new BadRequestException();
 		}
-
-		const newEmail = dto.newEmail !== undefined ? dto.newEmail : user.email;
-
-		const newUsername =
-			dto.newUsername !== undefined ? dto.newUsername : user.username;
-
-		const newPassword =
-			dto.newPassword !== undefined ? dto.newPassword : user.hash;
-
-		const hash = await argon.hash(newPassword);
-
-		await this.prisma.user.update({
-			where: {
-				email: decodedToken.email,
-			},
-			data: {
-				email: newEmail,
-				username: newUsername,
-				hash,
-			},
-		});
-
-		return {
-			message: 'User updated successfully!',
-		};
 	}
 
 	async signToken(
