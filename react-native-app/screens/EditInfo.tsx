@@ -5,9 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   useColorScheme,
-  Pressable,
   StatusBar,
-  Alert,
 } from "react-native";
 import { View, Text } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
