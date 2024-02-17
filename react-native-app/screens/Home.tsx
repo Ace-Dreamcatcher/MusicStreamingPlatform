@@ -5,8 +5,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import axios from 'axios';
 import React, { useLayoutEffect, useState } from 'react';
-import { LinearGradient } from 'expo-linear-gradient'
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Audio } from 'expo-av';
 
 
@@ -64,29 +62,25 @@ export default function Home() {
         console.log(songPath);
     };
     
-    
-
-        return (
-            <LinearGradient colors={["#f5f5f5", "#401641"]} style={{ flex: 1 }}>
-                <SafeAreaView>
-                    <Text style={styles.heading}>Songs</Text>
-                    <Button onPress={fetchSongs} title='Fetch Songs' />
-                    <ScrollView>
-                        {songs.map((song, index) => (
-                            <View key={index} style={styles.songContainer}>
-                                <TouchableOpacity onPress={() => playSong('../assets/Songs/Hey_Gringo.mp3')}>
-                                    <Image source={require('../assets/Songs/SurfaceSounds.jpeg')} style={styles.albumImage} />
-                                </TouchableOpacity>
-                                <View style={styles.songInfo}>
-                                    <Text style={styles.songTitle}>{song.name}</Text>
-                                    <Text>Album: {song.albums.name}</Text>
-                                    <Text>Artist: {song.artists.name}</Text>
-                                </View>
+    return (
+            <View style={styles.container}>
+                <Text style={styles.heading}>Songs</Text>
+                <Button onPress={fetchSongs} title='Fetch Songs' />
+                <ScrollView>
+                    {songs.map((song, index) => (
+                        <View key={index} style={styles.songContainer}>
+                            <TouchableOpacity onPress={() => playSong('../assets/Songs/Hey_Gringo.mp3')}>
+                                <Image source={require('../assets/Songs/SurfaceSounds.jpeg')} style={styles.albumImage} />
+                            </TouchableOpacity>
+                            <View style={styles.songInfo}>
+                                <Text style={styles.songTitle}>{song.name}</Text>
+                                <Text>Album: {song.albums.name}</Text>
+                                <Text>Artist: {song.artists.name}</Text>
                             </View>
-                        ))}
-                    </ScrollView>
-                </SafeAreaView>
-            </LinearGradient>
+                        </View>
+                    ))}
+                </ScrollView>
+            </View>
         );
     }
 

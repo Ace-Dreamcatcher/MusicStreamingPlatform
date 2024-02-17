@@ -10,6 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../AuthContext';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 export default function EditUser() {
@@ -18,15 +19,15 @@ export default function EditUser() {
     const styles = getStyles(colorScheme);
     const [toggleLossless, setToggleLossless] = useState(false);
     const [toggleDolby, setToggleDolby] = useState(false);
-    const [membership, setMembership] = useState(false);
-    const { onRole, onSignOut } = useAuth();
+    const [membership, setMembership] = useState('FREE');
+    const [username, setUsername] = useState('Username');
+    const { onRole, onSignOut, loadingState, getRole, getUsername } = useAuth();
 
     useEffect(() => {
         const loadToggleState = async () => {
             try {
                 const storedLossLessState = await AsyncStorage.getItem('toggleLossless');
                 const storedDolbyState = await AsyncStorage.getItem('toggleDolby');
-                const storedMembershipState = await AsyncStorage.getItem('membership');
 
                 if (storedLossLessState !== null) {
                     setToggleLossless(JSON.parse(storedLossLessState));
@@ -34,14 +35,22 @@ export default function EditUser() {
                 if (storedDolbyState !== null) {
                     setToggleDolby(JSON.parse(storedDolbyState));
                 }
-                if (storedMembershipState !== null) {
-                    setMembership(JSON.parse(storedMembershipState));
-                }
             } catch (error) {
                 console.error('Error loading toggle state:', error);
             }
         };
+        const showUsername = async () => {
+            try {
+                const token = (await AsyncStorage.getItem('accessToken')) || '';
+                const response = await getUsername!(token);
+                setUsername(response.data);
+            } catch (error) {
+                console.error('Error retrieving username:', error);
+            }
+        };
         loadToggleState();
+        showUsername();
+        showRole();
     }, []);
 
     const handleToggleLossless = async () => {
@@ -68,28 +77,36 @@ export default function EditUser() {
 
     const handleMembership = async () => {
         try {
-            const newMembership = !membership
             const token = (await AsyncStorage.getItem('accessToken')) || '';
             const response = await onRole!(token);
             if (response.data !== undefined) {
-                setMembership(newMembership);
-                await AsyncStorage.removeItem('membership');
-                await AsyncStorage.setItem('membership', JSON.stringify(newMembership));
+                showRole();
             }
         } catch (error) {
             throw new Error('Error changing role');
         }
     }
+
+    const showRole = async () => {
+        try {
+            const token = (await AsyncStorage.getItem('accessToken')) || '';
+            const response = await getRole!(token);
+            setMembership(response.data);
+        } catch (error) {
+            console.error('Error retrieving username:', error);
+        }
+    };
     
     return (
         <GestureRecognizer style={{flex: 1}} onSwipeDown={() => navigation.goBack()}>
             <View style={styles.container}>
+                <Spinner visible={loadingState?.isLoading} />
                 <View style={styles.userButtonContainer}>
                     <TouchableOpacity style={styles.userButton}>
                         <View style={styles.directionForUserButton}>
                             <FontAwesome name='user-circle-o' size={50} color='#19bfb7'/>
                             <View style={styles.userInfo}>
-                                <Text style={styles.username}>Username</Text>
+                                <Text style={styles.username}>{username}</Text>
                                 <Text style={styles.changeInfo}>Change Info</Text>
                             </View>
                         </View>
@@ -140,18 +157,18 @@ export default function EditUser() {
                                 <MaterialIcons name='card-membership' size={20} color={colorScheme === 'light' ? 'black' : 'white'} />
                             </View>
                         </View>
-                        {membership ? <Text style={{fontSize: 18}}>Premium</Text>
+                        {membership === 'PREMIUM' ? <Text style={{fontSize: 18}}>Premium</Text>
                         : <Text style={{fontSize: 18}}>Free</Text>}
                     </View>
                 </View>
                 <View style={styles.membershipText}>
                     <Text style={{fontSize: 11}}>Just 6,99 € per month.</Text>
                     <TouchableOpacity onPress={handleMembership}>
-                        {membership ? <Text style={{fontSize: 11, color: '#19bfb7'}}> Cancel</Text>
+                        {membership === 'PREMIUM' ? <Text style={{fontSize: 11, color: '#19bfb7'}}> Cancel</Text>
                         : <Text style={{fontSize: 11, color: '#19bfb7'}}> Get it now</Text>}
                     </TouchableOpacity>
                 </View>
-                <View style={{alignItems: 'center'}}>
+                <View style={styles.signOutButtonContainer}>
                     <TouchableOpacity onPress={onSignOut}>
                         <View style={styles.signOutButton}>
                             <Text style={styles.signOutButtonText}>Sign Out</Text>
@@ -294,12 +311,15 @@ const getStyles = (colorScheme: string | null | undefined) => {
             flexDirection: 'row',
             paddingHorizontal: 35,
         },
+        signOutButtonContainer: {
+            alignItems: 'center',
+            marginTop: 70,
+        },
         signOutButton: {
             alignItems: 'center',
             justifyContent: 'center',
             width: Dimensions.get('window').width / 2,
             height: 50,
-            marginTop: 70,
             borderWidth: 1,
             borderColor: '#19bfb7',
             borderRadius: 15,

@@ -10,6 +10,8 @@ interface AuthProps {
     onSignIn?: (email: string, password: string) => Promise<any>;
     onSignOut?: () => Promise<any>;
     onRole?: (token: string) => Promise<any>;
+    getRole?: (token: string) => Promise<any>;
+    getUsername?: (token: string) => Promise<any>;
 }
 
 export const URL = 'http://192.168.1.5:3000/auth/';
@@ -138,7 +140,7 @@ export const AuthProvider = ({children}: any) => {
         });
     };
 
-    const role = async (token: string) => {
+    const Role = async (token: string) => {
         try {
             setLoadingState({
                 isLoading: true,
@@ -165,11 +167,41 @@ export const AuthProvider = ({children}: any) => {
         }
     };
 
+    const role = async (token: string) => {
+        try {
+            const result = await axios.get(`${URL}role`, {
+                params: {
+                    token: token,
+                },
+            });
+
+            return result;
+        } catch (error) {
+            return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode };
+        }
+    }
+
+    const username = async (token: string) => {
+        try {
+            const result = await axios.get(`${URL}username`, {
+                params: {
+                    token: token,
+                },
+            });
+
+            return result;
+        } catch (error) {
+            return { error: true, message: (error as any).response.data.message, statusCode: (error as any).response.data.statusCode };
+        }
+    };
+
     const value = {
         onSignUp: signup,
         onSignIn: signin,
         onSignOut: signout,
-        onRole: role,
+        onRole: Role,
+        getRole: role,
+        getUsername: username,
         authState,
         loadingState,
     };

@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthUpdateDto, SignInDto, SignUpDto } from './dto';
 import { Role } from '@prisma/client';
-import { RoleDto } from './dto/auth.role.dto';
+import { TokenDto } from './dto/auth.token.dto';
 import * as argon from 'argon2';
 
 @Injectable({})
@@ -76,7 +76,7 @@ export class AuthService {
 		}
 	}
 
-	async role(dto: RoleDto) {
+	async role(dto: TokenDto) {
 		try {
 			const decodedToken = this.jwt.decode(dto.token);
 			let changeRole: Role;
@@ -109,8 +109,40 @@ export class AuthService {
 		}
 	}
 
+	async getRole(token: string) {
+		try {
+			const decodedToken = await this.jwt.decode(token);
+
+			const user = await this.prisma.user.findUnique({
+				where: {
+					id: decodedToken.id,
+				},
+			});
+
+			return user.role;
+		} catch (error) {
+			throw new BadRequestException();
+		}
+	}
+
+	async getUsername(token: string) {
+		try {
+			const decodedToken = await this.jwt.decode(token);
+
+			const user = await this.prisma.user.findUnique({
+				where: {
+					id: decodedToken.id,
+				},
+			});
+
+			return user.username;
+		} catch (error) {
+			throw new BadRequestException();
+		}
+	}
+
 	async update(dto: AuthUpdateDto) {
-		const decodedToken = this.jwt.decode(dto.token);
+		const decodedToken = await this.jwt.decode(dto.token);
 
 		const user = await this.prisma.user.findUnique({
 			where: {

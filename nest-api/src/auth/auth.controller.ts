@@ -3,13 +3,15 @@ import {
 	Body,
 	Controller,
 	ForbiddenException,
+	Get,
 	Post,
+	Query,
 	ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthUpdateDto, SignInDto, SignUpDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { RoleDto } from './dto/auth.role.dto';
+import { TokenDto } from './dto/auth.token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -41,11 +43,29 @@ export class AuthController {
 	}
 
 	@Post('role')
-	async role(@Body(new ValidationPipe()) dto: RoleDto) {
+	async role(@Body(new ValidationPipe()) dto: TokenDto) {
 		try {
 			return await this.authService.role(dto);
 		} catch (error) {
 			throw new BadRequestException('*Failed to change status role!');
+		}
+	}
+
+	@Get('role')
+	async getRole(@Query('token') token: string) {
+		try {
+			return await this.authService.getRole(token);
+		} catch (error) {
+			throw new BadRequestException('*Failed to retrieve role!');
+		}
+	}
+
+	@Get('username')
+	async getUsername(@Query('token') token: string) {
+		try {
+			return await this.authService.getUsername(token);
+		} catch (error) {
+			throw new BadRequestException('*Failed to retrieve username!');
 		}
 	}
 
