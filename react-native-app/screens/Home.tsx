@@ -1,4 +1,4 @@
-import { TouchableOpacity, Button, Pressable, ScrollView, StyleSheet, Image } from 'react-native';
+import { TouchableOpacity, Button, Pressable, ScrollView, StyleSheet, Image, useColorScheme } from 'react-native';
 import { Text, View } from '../components/Theme';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -21,6 +21,8 @@ interface Song {
 
 export default function Home() {
     const navigation = useNavigation<StackNavigationProp<any>>();
+    const colorScheme = useColorScheme();
+    const styles = getStyles(colorScheme);
     const [songs, setSongs] = useState<Song[]>([]);
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [likedSongs, setLikedSongs] = useState<string[]>([]);
@@ -85,7 +87,7 @@ export default function Home() {
                                 <FontAwesome
                                     name={likedSongs.includes(song.name) ? 'heart' : 'heart-o'}
                                     size={20}
-                                    color={likedSongs.includes(song.name) ? 'red' : '#19bfb7'}
+                                    color={likedSongs.includes(song.name) ? '#19bfb7' : '#19bfb7'}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -97,46 +99,47 @@ export default function Home() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 5,
-    },
-    heading: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        marginLeft: 5,
-    },
-    songContainer: {
-        marginBottom: 0,
-        marginEnd: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#d4d4d4',
-    },
-    songInnerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+const getStyles = (colorScheme: string | null | undefined) => {
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+            padding: 5,
+        },
+        heading: {
+            fontSize: 25,
+            fontWeight: 'bold',
+            marginLeft: 5,
+        },
+        songContainer: {
+            marginBottom: 5,
+            marginEnd: 10,
+            borderBottomWidth: 1,
+            borderBottomColor: colorScheme === 'light' ? '#f5f5f5' : '#202123',
+        },
+        songInnerContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
 
-    },
-    songTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 5,
-    },
-    albumImage: {
-        width: 65,
-        height: 65,
-        resizeMode: 'cover',
-        marginRight: 10,
-    },
-    songInfo: {
-        flex: 1,  
-        marginTop: 7,
-    },
-    artist: {
-        fontSize: 14,
-        fontWeight: '200',
-    },
-    
-});
+        },
+        songTitle: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            marginBottom: 5,
+        },
+        albumImage: {
+            width: 65,
+            height: 65,
+            resizeMode: 'cover',
+            marginRight: 10,
+        },
+        songInfo: {
+            flex: 1,  
+            marginTop: 7,
+        },
+        artist: {
+            fontSize: 14,
+            fontWeight: '200',
+        },
+    })
+}
