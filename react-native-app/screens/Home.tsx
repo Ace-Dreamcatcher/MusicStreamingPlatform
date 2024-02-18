@@ -49,21 +49,19 @@ export default function Home() {
     });
   }, [navigation]);
 
-  
-
   useEffect(() => {
     const fetchSongs = async () => {
-        try {
-            const response = await axios.get<Song[]>(
-              "http://192.168.1.163:3000/song/songs",
-            );
-            setSongs(response.data);
-          } catch (error) {
-            console.error("Error fetching songs:", error);
-          }
-      }; 
-      fetchSongs();
-  },[setSongs]);
+      try {
+        const response = await axios.get<Song[]>(
+          "http://192.168.1.163:3000/song/songs",
+        );
+        setSongs(response.data);
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+      }
+    };
+    fetchSongs();
+  }, [setSongs]);
 
   const playSong = async (songPath: string) => {
     if (sound) {
@@ -72,16 +70,17 @@ export default function Home() {
     }
     try {
       const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: 'https://soundcloud.com/user-492864690/driftveil-city-pokemon-black?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing' },
-        { shouldPlay: true }
+        {
+          uri: "https://soundcloud.com/user-492864690/driftveil-city-pokemon-black?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+        },
+        { shouldPlay: true },
       );
       setSound(newSound);
     } catch (error) {
       console.error("Error playing song:", error);
     }
   };
-  
-  
+
   const toggleLike = (index: number) => {
     const newLikedSongs = [...likedSongs];
     if (newLikedSongs.includes(songs[index].name)) {
@@ -95,7 +94,6 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Songs</Text>
-      
       <ScrollView>
         {songs.map((song, index) => (
           <TouchableOpacity
