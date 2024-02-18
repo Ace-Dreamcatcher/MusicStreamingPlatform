@@ -49,11 +49,11 @@ export class AuthController {
 	}
 
 	@Post('update')
-	async update(@Body(new ValidationPipe()) dto: UpdateDto, dtoToken: TokenDto) {
+	async update(@Body(new ValidationPipe()) dto: UpdateDto) {
 		try {
-			return await this.authService.update(dto, dtoToken);
+			return await this.authService.update(dto);
 		} catch (error) {
-			throw new BadRequestException('*Failed to update informaton!');
+			throw new BadRequestException(error.response.message);
 		}
 	}
 }

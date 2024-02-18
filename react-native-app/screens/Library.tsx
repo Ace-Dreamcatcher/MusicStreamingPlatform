@@ -1,33 +1,37 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from "react-native";
 import { Text, View } from "../components/Theme";
-import { ParamListBase, useNavigation } from '@react-navigation/native';
-import { useLayoutEffect } from 'react';
-import { FontAwesome } from '@expo/vector-icons';
-import { StackNavigationProp } from '@react-navigation/stack';
-
+import { ParamListBase, useNavigation } from "@react-navigation/native";
+import { useLayoutEffect } from "react";
+import { FontAwesome } from "@expo/vector-icons";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export default function Library() {
-    const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerRight: () => (
-                <Pressable onPress={() => navigation.navigate('Account')}>
-                    <FontAwesome name='user-circle-o' size={25} color='#19bfb7' style={{marginRight: 27}}/>
-                </Pressable>
-            ),
-        });
-    }, []);
-    
-    return (
-        <View style={styles.container}>
-            <Text>Library</Text>
-        </View>
-    )
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={() => navigation.navigate("Account")}>
+          <FontAwesome
+            name="user-circle-o"
+            size={25}
+            color="#19bfb7"
+            style={{ marginRight: 27 }}
+          />
+        </Pressable>
+      ),
+    });
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Library</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-})
+  container: {
+    flex: 1,
+  },
+});
