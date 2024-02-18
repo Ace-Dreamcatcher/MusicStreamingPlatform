@@ -15,8 +15,8 @@ interface AuthProps {
     getUsername?: () => Promise<any>;
 }
 
-export const URL_AUTH = 'http://192.168.1.5:3000/auth/';
-export const URL_USER = 'http://192.168.1.5:3000/user/me/';
+export const URL_AUTH = 'http://192.168.1.4:3000/auth/';
+export const URL_USER = 'http://192.168.1.4:3000/user/me/';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {

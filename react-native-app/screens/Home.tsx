@@ -4,8 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import axios from 'axios';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Audio } from 'expo-av';
+
+
+
+
 
 interface Song {
     name: string;
@@ -46,9 +50,14 @@ export default function Home() {
         }
     };
 
-    const playSong = async (songPath: string) => {
-        // Implement your playSong function
+    useEffect(() => {
+        fetchSongs();
+    }, []); 
+
+    const playSong = async () => {
+        
     };
+    
 
     const toggleLike = (index: number) => {
         const newLikedSongs = [...likedSongs];
@@ -63,20 +72,21 @@ export default function Home() {
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Songs</Text>
-            <Button onPress={fetchSongs} title='Fetch Songs' />
+            
             <ScrollView>
                 {songs.map((song, index) => (
                     <TouchableOpacity 
                         key={index} 
                         style={styles.songContainer} 
-                        onPress={() => playSong('../assets/Songs/Hey_Gringo.mp3')}
-                    >
+                        onPress={() => playSong()}
+                        >
                         <View style={styles.songInnerContainer}>
+                        
                             <Image
-                                source={{ uri: song.albums.image }}
+                                source={{uri: song.albums.image} }
                                 style={styles.albumImage}
-                                onError={() => console.log('Error loading image')} 
-                                defaultSource={require('../assets/Songs/Toothless.png')} 
+                                // onError={() => console.log('Error loading image')} 
+                                defaultSource={require('../assets/Songs/SurfaceSounds.jpeg')} 
                                 resizeMode="cover"
                             />
                             <View style={styles.songInfo}>
@@ -86,8 +96,9 @@ export default function Home() {
                             <TouchableOpacity onPress={() => toggleLike(index)}>
                                 <FontAwesome
                                     name={likedSongs.includes(song.name) ? 'heart' : 'heart-o'}
-                                    size={28}
-                                    color={likedSongs.includes(song.name) ? '#19bfb7' : '#19bfb7'}
+                                    size={26}
+                                    padding={10}
+                                    color={likedSongs.includes(song.name) ? '#19bfb7' : 'grey'}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -108,7 +119,8 @@ const getStyles = (colorScheme: string | null | undefined) => {
         heading: {
             fontSize: 25,
             fontWeight: 'bold',
-            marginLeft: 5,
+            paddingBottom: 12,
+            paddingTop: 9,
         },
         songContainer: {
             marginBottom: 5,
@@ -126,21 +138,22 @@ const getStyles = (colorScheme: string | null | undefined) => {
         songTitle: {
             fontSize: 16,
             fontWeight: 'bold',
-            marginBottom: 5,
+            marginBottom: 2,
         },
         albumImage: {
-            width: 65,
-            height: 65,
+            width: 63,
+            height: 63,
             resizeMode: 'cover',
             marginRight: 10,
         },
         songInfo: {
             flex: 1,  
-            marginTop: 7,
         },
         artist: {
             fontSize: 14,
-            fontWeight: '200',
+            fontWeight: '500',
+            color: 'grey',
+
         },
     })
 }
