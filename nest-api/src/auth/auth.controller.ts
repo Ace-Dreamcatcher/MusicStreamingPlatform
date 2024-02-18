@@ -56,4 +56,13 @@ export class AuthController {
 			throw new BadRequestException(error.response.message);
 		}
 	}
+
+	@Post('delete')
+	async delete(@Body(new ValidationPipe()) dto: TokenDto) {
+		try {
+			return await this.authService.delete(dto);
+		} catch (error) {
+			throw new BadRequestException('*Failed to delete user!');
+		}
+	}
 }

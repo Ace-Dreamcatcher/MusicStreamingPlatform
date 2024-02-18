@@ -154,6 +154,22 @@ export class AuthService {
 		}
 	}
 
+	async delete(dto: TokenDto) {
+		try {
+			const decodedToken = await this.jwt.decode(dto.token);
+
+			const user = await this.prisma.user.delete({
+				where: {
+					id: decodedToken.id,
+				},
+			});
+
+			return { message: 'Your account has been deleted successfully!' };
+		} catch (error) {
+			throw new BadRequestException();
+		}
+	}
+
 	async signToken(
 		id: string,
 		email: string,
@@ -172,7 +188,7 @@ export class AuthService {
 		};
 
 		const token = await this.jwt.signAsync(payload, {
-			expiresIn: '60m',
+			expiresIn: '120m',
 			secret: this.config.get<string>('JWT_SECRET'),
 		});
 

@@ -28,7 +28,7 @@ export default function EditInfo() {
   const [textEmail, setTextEmail] = useState("");
   const [textUsername, setTextUsername] = useState("");
   const [textPassword, setTextPassword] = useState("");
-  const { onUpdate, loadingState } = useAuth();
+  const { onUpdate, onDelete, loadingState } = useAuth();
 
   const handleUpdate = async () => {
     if (textEmail === "" && textUsername === "" && textPassword === "") {
@@ -69,6 +69,19 @@ export default function EditInfo() {
       } else {
         navigation.goBack();
       }
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const token = (await AsyncStorage.getItem("accessToken")) || "";
+      const response = await onDelete!(token);
+
+      if (response.data != undefined) {
+        Alert.alert("Status:", response.data.message, [{ text: "OK" }]);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
     }
   };
 
@@ -144,8 +157,33 @@ export default function EditInfo() {
           <View style={{ marginTop: -20 }}>
             <Text style={{ fontSize: 11 }}>
               *Input the information you wish to update and leave blank any
-              field you don't want to alter.
+              field or fields you don't want to alter.
             </Text>
+            <View style={{ alignItems: "center", flexDirection: "row" }}>
+              <Text style={{ fontSize: 11 }}>
+                *If you wish to delete your account press
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    "You are about to delete your account:",
+                    "Are you sure?",
+                    [
+                      {
+                        text: "Yes",
+                        onPress: () => handleDelete(),
+                      },
+                      {
+                        text: "No",
+                        onPress: () => navigation.navigate("Edit Info"),
+                      },
+                    ],
+                  );
+                }}
+              >
+                <Text style={{ fontSize: 12, color: "#19bfb7" }}> here</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </TouchableWithoutFeedback>

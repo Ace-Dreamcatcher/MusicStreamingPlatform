@@ -19,6 +19,7 @@ interface AuthProps {
     newPassword: string,
     token: string,
   ) => Promise<any>;
+  onDelete?: (token: string) => Promise<any>;
   onRole?: (token: string) => Promise<any>;
   getUser?: (token: string) => Promise<any>;
 }
@@ -190,7 +191,7 @@ export const AuthProvider = ({ children }: any) => {
     });
   };
 
-  const update = async (
+  const updateUser = async (
     newEmail: string,
     newUsername: string,
     newPassword: string,
@@ -234,9 +235,45 @@ export const AuthProvider = ({ children }: any) => {
         isLoading: false,
       });
 
+      return {
+        error: true,
+        message: (error as any).response.data.message,
+        statusCode: (error as any).response.data.statusCode,
+      };
+    }
+  };
+
+  const deleteUser = async (token: string) => {
+    try {
+      setLoadingState({
+        isLoading: true,
+      });
+
+      await axios.get(`${URL_USER}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await axios.post(`${URL_AUTH}delete`, { token });
+
+      await AsyncStorage.removeItem("accessToken");
+
+      axios.defaults.headers.common["Authorization"] = "";
+
       setAuthState({
         accessToken: null,
         isAuthenticated: false,
+      });
+
+      setLoadingState({
+        isLoading: false,
+      });
+
+      return result;
+    } catch (error) {
+      setLoadingState({
+        isLoading: false,
       });
 
       return {
@@ -306,7 +343,8 @@ export const AuthProvider = ({ children }: any) => {
     onSignUp: signup,
     onSignIn: signin,
     onSignOut: signout,
-    onUpdate: update,
+    onUpdate: updateUser,
+    onDelete: deleteUser,
     onRole: role,
     getUser: user,
     authState,
