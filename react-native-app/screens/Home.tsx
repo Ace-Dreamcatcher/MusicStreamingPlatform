@@ -93,7 +93,6 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Songs</Text>
-      
       <ScrollView>
         {songs.map((song, index) => (
           <TouchableOpacity
