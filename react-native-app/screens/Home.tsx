@@ -16,6 +16,7 @@ import { Audio } from "expo-av";
 
 interface Song {
   name: string;
+  track: string;
   albums: {
     name: string;
     image: string;
@@ -49,13 +50,11 @@ export default function Home() {
     });
   }, [navigation]);
 
-  
-
   useEffect(() => {
     const fetchSongs = async () => {
         try {
             const response = await axios.get<Song[]>(
-              "http://192.168.1.163:3000/song/songs",
+              "http://192.168.1.4:3000/song/songs",
             );
             setSongs(response.data);
           } catch (error) {
@@ -72,7 +71,7 @@ export default function Home() {
     }
     try {
       const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: 'https://soundcloud.com/user-492864690/driftveil-city-pokemon-black?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing' },
+        { uri: songPath },
         { shouldPlay: true }
       );
       setSound(newSound);
@@ -80,7 +79,6 @@ export default function Home() {
       console.error("Error playing song:", error);
     }
   };
-  
   
   const toggleLike = (index: number) => {
     const newLikedSongs = [...likedSongs];
@@ -101,14 +99,13 @@ export default function Home() {
           <TouchableOpacity
             key={index}
             style={styles.songContainer}
-            onPress={() => playSong("../assets/Songs/Hey_Gringo.mp3")}
+            onPress={() => playSong(song.track)}
           >
             <View style={styles.songInnerContainer}>
               <Image
                 source={{ uri: song.albums.image }}
                 style={styles.albumImage}
-                //onError={() => console.log("Error loading image")}
-                defaultSource={require("../assets/Songs/Toothless.png")}
+                defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
                 resizeMode="cover"
               />
               <View style={styles.songInfo}>
