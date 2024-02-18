@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import axios from "axios";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Audio } from "expo-av";
 
 interface Song {
@@ -49,21 +49,39 @@ export default function Home() {
     });
   }, [navigation]);
 
-  const fetchSongs = async () => {
-    try {
-      const response = await axios.get<Song[]>(
-        "http://192.168.1.5:3000/song/songs",
-      );
-      setSongs(response.data);
-    } catch (error) {
-      console.error("Error fetching songs:", error);
-    }
-  };
+  
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+        try {
+            const response = await axios.get<Song[]>(
+              "http://192.168.1.163:3000/song/songs",
+            );
+            setSongs(response.data);
+          } catch (error) {
+            console.error("Error fetching songs:", error);
+          }
+      }; 
+      fetchSongs();
+  },[setSongs]);
 
   const playSong = async (songPath: string) => {
-    // Implement your playSong function
+    if (sound) {
+      // If a song is already playing, stop it
+      await sound.unloadAsync();
+    }
+    try {
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        { uri: 'https://soundcloud.com/user-492864690/driftveil-city-pokemon-black?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing' },
+        { shouldPlay: true }
+      );
+      setSound(newSound);
+    } catch (error) {
+      console.error("Error playing song:", error);
+    }
   };
-
+  
+  
   const toggleLike = (index: number) => {
     const newLikedSongs = [...likedSongs];
     if (newLikedSongs.includes(songs[index].name)) {
@@ -77,7 +95,7 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Songs</Text>
-      <Button onPress={fetchSongs} title="Fetch Songs" />
+      
       <ScrollView>
         {songs.map((song, index) => (
           <TouchableOpacity
@@ -89,7 +107,7 @@ export default function Home() {
               <Image
                 source={{ uri: song.albums.image }}
                 style={styles.albumImage}
-                onError={() => console.log("Error loading image")}
+                //onError={() => console.log("Error loading image")}
                 defaultSource={require("../assets/Songs/Toothless.png")}
                 resizeMode="cover"
               />
@@ -101,7 +119,7 @@ export default function Home() {
                 <FontAwesome
                   name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
                   size={28}
-                  color={likedSongs.includes(song.name) ? "#19bfb7" : "#19bfb7"}
+                  color={likedSongs.includes(song.name) ? "#19bfb7" : "grey"}
                 />
               </TouchableOpacity>
             </View>
