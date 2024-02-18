@@ -1,4 +1,10 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import {
+	BadRequestException,
+	Body,
+	Controller,
+	HttpCode,
+	Post,
+} from '@nestjs/common';
 
 import {
 	AdminDtoAdd,
@@ -21,52 +27,72 @@ export class AdminController {
 
 	@Post('add')
 	async add(@Body() dto: AdminDtoAdd) {
-		const artistMessage: string = await this.artistService.addArtist(
-			dto.artistName,
-			dto.artistImage,
-		);
-		const albumMessage: string = await this.albumService.addAlbum(
-			dto.albumName,
-			dto.artistName,
-			dto?.albumImage,
-		);
-		const songMessage: string = await this.songService.addSong(
-			dto.songName,
-			dto.songGenre,
-			dto.songFile,
-			dto.artistName,
-			dto.albumName,
-		);
+		try {
+			const artistMessage = await this.artistService.addArtist(
+				dto.artistName,
+				dto.artistImage,
+			);
+			const albumMessage = await this.albumService.addAlbum(
+				dto.albumName,
+				dto.artistName,
+				dto?.albumImage,
+			);
+			const songMessage = await this.songService.addSong(
+				dto.songName,
+				dto.songGenre,
+				dto.songFile,
+				dto.artistName,
+				dto.albumName,
+			);
 
-		return { artistMessage, albumMessage, songMessage };
+			return { artistMessage, albumMessage, songMessage };
+		} catch (error) {
+			throw new BadRequestException(error.response.message);
+		}
 	}
 
 	@Post('delete')
 	async delete(@Body() dto: AdminDtoDelete) {
-		const songMessage: string = await this.songService.deleteSong(dto);
-		const albumMessage: string = await this.albumService.deleteAlbum(dto);
+		try {
+			const songMessage = await this.songService.deleteSong(dto);
+			const albumMessage = await this.albumService.deleteAlbum(dto);
 
-		return { songMessage, albumMessage };
+			return { songMessage, albumMessage };
+		} catch (error) {
+			throw new BadRequestException(error.response.message);
+		}
 	}
 
 	@Post('updateSong')
 	async updateSong(@Body() dto: AdminDtoUpdateSong) {
-		const songMessage: string = await this.songService.updateSong(dto);
+		try {
+			const songMessage = await this.songService.updateSong(dto);
 
-		return { songMessage };
+			return { songMessage };
+		} catch (error) {
+			throw new BadRequestException(error.response.message);
+		}
 	}
 
 	@Post('updateArtist')
 	async updateArtist(@Body() dto: AdminDtoUpdateArtist) {
-		const artistMessage = await this.artistService.updateArtist(dto);
+		try {
+			const artistMessage = await this.artistService.updateArtist(dto);
 
-		return { artistMessage };
+			return { artistMessage };
+		} catch (error) {
+			throw new BadRequestException(error.response.message);
+		}
 	}
 
 	@Post('updateAlbum')
 	async updateAlbum(@Body() dto: AdminDtoUpdateAlbum) {
-		const albumMessage: string = await this.albumService.updateAlbum(dto);
+		try {
+			const albumMessage = await this.albumService.updateAlbum(dto);
 
-		return { albumMessage };
+			return { albumMessage };
+		} catch (error) {
+			throw new BadRequestException(error.response.message);
+		}
 	}
 }
