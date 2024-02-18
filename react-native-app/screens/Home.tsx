@@ -53,7 +53,7 @@ export default function Home() {
     const fetchSongs = async () => {
       try {
         const response = await axios.get<Song[]>(
-          "http://192.168.1.163:3000/song/songs",
+          "http://192.168.1.5:3000/song/songs",
         );
         setSongs(response.data);
       } catch (error) {
