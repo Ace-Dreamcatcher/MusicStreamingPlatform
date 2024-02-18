@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface AuthProps {
   authState?: { accessToken: string | null; isAuthenticated: boolean | null };
   loadingState?: { isLoading: boolean };
+  expirationState?: { isExpired: boolean | null };
   onSignUp?: (
     email: string,
     username: string,
@@ -19,8 +20,7 @@ interface AuthProps {
     token: string,
   ) => Promise<any>;
   onRole?: (token: string) => Promise<any>;
-  getRole?: () => Promise<any>;
-  getUsername?: () => Promise<any>;
+  getUser?: (token: string) => Promise<any>;
 }
 
 export const URL_AUTH = "http://192.168.1.5:3000/auth/";
@@ -47,23 +47,49 @@ export const AuthProvider = ({ children }: any) => {
 
   useEffect(() => {
     const loadToken = async () => {
-      setLoadingState({
-        isLoading: true,
-      });
-
-      const token = await AsyncStorage.getItem("accessToken");
-
-      if (token) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        setAuthState({
-          accessToken: token,
-          isAuthenticated: true,
+      try {
+        setLoadingState({
+          isLoading: true,
         });
-      }
 
-      setLoadingState({
-        isLoading: false,
-      });
+        const token = await AsyncStorage.getItem("accessToken");
+
+        if (token != null) {
+          await axios.get(`${URL_USER}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setAuthState({
+            accessToken: token,
+            isAuthenticated: true,
+          });
+        } else {
+          setAuthState({
+            accessToken: null,
+            isAuthenticated: false,
+          });
+        }
+
+        setLoadingState({
+          isLoading: false,
+        });
+      } catch (error) {
+        setLoadingState({
+          isLoading: false,
+        });
+
+        setAuthState({
+          accessToken: null,
+          isAuthenticated: false,
+        });
+
+        return {
+          error: true,
+          message: (error as any).response.data.message,
+          statusCode: (error as any).response.data.statusCode,
+        };
+      }
     };
 
     loadToken();
@@ -175,6 +201,12 @@ export const AuthProvider = ({ children }: any) => {
         isLoading: true,
       });
 
+      await axios.get(`${URL_USER}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       const result = await axios.post(`${URL_AUTH}update`, {
         newEmail,
         newUsername,
@@ -202,6 +234,11 @@ export const AuthProvider = ({ children }: any) => {
         isLoading: false,
       });
 
+      setAuthState({
+        accessToken: null,
+        isAuthenticated: false,
+      });
+
       return {
         error: true,
         message: (error as any).response.data.message,
@@ -210,7 +247,7 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
-  const Role = async (token: string) => {
+  const role = async (token: string) => {
     try {
       setLoadingState({
         isLoading: true,
@@ -242,26 +279,21 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
-  const role = async () => {
+  const user = async (token: string) => {
     try {
-      const result = await axios.get(`${URL_USER}`);
+      const result = await axios.get(`${URL_USER}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       return result;
     } catch (error) {
-      return {
-        error: true,
-        message: (error as any).response.data.message,
-        statusCode: (error as any).response.data.statusCode,
-      };
-    }
-  };
+      setAuthState({
+        accessToken: null,
+        isAuthenticated: false,
+      });
 
-  const username = async () => {
-    try {
-      const result = await axios.get(`${URL_USER}`);
-
-      return result;
-    } catch (error) {
       return {
         error: true,
         message: (error as any).response.data.message,
@@ -275,9 +307,8 @@ export const AuthProvider = ({ children }: any) => {
     onSignIn: signin,
     onSignOut: signout,
     onUpdate: update,
-    onRole: Role,
-    getRole: role,
-    getUsername: username,
+    onRole: role,
+    getUser: user,
     authState,
     loadingState,
   };

@@ -1,7 +1,6 @@
 import {
   Animated,
   Dimensions,
-  Pressable,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -29,14 +28,14 @@ export default function Search() {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={() => navigation.navigate("Account")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Account")}>
           <FontAwesome
             name="user-circle-o"
             size={25}
             color="#19bfb7"
             style={{ marginRight: 27 }}
           />
-        </Pressable>
+        </TouchableOpacity>
       ),
     });
   }, []);

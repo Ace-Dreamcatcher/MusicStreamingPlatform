@@ -19,8 +19,8 @@ export default function Account() {
   const [toggleLossless, setToggleLossless] = useState(false);
   const [toggleDolby, setToggleDolby] = useState(false);
   const [membership, setMembership] = useState("FREE");
-  const [username, setUsername] = useState("Username");
-  const { onRole, onSignOut, loadingState, getRole, getUsername } = useAuth();
+  const [username, setUsername] = useState("user");
+  const { onRole, onSignOut, loadingState, getUser } = useAuth();
 
   const handleToggleLossless = async () => {
     const newToggleState = !toggleLossless;
@@ -50,34 +50,22 @@ export default function Account() {
   const handleMembership = async () => {
     try {
       const token = (await AsyncStorage.getItem("accessToken")) || "";
-      const response = await onRole!(token);
-      if (response.data !== undefined) {
-        showRole();
-      }
+      await onRole!(token);
     } catch (error) {
       throw new Error("Error changing role");
     }
   };
 
-  const showUsername = async () => {
+  const showUsernameAndRole = async () => {
     try {
-      const response = await getUsername!();
-      if (response.data.username !== undefined) {
+      const token = (await AsyncStorage.getItem("accessToken")) || "";
+      const response = await getUser!(token);
+      if (response.data !== undefined) {
         setUsername(response.data.username);
-      }
-    } catch (error) {
-      console.error("Error retrieving username:", error);
-    }
-  };
-
-  const showRole = async () => {
-    try {
-      const response = await getRole!();
-      if (response.data.role !== undefined) {
         setMembership(response.data.role);
       }
     } catch (error) {
-      console.error("Error retrieving role:", error);
+      console.error("Error retrieving username and role:", error);
     }
   };
 
@@ -99,9 +87,8 @@ export default function Account() {
       }
     };
     loadToggleState();
-    showUsername();
-    showRole();
-  }, [showUsername, showRole, toggleDolby, toggleLossless]);
+    showUsernameAndRole();
+  }, [showUsernameAndRole, toggleDolby, toggleLossless]);
 
   return (
     <GestureRecognizer
