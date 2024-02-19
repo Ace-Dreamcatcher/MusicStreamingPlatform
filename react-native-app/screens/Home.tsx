@@ -52,17 +52,17 @@ export default function Home() {
 
   useEffect(() => {
     const fetchSongs = async () => {
-        try {
-            const response = await axios.get<Song[]>(
-              "http://192.168.1.4:3000/song/songs",
-            );
-            setSongs(response.data);
-          } catch (error) {
-            console.error("Error fetching songs:", error);
-          }
-      }; 
-      fetchSongs();
-  },[setSongs]);
+      try {
+        const response = await axios.get<Song[]>(
+          "http://192.168.1.5:3000/song/songs",
+        );
+        setSongs(response.data);
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+      }
+    };
+    fetchSongs();
+  }, [setSongs]);
 
   const playSong = async (songPath: string) => {
     if (sound) {
@@ -72,14 +72,14 @@ export default function Home() {
     try {
       const { sound: newSound } = await Audio.Sound.createAsync(
         { uri: songPath },
-        { shouldPlay: true }
+        { shouldPlay: true },
       );
       setSound(newSound);
     } catch (error) {
       console.error("Error playing song:", error);
     }
   };
-  
+
   const toggleLike = (index: number) => {
     const newLikedSongs = [...likedSongs];
     if (newLikedSongs.includes(songs[index].name)) {

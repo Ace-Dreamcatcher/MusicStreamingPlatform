@@ -115,14 +115,18 @@ export class SongService {
 	}
 
 	async printSongs() {
-		const resultSong = await this.prisma.song.findMany({
-			select: {
-				name: true,
-				track: true,
-				albums: { select: { name: true, image: true } },
-				artists: { select: { name: true, image: true } },
-			},
-		});
-		return resultSong;
+		try {
+			const resultSong = await this.prisma.song.findMany({
+				select: {
+					name: true,
+					track: true,
+					albums: { select: { name: true, image: true } },
+					artists: { select: { name: true, image: true } },
+				},
+			});
+			return resultSong;
+		} catch (error) {
+			throw new BadRequestException('Failed to get songs!');
+		}
 	}
 }
