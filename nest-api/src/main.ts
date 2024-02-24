@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
 import { AppModule } from './app.module';
+import * as express from 'express';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -10,6 +10,7 @@ async function bootstrap() {
 			whitelist: true,
 		}),
 	);
+	app.use('/media', express.static('media'));
 	await app.listen(3000);
 }
 bootstrap();

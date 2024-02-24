@@ -53,7 +53,7 @@ export default function Home() {
           >
             <View style={styles.songInnerContainer}>
               <Image
-                source={{ uri: song.albums.image }}
+                source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
                 style={styles.albumImage}
                 defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
                 resizeMode="cover"
@@ -106,10 +106,11 @@ const getStyles = (colorScheme: string | null | undefined) => {
       marginBottom: 5,
     },
     albumImage: {
-      width: 65,
-      height: 65,
+      width: 60,
+      height: 60,
       resizeMode: "cover",
       marginRight: 10,
+      borderRadius: 20,
     },
     songInfo: {
       flex: 1,

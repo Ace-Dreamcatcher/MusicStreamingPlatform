@@ -38,7 +38,7 @@ export const playSong = async (
         }
         try {
             const { sound: newSound } = await Audio.Sound.createAsync(
-                { uri: songPath },
+                { uri: `http://192.168.1.5:3000/media/${songPath}` },
                 { shouldPlay: true },
             );
             setSound(newSound);
