@@ -9,22 +9,10 @@ import { Text, View } from "../components/Theme";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
-import axios from "axios";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Audio } from "expo-av";
+import { Song, getSongs, playSong, toggleLike } from "../SongHandler";
 
-interface Song {
-  name: string;
-  track: string;
-  albums: {
-    name: string;
-    image: string;
-  };
-  artists: {
-    name: string;
-    image: string;
-  };
-}
 
 export default function Home() {
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -50,44 +38,8 @@ export default function Home() {
   }, [navigation]);
 
   useEffect(() => {
-    const fetchSongs = async () => {
-      try {
-        const response = await axios.get<Song[]>(
-          "http://192.168.1.5:3000/song/songs",
-        );
-        setSongs(response.data);
-      } catch (error) {
-        console.error("Error fetching songs:", error);
-      }
-    };
-    fetchSongs();
-  }, [setSongs]);
-
-  const playSong = async (songPath: string) => {
-    if (sound) {
-      // If a song is already playing, stop it
-      await sound.unloadAsync();
-    }
-    try {
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: songPath },
-        { shouldPlay: true },
-      );
-      setSound(newSound);
-    } catch (error) {
-      console.error("Error playing song:", error);
-    }
-  };
-
-  const toggleLike = (index: number) => {
-    const newLikedSongs = [...likedSongs];
-    if (newLikedSongs.includes(songs[index].name)) {
-      newLikedSongs.splice(newLikedSongs.indexOf(songs[index].name), 1);
-    } else {
-      newLikedSongs.push(songs[index].name);
-    }
-    setLikedSongs(newLikedSongs);
-  };
+    getSongs(setSongs);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -97,7 +49,7 @@ export default function Home() {
           <TouchableOpacity
             key={index}
             style={styles.songContainer}
-            onPress={() => playSong(song.track)}
+            onPress={() => playSong(song.track, sound, setSound)}
           >
             <View style={styles.songInnerContainer}>
               <Image
@@ -110,7 +62,7 @@ export default function Home() {
                 <Text style={styles.songTitle}>{song.name}</Text>
                 <Text style={styles.artist}>{song.artists.name}</Text>
               </View>
-              <TouchableOpacity onPress={() => toggleLike(index)}>
+              <TouchableOpacity onPress={() => toggleLike(index, songs, likedSongs, setLikedSongs)}>
                 <FontAwesome
                   name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
                   size={28}

@@ -5,7 +5,7 @@ import { SongService } from './song.service';
 export class SongController {
 	constructor(private songService: SongService) {}
 
-	@Get('songs')
+	@Get('getSongs')
 	async printSongs() {
 		return await this.songService.printSongs();
 	}

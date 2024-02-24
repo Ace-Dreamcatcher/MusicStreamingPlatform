@@ -138,7 +138,7 @@ export default function Account() {
             High audio quality up to 24-bit/48kHz.
           </Text>
           <Text style={{ fontSize: 11 }}>
-            Turning this on will consume significally more data.
+            Turning this on will consume significantly more data.
           </Text>
         </View>
         <View style={styles.dolbyAtmosButtonContainer}>
