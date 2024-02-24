@@ -124,7 +124,10 @@ export class SongService {
 					artists: { select: { name: true, image: true } },
 				},
 			});
-			return resultSong;
+
+			const shuffledResultSong = resultSong.sort(() => Math.random() - 0.5);
+
+			return shuffledResultSong;
 		} catch (error) {
 			throw new BadRequestException('Failed to get songs!');
 		}

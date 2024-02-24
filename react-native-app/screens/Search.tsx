@@ -97,10 +97,10 @@ export default function Search() {
         <Text style={styles.header}>Browse</Text>
         <View style={styles.buttonFlex}>
           <TouchableOpacity style={styles.button1}>
-            <Text style={styles.buttonText}>Rock</Text>
+            <Text style={styles.buttonText}>Ost</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button2}>
-            <Text style={styles.buttonText}>Hip-Hop</Text>
+            <Text style={styles.buttonText}>Rock</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buttonFlex}>
@@ -129,7 +129,7 @@ export default function Search() {
         </View>
         <View style={styles.buttonFlex}>
           <TouchableOpacity style={styles.button9}>
-            <Text style={styles.buttonText}>Top Hits</Text>
+            <Text style={styles.buttonText}>Pop / Rap</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -199,7 +199,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 10,
-      backgroundColor: "#ea522c",
+      backgroundColor: "#e2ae03",
       width: Dimensions.get("window").width / 2 - 10,
       height: 70,
       marginHorizontal: 5,
@@ -208,7 +208,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 10,
-      backgroundColor: "#5782ee",
+      backgroundColor: "#ea522c",
       width: Dimensions.get("window").width / 2 - 10,
       height: 70,
       marginHorizontal: 5,
@@ -277,7 +277,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 10,
-      backgroundColor: "#e2ae03",
+      backgroundColor: "#5782ee",
       alignSelf: "stretch",
       width: Dimensions.get("window").width - 10,
       height: 70,
