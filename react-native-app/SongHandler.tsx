@@ -34,16 +34,16 @@ export const playSong = async (
     setSound: React.Dispatch<React.SetStateAction<Audio.Sound | null>>
     ) => {
         if (sound) {
-        await sound.unloadAsync();
+            await sound.unloadAsync();
         }
         try {
-        const { sound: newSound } = await Audio.Sound.createAsync(
-            { uri: songPath },
-            { shouldPlay: true },
-        );
-        setSound(newSound);
+            const { sound: newSound } = await Audio.Sound.createAsync(
+                { uri: songPath },
+                { shouldPlay: true },
+            );
+            setSound(newSound);
         } catch (error) {
-        console.error("Error playing song:", error);
+            console.error("Error playing song:", error);
         }
     };
 
@@ -56,9 +56,9 @@ export const toggleLike = (
     ) => {
         const newLikedSongs = [...likedSongs];
         if (newLikedSongs.includes(songs[index].name)) {
-        newLikedSongs.splice(newLikedSongs.indexOf(songs[index].name), 1);
+            newLikedSongs.splice(newLikedSongs.indexOf(songs[index].name), 1);
         } else {
-        newLikedSongs.push(songs[index].name);
+            newLikedSongs.push(songs[index].name);
         }
         setLikedSongs(newLikedSongs);
     };
