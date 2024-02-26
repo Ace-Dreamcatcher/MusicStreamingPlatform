@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Image,
   useColorScheme,
+  Dimensions,
 } from "react-native";
 import { Text, View } from "../components/Theme";
 import { useNavigation } from "@react-navigation/native";
@@ -73,6 +74,15 @@ export default function Home() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <View style={styles.musicPlayerContainer}>
+          <TouchableOpacity style={styles.musicPlayer}>
+            <Image
+              style={styles.musicPlayerImage}
+              defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -119,6 +129,31 @@ const getStyles = (colorScheme: string | null | undefined) => {
     artist: {
       fontSize: 14,
       fontWeight: "200",
+    },
+    musicPlayerContainer: {
+      position: "absolute",
+      bottom: 10,
+      left: Dimensions.get("window").width / 4,
+      right: Dimensions.get("window").width / 4,
+      alignItems: "center",
+
+    },
+    musicPlayer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderRadius: 15,
+      paddingHorizontal: 20,
+      backgroundColor: colorScheme === "light" ? "#f5f5f5" : "#202123",
+      width: Dimensions.get("window").width - 20,
+      height: 60,
+    },
+    musicPlayerImage: {
+      width: 40,
+      height: 40,
+      resizeMode: "cover",
+      marginRight: 10,
+      borderRadius: 20,
     },
   });
 };
