@@ -111,6 +111,7 @@ function TabScreens() {
             headerShown: true,
             headerStyle: {
               backgroundColor: GenreColor,
+              shadowColor: "transparent",
             },
           }}
         />
