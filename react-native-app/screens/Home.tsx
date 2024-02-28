@@ -139,7 +139,7 @@ export default function Home() {
           >
             <View style={styles.songInnerContainer}>
               <Image
-                source={{ uri: `http://192.168.1.4:3000/media/${song.albums.image}` }}
+                source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
                 style={styles.albumImage}
                 defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
                 resizeMode="cover"
@@ -163,7 +163,7 @@ export default function Home() {
         <View style={styles.musicPlayerContainer}>
           <TouchableOpacity style={styles.musicPlayer}>
             <Image
-              source={{ uri: `http://192.168.1.4:3000/media/${currentSong.albums.image}` }}
+              source={{ uri: `http://192.168.1.5:3000/media/${currentSong.albums.image}` }}
               style={styles.musicPlayerImage}
               defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
               resizeMode="cover"
@@ -193,6 +193,7 @@ export default function Home() {
                 <Ionicons name="play-back" size={29} />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleTogglePlay} style={styles.controlButton}>
+                <Ionicons name={isPlaying ? "pause" : "play"} size={31} />
                 <Ionicons name={isPlaying ? "pause" : "play"} size={31} />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleNextSong} style={styles.controlButton}>
@@ -292,6 +293,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       backgroundColor: "#19bfb7",
     },
     controlButton: {
+      marginHorizontal: 4,
       marginHorizontal: 4,
     },
   });
