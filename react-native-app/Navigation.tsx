@@ -13,6 +13,7 @@ import SignUp from "./screens/SignUp";
 import Starting from "./screens/Starting";
 import Account from "./screens/Account";
 import EditInfo from "./screens/EditInfo";
+import Genre from "./screens/Genre";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,6 +63,7 @@ function StartScreens() {
 function TabScreens() {
   const colorScheme = useColorScheme();
   const backgroundColor = colorScheme === "dark" ? "black" : "white";
+  const GenreColor = colorScheme === "dark" ? "#202123" : "#f5f5f5";
   const statusBarStyle =
     colorScheme === "dark" ? "light-content" : "dark-content";
 
@@ -98,6 +100,18 @@ function TabScreens() {
             gestureEnabled: true,
             gestureDirection: "horizontal",
             headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="Genre"
+          component={Genre}
+          options={{
+            gestureEnabled: true,
+            gestureDirection: "horizontal",
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: GenreColor,
+            },
           }}
         />
       </Stack.Navigator>

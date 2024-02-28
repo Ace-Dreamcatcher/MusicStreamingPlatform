@@ -132,4 +132,68 @@ export class SongService {
 			throw new BadRequestException('Failed to get songs!');
 		}
 	}
+
+	async printSearchSongs(query: string) {
+		try {
+			const resultSong = await this.prisma.song.findMany({
+				where: {
+					OR: [
+						{ name: { contains: query } },
+						// { albums: { name: { contains: query } } },
+						{ artists: { name: { contains: query } } },
+					],
+				},
+				select: {
+					name: true,
+					track: true,
+					albums: { select: { name: true, image: true } },
+					artists: { select: { name: true, image: true } },
+				},
+			});
+
+			return resultSong;
+		} catch (error) {
+			throw new BadRequestException('Failed to get search songs!');
+		}
+	}
+
+	async printGenreSongs(query: string) {
+		try {
+			if (query !== 'Rap') {
+				const resultSong = await this.prisma.song.findMany({
+					where: {
+						genre: query,
+					},
+					select: {
+						name: true,
+						track: true,
+						albums: { select: { name: true, image: true } },
+						artists: { select: { name: true, image: true } },
+					},
+				});
+
+				const shuffledResultSong = resultSong.sort(() => Math.random() - 0.5);
+
+				return shuffledResultSong;
+			} else if (query === 'Rap') {
+				const resultSong = await this.prisma.song.findMany({
+					where: {
+						genre: query || 'Hip-Hop',
+					},
+					select: {
+						name: true,
+						track: true,
+						albums: { select: { name: true, image: true } },
+						artists: { select: { name: true, image: true } },
+					},
+				});
+
+				const shuffledResultSong = resultSong.sort(() => Math.random() - 0.5);
+
+				return shuffledResultSong;
+			}
+		} catch (error) {
+			throw new BadRequestException('Failed to get genre songs!');
+		}
+	}
 }

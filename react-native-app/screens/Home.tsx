@@ -74,15 +74,6 @@ export default function Home() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View style={styles.musicPlayerContainer}>
-          <TouchableOpacity style={styles.musicPlayer}>
-            <Image
-              style={styles.musicPlayerImage}
-              defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -136,7 +127,6 @@ const getStyles = (colorScheme: string | null | undefined) => {
       left: Dimensions.get("window").width / 4,
       right: Dimensions.get("window").width / 4,
       alignItems: "center",
-
     },
     musicPlayer: {
       flexDirection: "row",

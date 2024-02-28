@@ -16,6 +16,8 @@ export interface Song {
 }
 
 export const URL_SONG = "http://192.168.1.5:3000/song/getSongs";
+export const URL_SEARCH = "http://192.168.1.5:3000/song/getSearchSongs";
+export const URL_GENRE = "http://192.168.1.5:3000/song/getGenreSongs";
 
 
 export const getSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => {
@@ -64,4 +66,22 @@ export const toggleLike = (
     };
 
 
+export const getSearchSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => {
+    try {
+        const response = await axios.get<Song[]>(`${URL_SEARCH}?query=${encodeURIComponent(query)}`);
+        setSongs(response.data);
+    } catch (error) {
+        console.error("Error fetching songs:", error);
+    }
+};
+
+
+export const getGenreSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, genre: string) => {
+    try {
+        const response = await axios.get<Song[]>(`${URL_SEARCH}?query=${encodeURIComponent(genre)}`);
+        setSongs(response.data);
+    } catch (error) {
+        console.error("Error fetching songs:", error);
+    }
+};
   
