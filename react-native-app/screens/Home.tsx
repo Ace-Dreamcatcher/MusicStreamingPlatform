@@ -2,11 +2,11 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme, Dimensions, Animated } from "react-native";
 import { Text, View } from "../components/Theme";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome,  } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Audio } from "expo-av";
 import { Song, getSongs, playSong, toggleLike } from "../SongHandler";
-import { AntDesign } from '@expo/vector-icons';
 
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false); // Track play state
+  const [isPlaying, setIsPlaying] = useState<boolean>(false); 
   const scrollX = React.useRef(new Animated.Value(0)).current;
 
   useLayoutEffect(() => {
@@ -43,7 +43,7 @@ export default function Home() {
     const loop = Animated.loop(
       Animated.timing(scrollX, {
         toValue: 1,
-        duration: 10000, // Adjust duration as needed for desired scrolling speed
+        duration: 10000,
         useNativeDriver: true,
       })
     );
@@ -52,6 +52,24 @@ export default function Home() {
 
     return () => loop.stop();
   }, []);
+
+  useEffect(() => {
+    if (!sound) return;
+
+    const onPlaybackStatusUpdate = async (status: Audio.PlaybackStatus) => {
+      if (status.isLoaded && status.positionMillis === status.durationMillis) {
+        // Song has finished, play the next song
+        await handleNextSong();
+      }
+    };
+
+    sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+
+    return () => {
+      // Clean up the event listener when the component unmounts
+      sound.setOnPlaybackStatusUpdate(null);
+    };
+  }, [sound]);
 
   const handlePlaySong = async (song: Song) => {
     if (currentSong === null || currentSong.name !== song.name) {
@@ -157,22 +175,28 @@ export default function Home() {
                 { useNativeDriver: true }
               )}
             >
-              {currentSong && (
-                <Text style={styles.musicPlayerText}>
-                  {currentSong.name} • {currentSong.artists.name}
-                </Text>
+              <Animated.View style={{ transform: [{ translateX: scrollX.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, -Dimensions.get("window").width * 0.5], 
+                extrapolate: 'clamp'
+              }) }] }}>
+            {currentSong && (
+              <Text style={styles.musicPlayerText}>
+                {currentSong.name} • {currentSong.artists.name}
+              </Text>
               )}
+            </Animated.View>
             </Animated.ScrollView>
             </View>
             <View style={styles.controls}>
               <TouchableOpacity onPress={handlePreviousSong} style={styles.controlButton}>
-                <AntDesign name="stepbackward" size={24} />
+                <Ionicons name="play-back" size={29} />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleTogglePlay} style={styles.controlButton}>
-                <AntDesign name={isPlaying ? "pausecircle" : "play"} size={32} />
+                <Ionicons name={isPlaying ? "pause" : "play"} size={31} />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleNextSong} style={styles.controlButton}>
-                <AntDesign name="stepforward" size={24} />
+                <Ionicons name="play-forward" size={29} />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -268,7 +292,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       backgroundColor: "#19bfb7",
     },
     controlButton: {
-      marginHorizontal: 3,
+      marginHorizontal: 4,
     },
   });
 };
