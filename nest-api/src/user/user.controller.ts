@@ -11,4 +11,9 @@ export class UserController {
 	getMe(@GetUser() user: User) {
 		return { username: user.username, role: user.role };
 	}
+
+	@Get('likedSongs')
+	getLikedSongs(@GetUser() user: User) {
+		return;
+	}
 }

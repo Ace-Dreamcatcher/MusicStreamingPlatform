@@ -24,22 +24,23 @@ export default function Genre({route}: any) {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingHorizontal: 5,
-                  backgroundColor: backButtonColor,
-                }}
-              >
-                <Ionicons name="arrow-back" size={24} color="#19bfb7" />
-                <Text style={{ fontSize: 20, color: "#19bfb7" }}> Back</Text>
-              </View>
-            </TouchableOpacity>
-          ),
-        });
+            title: genre,
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <View
+                    style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingHorizontal: 5,
+                    backgroundColor: backButtonColor,
+                    }}
+                >
+                    <Ionicons name="arrow-back" size={24} color="#19bfb7" />
+                    <Text style={{ fontSize: 20, color: "#19bfb7" }}> Back</Text>
+                </View>
+                </TouchableOpacity>
+            ),
+            });
       }, [navigation, colorScheme]);
 
       useEffect(() => {

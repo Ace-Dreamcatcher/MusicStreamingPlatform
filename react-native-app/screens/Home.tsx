@@ -194,7 +194,6 @@ export default function Home() {
               </TouchableOpacity>
               <TouchableOpacity onPress={handleTogglePlay} style={styles.controlButton}>
                 <Ionicons name={isPlaying ? "pause" : "play"} size={31} />
-                <Ionicons name={isPlaying ? "pause" : "play"} size={31} />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleNextSong} style={styles.controlButton}>
                 <Ionicons name="play-forward" size={29} />
@@ -293,7 +292,6 @@ const getStyles = (colorScheme: string | null | undefined) => {
       backgroundColor: "#19bfb7",
     },
     controlButton: {
-      marginHorizontal: 4,
       marginHorizontal: 4,
     },
   });
