@@ -1,18 +1,12 @@
-import {
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Image,
-  useColorScheme,
-  Dimensions,
-} from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme, Dimensions, Animated } from "react-native";
 import { Text, View } from "../components/Theme";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Audio } from "expo-av";
 import { Song, getSongs, playSong, toggleLike } from "../SongHandler";
+import { AntDesign } from '@expo/vector-icons';
 
 
 export default function Home() {
@@ -22,6 +16,9 @@ export default function Home() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
+  const [currentSong, setCurrentSong] = useState<Song | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false); // Track play state
+  const scrollX = React.useRef(new Animated.Value(0)).current;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -42,6 +39,76 @@ export default function Home() {
     getSongs(setSongs);
   }, []);
 
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.timing(scrollX, {
+        toValue: 1,
+        duration: 10000, // Adjust duration as needed for desired scrolling speed
+        useNativeDriver: true,
+      })
+    );
+
+    loop.start();
+
+    return () => loop.stop();
+  }, []);
+
+  const handlePlaySong = async (song: Song) => {
+    if (currentSong === null || currentSong.name !== song.name) {
+      setCurrentSong(song);
+      await playSong(song.track, sound, setSound);
+      setIsPlaying(true);
+    } else {
+      if (sound) {
+        if (isPlaying) {
+          await sound.pauseAsync();
+          setIsPlaying(false);
+        } else {
+          await sound.playAsync();
+          setIsPlaying(true); 
+        }
+      }
+    }
+  };
+
+  const handleNextSong = async () => {
+    if (!currentSong) return;
+
+    const currentIndex = songs.findIndex(song => song.name === currentSong.name);
+    const nextIndex = (currentIndex + 1) % songs.length;
+    const nextSong = songs[nextIndex];
+
+    setCurrentSong(nextSong);
+    await playSong(nextSong.track, sound, setSound);
+    setIsPlaying(true); 
+  };
+
+  const handlePreviousSong = async () => {
+    if (!currentSong) return;
+
+    const currentIndex = songs.findIndex(song => song.name === currentSong.name);
+    const previousIndex = (currentIndex - 1 + songs.length) % songs.length;
+    const previousSong = songs[previousIndex];
+
+    setCurrentSong(previousSong);
+    await playSong(previousSong.track, sound, setSound);
+    setIsPlaying(true); 
+  };
+
+  const handleTogglePlay = async () => {
+    if (!currentSong) return;
+
+    if (sound) {
+      if (isPlaying) {
+        await sound.pauseAsync();
+        setIsPlaying(false); 
+      } else {
+        await sound.playAsync();
+        setIsPlaying(true); 
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Songs</Text>
@@ -50,11 +117,11 @@ export default function Home() {
           <TouchableOpacity
             key={index}
             style={styles.songContainer}
-            onPress={() => playSong(song.track, sound, setSound)}
+            onPress={() => handlePlaySong(song)}
           >
             <View style={styles.songInnerContainer}>
               <Image
-                source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
+                source={{ uri: `http://192.168.1.4:3000/media/${song.albums.image}` }}
                 style={styles.albumImage}
                 defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
                 resizeMode="cover"
@@ -74,15 +141,43 @@ export default function Home() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View style={styles.musicPlayerContainer}>
+      {currentSong && (
+        <View style={styles.musicPlayerContainer}>
           <TouchableOpacity style={styles.musicPlayer}>
             <Image
+              source={{ uri: `http://192.168.1.4:3000/media/${currentSong.albums.image}` }}
               style={styles.musicPlayerImage}
               defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
               resizeMode="cover"
             />
+            <View style={styles.musicPlayerTextContainer}>
+            <Animated.ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16} 
+                onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: true }
+              )}
+            >
+              {currentSong && (
+                <Text style={styles.musicPlayerText}>
+                  {currentSong.name} • {currentSong.artists.name}
+                </Text>
+              )}
+            </Animated.ScrollView>
+            </View>
+            <View style={styles.controls}>
+              <TouchableOpacity onPress={handlePreviousSong} style={styles.controlButton}>
+                <AntDesign name="stepbackward" size={24} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleTogglePlay} style={styles.controlButton}>
+                <AntDesign name={isPlaying ? "pausecircle" : "play"} size={32} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleNextSong} style={styles.controlButton}>
+                <AntDesign name="stepforward" size={24} />
+              </TouchableOpacity>
+            </View>
           </TouchableOpacity>
-      </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -97,6 +192,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       fontSize: 25,
       fontWeight: "bold",
       marginLeft: 5,
+      marginBottom: 10,
     },
     songContainer: {
       marginBottom: 5,
@@ -116,8 +212,8 @@ const getStyles = (colorScheme: string | null | undefined) => {
       marginBottom: 5,
     },
     albumImage: {
-      width: 60,
-      height: 60,
+      width: 55,
+      height: 55,
       resizeMode: "cover",
       marginRight: 10,
       borderRadius: 20,
@@ -136,24 +232,43 @@ const getStyles = (colorScheme: string | null | undefined) => {
       left: Dimensions.get("window").width / 4,
       right: Dimensions.get("window").width / 4,
       alignItems: "center",
-
     },
     musicPlayer: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      borderRadius: 15,
-      paddingHorizontal: 20,
-      backgroundColor: colorScheme === "light" ? "#f5f5f5" : "#202123",
-      width: Dimensions.get("window").width - 20,
+      borderRadius: 20,
+      paddingHorizontal: 15,
+      backgroundColor: "#19bfb7", //colorScheme === "light" ? "#f5f5f5" : "#202123",
+      width: Dimensions.get("window").width - 15,
       height: 60,
     },
     musicPlayerImage: {
-      width: 40,
-      height: 40,
+      width: 45,
+      height: 45,
       resizeMode: "cover",
-      marginRight: 10,
       borderRadius: 20,
+      marginLeft: -7,
+    },
+    musicPlayerTextContainer: {
+      flex: 1,
+      justifyContent: "center",
+      marginVertical: 21,
+      marginHorizontal: 18,
+      backgroundColor: "#19bfb7",
+    },
+    musicPlayerText: {
+      fontSize: 15,
+      fontWeight: "500",
+      color: "black",
+    },
+    controls: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "#19bfb7",
+    },
+    controlButton: {
+      marginHorizontal: 3,
     },
   });
 };

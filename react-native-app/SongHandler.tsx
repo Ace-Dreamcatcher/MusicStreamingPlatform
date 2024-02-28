@@ -15,7 +15,7 @@ export interface Song {
     };
 }
 
-export const URL_SONG = "http://192.168.1.5:3000/song/getSongs";
+export const URL_SONG = "http://192.168.1.4:3000/song/getSongs";
 
 
 export const getSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => {
@@ -38,7 +38,7 @@ export const playSong = async (
         }
         try {
             const { sound: newSound } = await Audio.Sound.createAsync(
-                { uri: `http://192.168.1.5:3000/media/${songPath}` },
+                { uri: `http://192.168.1.4:3000/media/${songPath}` },
                 { shouldPlay: true },
             );
             setSound(newSound);
