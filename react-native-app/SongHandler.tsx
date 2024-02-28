@@ -40,7 +40,7 @@ export const playSong = async (
         }
         try {
             const { sound: newSound } = await Audio.Sound.createAsync(
-                { uri: `http://192.168.1.4:3000/media/${songPath}` },
+                { uri: `http://192.168.1.5:3000/media/${songPath}` },
                 { shouldPlay: true },
             );
             setSound(newSound);
@@ -78,7 +78,7 @@ export const getSearchSongs = async (setSongs: React.Dispatch<React.SetStateActi
 
 export const getGenreSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, genre: string) => {
     try {
-        const response = await axios.get<Song[]>(`${URL_SEARCH}?query=${encodeURIComponent(genre)}`);
+        const response = await axios.get<Song[]>(`${URL_GENRE}?query=${encodeURIComponent(genre)}`);
         setSongs(response.data);
     } catch (error) {
         console.error("Error fetching songs:", error);

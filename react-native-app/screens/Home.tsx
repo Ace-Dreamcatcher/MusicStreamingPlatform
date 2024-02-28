@@ -3,6 +3,7 @@ import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme, Dimens
 import { Text, View } from "../components/Theme";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Audio } from "expo-av";
 import { Song, getSongs, playSong, toggleLike } from "../SongHandler";
@@ -121,7 +122,7 @@ export default function Home() {
           >
             <View style={styles.songInnerContainer}>
               <Image
-                source={{ uri: `http://192.168.1.4:3000/media/${song.albums.image}` }}
+                source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
                 style={styles.albumImage}
                 defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
                 resizeMode="cover"
@@ -145,7 +146,7 @@ export default function Home() {
         <View style={styles.musicPlayerContainer}>
           <TouchableOpacity style={styles.musicPlayer}>
             <Image
-              source={{ uri: `http://192.168.1.4:3000/media/${currentSong.albums.image}` }}
+              source={{ uri: `http://192.168.1.5:3000/media/${currentSong.albums.image}` }}
               style={styles.musicPlayerImage}
               defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
               resizeMode="cover"
@@ -166,13 +167,13 @@ export default function Home() {
             </View>
             <View style={styles.controls}>
               <TouchableOpacity onPress={handlePreviousSong} style={styles.controlButton}>
-                <AntDesign name="stepbackward" size={24} />
+                <Ionicons name="play-back" size={29} color="black" />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleTogglePlay} style={styles.controlButton}>
-                <AntDesign name={isPlaying ? "pausecircle" : "play"} size={32} />
+                <Ionicons name={isPlaying ? "pause" : "play"} size={31} />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleNextSong} style={styles.controlButton}>
-                <AntDesign name="stepforward" size={24} />
+                <Ionicons name="play-forward" size={29} color="black" />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -268,7 +269,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       backgroundColor: "#19bfb7",
     },
     controlButton: {
-      marginHorizontal: 3,
+      marginHorizontal: 4,
     },
   });
 };

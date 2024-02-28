@@ -2,13 +2,14 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StyleSheet, StatusBar, useColorScheme, Image, ScrollView, TouchableOpacity } from "react-native";
 import { View, Text } from "../components/Theme";
-import { Song, playSong, toggleLike } from "../SongHandler";
+import { Song, getGenreSongs, playSong, toggleLike } from "../SongHandler";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Audio } from "expo-av";
 
-export default function Genre() {
+
+export default function Genre({route}: any) {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     const colorScheme = useColorScheme();
     const backgroundColor = colorScheme === "dark" ? "black" : "white";
@@ -19,6 +20,7 @@ export default function Genre() {
     const [songs, setSongs] = useState<Song[]>([]);
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [likedSongs, setLikedSongs] = useState<string[]>([]);
+    const {genre} = route.params;
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -39,6 +41,10 @@ export default function Genre() {
           ),
         });
       }, [navigation, colorScheme]);
+
+      useEffect(() => {
+        getGenreSongs(setSongs, genre);
+      }, []);
 
     return (
         <>

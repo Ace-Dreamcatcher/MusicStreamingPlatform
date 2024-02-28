@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Song, getGenreSongs, getSearchSongs, playSong, toggleLike } from "../SongHandler";
+import { Song, getSearchSongs, playSong, toggleLike } from "../SongHandler";
 import { Audio } from "expo-av";
 
 export default function Search() {
@@ -82,8 +82,7 @@ export default function Search() {
   };
 
   const handleGenre = (genre: string) => {
-    getGenreSongs(setSongs, genre);
-    navigation.navigate("Genre");
+    navigation.navigate("Genre", {genre: genre});
   };
 
   return (
