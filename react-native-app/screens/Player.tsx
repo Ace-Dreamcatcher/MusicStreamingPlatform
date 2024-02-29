@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Image, StyleSheet, SafeAreaView } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
-import { Text } from "../components/Theme"; // Import Text from your Theme component
+import { Text } from "../components/Theme"; 
 
-export default function Player({ route }) {
-  const { currentSong } = route.params; // Get the currentSong parameter from navigation
+export default function Player({ route }: any) {
+  const { currentSong } = route.params; 
 
   return (
     <LinearGradient colors={["#19bfb7", "black"]} style={{ flex: 1 }}>
