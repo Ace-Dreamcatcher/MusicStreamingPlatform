@@ -14,6 +14,7 @@ import Starting from "./screens/Starting";
 import Account from "./screens/Account";
 import EditInfo from "./screens/EditInfo";
 import Genre from "./screens/Genre";
+import Player from "./screens/Player"; // Import the Player screen
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -113,6 +114,45 @@ function TabScreens() {
               backgroundColor: GenreColor,
               shadowColor: "transparent",
             },
+          }}
+        />
+        <Stack.Screen
+          name="Player"
+          component={Player}
+          options={{
+            gestureEnabled: true,
+            gestureDirection: "vertical", 
+            headerShown: false,
+            headerTransparent: true, 
+            headerBackTitleVisible: false, 
+            headerTintColor: 'white',
+            
+            cardStyle: {
+              backgroundColor: 'transparent', 
+            },
+            cardOverlayEnabled: true, 
+            cardShadowEnabled: true, 
+            cardStyleInterpolator: ({ current: { progress } }) => ({
+              cardStyle: {
+                transform: [
+                  {
+                    translateY: progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [500, 0], 
+                    }),
+                  },
+                ],
+              },
+              overlayStyle: {
+                opacity: progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 0.5], 
+                  extrapolate: 'clamp',
+                }),
+              },
+            }),
+            gestureResponseDistance: 1000, 
+            gestureVelocityImpact: 0.5, 
           }}
         />
       </Stack.Navigator>

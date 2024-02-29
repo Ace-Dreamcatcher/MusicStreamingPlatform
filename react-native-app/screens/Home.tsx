@@ -18,7 +18,6 @@ export default function Home() {
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false); 
-  const scrollX = React.useRef(new Animated.Value(0)).current;
 
 
   useLayoutEffect(() => {
@@ -29,8 +28,7 @@ export default function Home() {
             name="user-circle-o"
             size={25}
             color="#19bfb7"
-            style={{ marginRight: 27 }}
-          />
+            style={{ marginRight: 27 }}/>
         </TouchableOpacity>
       ),
     });
@@ -40,21 +38,7 @@ export default function Home() {
     getSongs(setSongs);
   }, []);
 
-  useEffect(() => {
-    const loop = Animated.loop(
-      Animated.timing(scrollX, {
-        toValue: 1,
-        duration: 10000,
-        useNativeDriver: true,
-      })
-    );
   
-    loop.start();
-  
-    return () => loop.stop();
-  }, [scrollX]);
-  
-
   const handlePlaySong = async (song: Song) => {
     if (currentSong === null || currentSong.name !== song.name) {
       setCurrentSong(song);
@@ -145,7 +129,7 @@ export default function Home() {
       </ScrollView>
       {currentSong && (
         <View style={styles.musicPlayerContainer}>
-          <TouchableOpacity style={styles.musicPlayer}>
+          <TouchableOpacity style={styles.musicPlayer} onPress={() => navigation.navigate("Player", {currentSong})}>
             <Image
               source={{ uri: `http://192.168.1.4:3000/media/${currentSong.albums.image}` }}
               style={styles.musicPlayerImage}
@@ -153,30 +137,9 @@ export default function Home() {
               resizeMode="cover"
             />
             <View style={styles.musicPlayerTextContainer}>
-              <Animated.ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16} 
-                onScroll={Animated.event(
-                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                { useNativeDriver: true }
-              )}
-              >
-            <Animated.View style={{
-              transform: [
-                {
-                  translateX: scrollX.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [Dimensions.get("window").width / 2, -Dimensions.get("window").width / 2],
-                    extrapolate: 'clamp'
-                  })
-                }
-              ]
-            }}>
-                  {currentSong && (
-                    <Text style={styles.musicPlayerText}>
-                      {currentSong.name} • {currentSong.artists.name}
-                    </Text>
-                  )}
-              </Animated.View>
-            </Animated.ScrollView>
+              <Text style={styles.musicPlayerText}>
+                {currentSong.name}
+              </Text>
             </View>
             <View style={styles.controls}>
               <TouchableOpacity onPress={handlePreviousSong} style={styles.controlButton}>
@@ -226,11 +189,11 @@ const getStyles = (colorScheme: string | null | undefined) => {
       marginBottom: 5,
     },
     albumImage: {
-      width: 55,
-      height: 55,
+      width: 60,
+      height: 60,
       resizeMode: "cover",
       marginRight: 10,
-      borderRadius: 20,
+      borderRadius: 15,
     },
     songInfo: {
       flex: 1,
@@ -261,18 +224,17 @@ const getStyles = (colorScheme: string | null | undefined) => {
       width: 45,
       height: 45,
       resizeMode: "cover",
-      borderRadius: 20,
+      borderRadius: 10,
       marginLeft: -7,
     },
     musicPlayerTextContainer: {
       flex: 1,
       justifyContent: "center",
-      marginVertical: 21,
-      marginHorizontal: 18,
+      marginHorizontal: 15,
       backgroundColor: "#19bfb7",
     },
     musicPlayerText: {
-      fontSize: 15,
+      fontSize: 16,
       fontWeight: "500",
       color: "black",
     },
@@ -282,7 +244,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       backgroundColor: "#19bfb7",
     },
     controlButton: {
-      marginHorizontal: 4,
+      marginHorizontal: 6,
     },
   });
 };
