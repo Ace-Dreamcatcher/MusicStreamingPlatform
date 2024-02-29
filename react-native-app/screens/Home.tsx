@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme, Dimensions, Animated } from "react-native";
 import { Text, View } from "../components/Theme";
-import { useNavigation } from "@react-navigation/native";
+import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { FontAwesome,  } from "@expo/vector-icons";
 import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -10,7 +10,7 @@ import { useSong } from "../SongContext";
 
 
 export default function Home() {
-  const navigation = useNavigation<StackNavigationProp<any>>();
+  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const colorScheme = useColorScheme();
   const styles = getStyles(colorScheme);
   const [songs, setSongs] = useState<Song[]>([]);
