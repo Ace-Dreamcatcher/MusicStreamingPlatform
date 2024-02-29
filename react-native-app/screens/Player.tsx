@@ -11,7 +11,7 @@ export default function Player({ route }: any) {
       <SafeAreaView style={styles.container}>
         <View style={styles.songInfoContainer}>
           <Image
-            source={{ uri: `http://192.168.1.4:3000/media/${currentSong.albums.image}` }}
+            source={{ uri: `http://192.168.1.5:3000/media/${currentSong.albums.image}` }}
             style={styles.albumImage}
             defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
             resizeMode="cover"

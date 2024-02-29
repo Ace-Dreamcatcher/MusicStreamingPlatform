@@ -15,10 +15,9 @@ export interface Song {
     };
 }
 
-export const URL_SONG = "http://192.168.1.4:3000/song/getSongs";
-export const URL_SEARCH = "http://192.168.1.4:3000/song/getSearchSongs";
-export const URL_GENRE = "http://192.168.1.4:3000/song/getGenreSongs";
-
+export const URL_SONG = "http://192.168.1.5:3000/song/getSongs";
+export const URL_SEARCH = "http://192.168.1.5:3000/song/getSearchSongs";
+export const URL_GENRE = "http://192.168.1.:3000/song/getGenreSongs";
 
 export const getSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => {
     try {
@@ -28,27 +27,6 @@ export const getSongs = async (setSongs: React.Dispatch<React.SetStateAction<Son
       console.error("Error fetching songs:", error);
     }
 };
-
-
-export const playSong = async (
-    songPath: string,
-    sound: Audio.Sound | null,
-    setSound: React.Dispatch<React.SetStateAction<Audio.Sound | null>>
-    ) => {
-        if (sound) {
-            await sound.unloadAsync();
-        }
-        try {
-            const { sound: newSound } = await Audio.Sound.createAsync(
-                { uri: `http://192.168.1.4:3000/media/${songPath}` },
-                { shouldPlay: true },
-            );
-            setSound(newSound);
-        } catch (error) {
-            console.error("Error playing song:", error);
-        }
-    };
-
 
 export const toggleLike = (
     index: number,
@@ -65,7 +43,6 @@ export const toggleLike = (
         setLikedSongs(newLikedSongs);
     };
 
-
 export const getSearchSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => {
     try {
         const response = await axios.get<Song[]>(`${URL_SEARCH}?query=${encodeURIComponent(query)}`);
@@ -74,7 +51,6 @@ export const getSearchSongs = async (setSongs: React.Dispatch<React.SetStateActi
         console.error("Error fetching songs:", error);
     }
 };
-
 
 export const getGenreSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, genre: string) => {
     try {

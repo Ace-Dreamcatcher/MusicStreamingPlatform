@@ -1,10 +1,13 @@
 import { AuthProvider } from "./AuthContext";
 import Navigation from "./Navigation";
+import { SongProvider } from "./SongContext";
 
 export default function App() {
   return (
     <AuthProvider>
-      <Navigation />
+      <SongProvider>
+        <Navigation />
+      </SongProvider>
     </AuthProvider>
   );
 }

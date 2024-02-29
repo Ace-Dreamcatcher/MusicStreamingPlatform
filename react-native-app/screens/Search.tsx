@@ -14,8 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Song, getSearchSongs, playSong, toggleLike } from "../SongHandler";
-import { Audio } from "expo-av";
+import { Song, getSearchSongs, toggleLike } from "../SongHandler";
+import { useSong } from "../SongContext";
 
 export default function Search() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -28,8 +28,8 @@ export default function Search() {
     new Animated.Value(Dimensions.get("window").width),
   ).current;
   const [songs, setSongs] = useState<Song[]>([]);
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
+  const { onPlay, soundState } = useSong();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -115,7 +115,7 @@ export default function Search() {
               <TouchableOpacity
                 key={index}
                 style={styles.songContainer}
-                onPress={() => playSong(song.track, sound, setSound)}
+                onPress={() => onPlay!(song.track)}
               >
                 <View style={styles.songInnerContainer}>
                   <Image
