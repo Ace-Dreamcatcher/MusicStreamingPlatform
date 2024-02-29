@@ -126,7 +126,6 @@ function TabScreens() {
             headerTransparent: true, 
             headerBackTitleVisible: false, 
             headerTintColor: 'white',
-            
             cardStyle: {
               backgroundColor: 'transparent', 
             },
@@ -138,7 +137,7 @@ function TabScreens() {
                   {
                     translateY: progress.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [850, 0],
+                      outputRange: [850, 0], 
                     }),
                   },
                 ],
@@ -152,7 +151,8 @@ function TabScreens() {
               },
             }),
             gestureResponseDistance: 1000, 
-            gestureVelocityImpact: 0.2, 
+            gestureVelocityImpact: 0.2,
+            presentation: 'modal', 
           }}
         />
       </Stack.Navigator>
