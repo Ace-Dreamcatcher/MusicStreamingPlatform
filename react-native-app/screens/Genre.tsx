@@ -2,24 +2,23 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StyleSheet, StatusBar, useColorScheme, Image, ScrollView, TouchableOpacity } from "react-native";
 import { View, Text } from "../components/Theme";
-import { Song, getGenreSongs, playSong, toggleLike } from "../SongHandler";
+import { Song, getGenreSongs, toggleLike } from "../SongHandler";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { Audio } from "expo-av";
+import { useSong } from "../SongContext";
 
 
 export default function Genre({route}: any) {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     const colorScheme = useColorScheme();
     const backgroundColor = colorScheme === "dark" ? "black" : "white";
-    const statusBarStyle =
-    colorScheme === "dark" ? "light-content" : "dark-content";
+    const statusBarStyle = colorScheme === "dark" ? "light-content" : "dark-content";
     const backButtonColor = colorScheme === "dark" ? "#202123" : "#f5f5f5";
     const styles = getStyles(colorScheme);
     const [songs, setSongs] = useState<Song[]>([]);
-    const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [likedSongs, setLikedSongs] = useState<string[]>([]);
+    const { onPlay, soundState } = useSong();
     const {genre} = route.params;
 
     useLayoutEffect(() => {
@@ -56,7 +55,7 @@ export default function Genre({route}: any) {
                     <TouchableOpacity
                         key={index}
                         style={styles.songContainer}
-                        onPress={() => playSong(song.track, sound, setSound)}
+                        onPress={() => onPlay!(song.track)}
                     >
                         <View style={styles.songInnerContainer}>
                         <Image

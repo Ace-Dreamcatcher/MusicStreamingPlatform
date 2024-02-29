@@ -17,7 +17,7 @@ export interface Song {
 
 export const URL_SONG = "http://192.168.1.5:3000/song/getSongs";
 export const URL_SEARCH = "http://192.168.1.5:3000/song/getSearchSongs";
-export const URL_GENRE = "http://192.168.1.:3000/song/getGenreSongs";
+export const URL_GENRE = "http://192.168.1.5:3000/song/getGenreSongs";
 
 export const getSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => {
     try {

@@ -13,7 +13,7 @@ export default function Player({ route }: any) {
         <SafeAreaView style={styles.container}>
           <View style={styles.imageContainer}>
             <Image
-              source={{ uri: `http://192.168.1.4:3000/media/${currentSong.albums.image}` }}
+              source={{ uri: `http://192.168.1.5:3000/media/${currentSong.albums.image}` }}
               style={styles.albumImage}
               defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
               resizeMode="cover"
@@ -29,13 +29,13 @@ export default function Player({ route }: any) {
             </View>
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.controlButton}>
-                <Ionicons name="play-back-circle-outline" size={65} color={"white"}/>
+                <Ionicons name="play-back" size={50} color={"white"}/>
               </TouchableOpacity>
               <TouchableOpacity style={styles.controlButton}>
-                <Ionicons name= "play-circle-outline" size={65} color={"white"}/>
+                <Ionicons name= "play" size={50} color={"white"}/>
               </TouchableOpacity>
               <TouchableOpacity style={styles.controlButton}>
-                <Ionicons name="play-forward-circle-outline" size={65} color={"white"}/>
+                <Ionicons name="play-forward" size={50} color={"white"}/>
               </TouchableOpacity>
             </View>
           </View>
@@ -61,7 +61,7 @@ export default function Player({ route }: any) {
       borderRadius: 15,
     },
     songInfoContainer: {
-      marginTop: 50, 
+      marginTop: 30, 
     },
     songTitle: {
       fontSize: 24,
@@ -92,7 +92,7 @@ export default function Player({ route }: any) {
       marginTop: 0,
     },
     controlButton: {
-        margin: 10,
+        margin: 30,
     },
   });
   
