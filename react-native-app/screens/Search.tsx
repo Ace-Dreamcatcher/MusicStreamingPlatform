@@ -103,7 +103,7 @@ export default function Search() {
           />
         </View>
         {isFocused && (
-          <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
+          <TouchableOpacity onPress={handleCancel} style={styles.cancelButton} activeOpacity={0.3}>
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         )}

@@ -129,7 +129,7 @@ export default function Home() {
       </ScrollView>
       {currentSong && (
         <View style={styles.musicPlayerContainer}>
-          <TouchableOpacity style={styles.musicPlayer} onPress={() => navigation.navigate("Player", {currentSong})}>
+          <TouchableOpacity style={styles.musicPlayer} onPress={() => navigation.navigate("Player", {currentSong})} activeOpacity={0.7}>
             <Image
               source={{ uri: `http://192.168.1.5:3000/media/${currentSong.albums.image}` }}
               style={styles.musicPlayerImage}
@@ -214,7 +214,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      borderRadius: 20,
+      borderRadius: 15,
       paddingHorizontal: 15,
       backgroundColor: "#19bfb7", //colorScheme === "light" ? "#f5f5f5" : "#202123",
       width: Dimensions.get("window").width - 15,
