@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import GestureRecognizer from "react-native-swipe-gestures";
 import { Text, View } from "../components/Theme";
 import { useAuth } from "../AuthContext";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -64,60 +63,55 @@ export default function SignUp() {
   };
 
   return (
-    <GestureRecognizer
-      style={{ flex: 1 }}
-      onSwipeDown={() => navigation.goBack()}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
-          <Spinner visible={loadingState?.isLoading} />
-          <Text style={styles.text}> Email* </Text>
-          <View style={styles.gap} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="example@gmail.com"
-            placeholderTextColor="gray"
-            onChangeText={(newText) => {
-              setTextEmail(newText);
-              setEmailError("");
-            }}
-            defaultValue={textEmail}
-          />
-          {emailError && <Text style={styles.errorText}>{emailError}</Text>}
-          <View style={styles.space} />
-          <Text style={styles.text}> Username </Text>
-          <View style={styles.gap} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="user"
-            placeholderTextColor="gray"
-            onChangeText={(newText) => setTextUsername(newText)}
-            defaultValue={textUsername}
-          />
-          <View style={styles.space} />
-          <Text style={styles.text}> Password* </Text>
-          <View style={styles.gap} />
-          <TextInput
-            style={styles.textInput}
-            secureTextEntry={true}
-            onChangeText={(newText) => {
-              setTextPassword(newText);
-              setPasswordError("");
-            }}
-            defaultValue={textPassword}
-          />
-          {passwordError && (
-            <Text style={styles.errorText}>{passwordError}</Text>
-          )}
-          <View style={styles.space} />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSignUp}>
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <Spinner visible={loadingState?.isLoading} />
+        <Text style={styles.text}> Email* </Text>
+        <View style={styles.gap} />
+        <TextInput
+          style={styles.textInput}
+          placeholder="example@gmail.com"
+          placeholderTextColor="gray"
+          onChangeText={(newText) => {
+            setTextEmail(newText);
+            setEmailError("");
+          }}
+          defaultValue={textEmail}
+        />
+        {emailError && <Text style={styles.errorText}>{emailError}</Text>}
+        <View style={styles.space} />
+        <Text style={styles.text}> Username </Text>
+        <View style={styles.gap} />
+        <TextInput
+          style={styles.textInput}
+          placeholder="user"
+          placeholderTextColor="gray"
+          onChangeText={(newText) => setTextUsername(newText)}
+          defaultValue={textUsername}
+        />
+        <View style={styles.space} />
+        <Text style={styles.text}> Password* </Text>
+        <View style={styles.gap} />
+        <TextInput
+          style={styles.textInput}
+          secureTextEntry={true}
+          onChangeText={(newText) => {
+            setTextPassword(newText);
+            setPasswordError("");
+          }}
+          defaultValue={textPassword}
+        />
+        {passwordError && (
+          <Text style={styles.errorText}>{passwordError}</Text>
+        )}
+        <View style={styles.space} />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleSignUp} activeOpacity={0.7}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
         </View>
-      </TouchableWithoutFeedback>
-    </GestureRecognizer>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 

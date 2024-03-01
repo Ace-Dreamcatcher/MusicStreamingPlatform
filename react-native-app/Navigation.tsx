@@ -49,12 +49,12 @@ function StartScreens() {
         <Stack.Screen
           name="Sign In"
           component={SignIn}
-          options={{ presentation: "modal", headerLeft: () => null }}
+          options={{ gestureResponseDistance: 1000, gestureVelocityImpact: 0.1, presentation: "modal", headerLeft: () => null }}
         />
         <Stack.Screen
           name="Sign Up"
           component={SignUp}
-          options={{ presentation: "modal", headerLeft: () => null }}
+          options={{ gestureResponseDistance: 1000, gestureVelocityImpact: 0.1, presentation: "modal", headerLeft: () => null }}
         />
       </Stack.Navigator>
     </>
@@ -92,7 +92,7 @@ function TabScreens() {
         <Stack.Screen
           name="Account"
           component={Account}
-          options={{ presentation: "modal", headerLeft: () => null }}
+          options={{ gestureResponseDistance: 1000, gestureVelocityImpact: 0.1, presentation: "modal", headerLeft: () => null }}
         />
         <Stack.Screen
           name="Edit Info"
@@ -145,13 +145,13 @@ function TabScreens() {
               overlayStyle: {
                 opacity: progress.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0, 0.5], 
+                  outputRange: [0, 1], 
                   extrapolate: 'clamp',
                 }),
               },
             }),
             gestureResponseDistance: 1000, 
-            gestureVelocityImpact: 0.2,
+            gestureVelocityImpact: 0.1,
             presentation: 'modal', 
           }}
         />

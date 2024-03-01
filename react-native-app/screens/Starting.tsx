@@ -30,6 +30,7 @@ export default function Starting() {
         <TouchableOpacity
           style={[styles.button]}
           onPress={() => navigation.navigate("Sign Up")}
+          activeOpacity={0.7}
         >
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
@@ -37,6 +38,7 @@ export default function Starting() {
         <TouchableOpacity
           style={[styles.button]}
           onPress={() => navigation.navigate("Sign In")}
+          activeOpacity={0.7}
         >
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>

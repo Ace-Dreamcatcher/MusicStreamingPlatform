@@ -9,7 +9,6 @@ import {
   useColorScheme,
 } from "react-native";
 import { useState } from "react";
-import GestureRecognizer from "react-native-swipe-gestures";
 import { Text, View } from "../components/Theme";
 import { useAuth } from "../AuthContext";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -39,47 +38,42 @@ export default function SignIn() {
   };
 
   return (
-    <GestureRecognizer
-      style={{ flex: 1 }}
-      onSwipeDown={() => navigation.goBack()}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
-          <Spinner visible={loadingState?.isLoading} />
-          <Text style={styles.text}> Email </Text>
-          <View style={styles.gap} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="example@gmail.com"
-            placeholderTextColor="gray"
-            onChangeText={(newText) => {
-              setTextEmail(newText);
-              setError("");
-            }}
-            defaultValue={textEmail}
-          />
-          <View style={styles.space} />
-          <Text style={styles.text}> Password </Text>
-          <View style={styles.gap} />
-          <TextInput
-            style={styles.textInput}
-            secureTextEntry={true}
-            onChangeText={(newText) => {
-              setTextPassword(newText);
-              setError("");
-            }}
-            defaultValue={textPassword}
-          />
-          {error && <Text style={styles.errorText}>{error}</Text>}
-          <View style={styles.space} />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSignIn}>
-              <Text style={styles.buttonText}>Sign In</Text>
-            </TouchableOpacity>
-          </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <Spinner visible={loadingState?.isLoading} />
+        <Text style={styles.text}> Email </Text>
+        <View style={styles.gap} />
+        <TextInput
+          style={styles.textInput}
+          placeholder="example@gmail.com"
+          placeholderTextColor="gray"
+          onChangeText={(newText) => {
+            setTextEmail(newText);
+            setError("");
+          }}
+          defaultValue={textEmail}
+        />
+        <View style={styles.space} />
+        <Text style={styles.text}> Password </Text>
+        <View style={styles.gap} />
+        <TextInput
+          style={styles.textInput}
+          secureTextEntry={true}
+          onChangeText={(newText) => {
+            setTextPassword(newText);
+            setError("");
+          }}
+          defaultValue={textPassword}
+        />
+        {error && <Text style={styles.errorText}>{error}</Text>}
+        <View style={styles.space} />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleSignIn} activeOpacity={0.7}>
+            <Text style={styles.buttonText}>Sign In</Text>
+          </TouchableOpacity>
         </View>
-      </TouchableWithoutFeedback>
-    </GestureRecognizer>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
