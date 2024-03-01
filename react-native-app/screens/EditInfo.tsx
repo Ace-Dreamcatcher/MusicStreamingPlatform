@@ -88,7 +88,7 @@ export default function EditInfo() {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.5}>
           <View
             style={{
               flexDirection: "row",
@@ -102,7 +102,7 @@ export default function EditInfo() {
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity onPress={handleUpdate}>
+        <TouchableOpacity onPress={handleUpdate} activeOpacity={0.5}>
           <View
             style={{
               flexDirection: "row",
@@ -180,6 +180,7 @@ export default function EditInfo() {
                     ],
                   );
                 }}
+                activeOpacity={0.7}
               >
                 <Text style={{ fontSize: 12, color: "#19bfb7" }}> here</Text>
               </TouchableOpacity>

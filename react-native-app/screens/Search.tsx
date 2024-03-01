@@ -14,8 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Song, getSearchSongs, toggleLike } from "../SongHandler";
-import { useSong } from "../SongContext";
+import { Song, toggleLike, useSong } from "../SongContext";
+import MusicPlayer from "./MusicPlayer";
 
 export default function Search() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -29,7 +29,7 @@ export default function Search() {
   ).current;
   const [songs, setSongs] = useState<Song[]>([]);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
-  const { onPlay, soundState } = useSong();
+  const { onGetSearchSongs, onPressSong } = useSong();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -75,7 +75,7 @@ export default function Search() {
   const handleSearch = (text: string) => {
     setSearchQuery(text);
     if (text.trim() !== "") {
-      getSearchSongs(setSongs, text);
+      onGetSearchSongs!(setSongs, text);
     } else {
       setSongs([]);
     }
@@ -86,103 +86,106 @@ export default function Search() {
   };
 
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[styles.secondContainer, { width: widthAnimation }]}
-      >
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={24} color="gray" style={styles.icon} />
-          <TextInput
-            ref={inputRef}
-            style={styles.input}
-            placeholder="Artists, Albums, Songs"
-            placeholderTextColor="gray"
-            onChangeText={handleSearch}
-            onFocus={handleFocus}
-            value={searchQuery}
-          />
-        </View>
-        {isFocused && (
-          <TouchableOpacity onPress={handleCancel} style={styles.cancelButton} activeOpacity={0.3}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
-        )}
-      </Animated.View>
-      {isFocused ?
-        <View style={styles.container}>
-          <ScrollView>
-            {songs.map((song, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.songContainer}
-                onPress={() => onPlay!(song.track)}
-              >
-                <View style={styles.songInnerContainer}>
-                  <Image
-                    source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
-                    style={styles.albumImage}
-                    defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
-                    resizeMode="cover"
-                  />
-                  <View style={styles.songInfo}>
-                    <Text style={styles.songTitle}>{song.name}</Text>
-                    <Text style={styles.artist}>{song.artists.name}</Text>
-                  </View>
-                  <TouchableOpacity onPress={() => toggleLike(index, songs, likedSongs, setLikedSongs)}>
-                    <FontAwesome
-                      name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
-                      size={28}
-                      color={likedSongs.includes(song.name) ? "#19bfb7" : "grey"}
+    <>
+      <View style={styles.container}>
+        <Animated.View
+          style={[styles.secondContainer, { width: widthAnimation }]}
+        >
+          <View style={styles.searchContainer}>
+            <Ionicons name="search" size={24} color="gray" style={styles.icon} />
+            <TextInput
+              ref={inputRef}
+              style={styles.input}
+              placeholder="Artists, Albums, Songs"
+              placeholderTextColor="gray"
+              onChangeText={handleSearch}
+              onFocus={handleFocus}
+              value={searchQuery}
+            />
+          </View>
+          {isFocused && (
+            <TouchableOpacity onPress={handleCancel} style={styles.cancelButton} activeOpacity={0.3}>
+              <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
+          )}
+        </Animated.View>
+        {isFocused ?
+          <View style={styles.container}>
+            <ScrollView>
+              {songs.map((song, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.songContainer}
+                  onPress={() => onPressSong!(song, "Home")}
+                >
+                  <View style={styles.songInnerContainer}>
+                    <Image
+                      source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
+                      style={styles.albumImage}
+                      defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
+                      resizeMode="cover"
                     />
-                  </TouchableOpacity>
-                </View>
+                    <View style={styles.songInfo}>
+                      <Text style={styles.songTitle}>{song.name}</Text>
+                      <Text style={styles.artist}>{song.artists.name}</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => toggleLike(index, songs, likedSongs, setLikedSongs)}>
+                      <FontAwesome
+                        name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
+                        size={28}
+                        color={likedSongs.includes(song.name) ? "#19bfb7" : "grey"}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+          :
+          <View style={styles.browseContainer}>
+            <Text style={styles.header}>Browse</Text>
+            <View style={styles.buttonFlex}>
+              <TouchableOpacity onPress={() => handleGenre("Ost")} style={styles.button1}>
+                <Text style={styles.buttonText}>Ost</Text>
               </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-        :
-        <View style={styles.browseContainer}>
-          <Text style={styles.header}>Browse</Text>
-          <View style={styles.buttonFlex}>
-            <TouchableOpacity onPress={() => handleGenre("Ost")} style={styles.button1}>
-              <Text style={styles.buttonText}>Ost</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleGenre("Rock")} style={styles.button2}>
-              <Text style={styles.buttonText}>Rock</Text>
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleGenre("Rock")} style={styles.button2}>
+                <Text style={styles.buttonText}>Rock</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonFlex}>
+              <TouchableOpacity onPress={() => handleGenre("Metal")} style={styles.button3}>
+                <Text style={styles.buttonText}>Metal</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleGenre("Jazz")} style={styles.button4}>
+                <Text style={styles.buttonText}>Jazz</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonFlex}>
+              <TouchableOpacity onPress={() => handleGenre("Classic")} style={styles.button5}>
+                <Text style={styles.buttonText}>Classic</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleGenre("Blues")} style={styles.button6}>
+                <Text style={styles.buttonText}>Blues</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonFlex}>
+              <TouchableOpacity onPress={() => handleGenre("Pop")} style={styles.button7}>
+                <Text style={styles.buttonText}>Pop</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleGenre("Country")} style={styles.button8}>
+                <Text style={styles.buttonText}>Country</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonFlex}>
+              <TouchableOpacity onPress={() => handleGenre("Rap")} style={styles.button9}>
+                <Text style={styles.buttonText}>Hip-Hop / Rap</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.buttonFlex}>
-            <TouchableOpacity onPress={() => handleGenre("Metal")} style={styles.button3}>
-              <Text style={styles.buttonText}>Metal</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleGenre("Jazz")} style={styles.button4}>
-              <Text style={styles.buttonText}>Jazz</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonFlex}>
-            <TouchableOpacity onPress={() => handleGenre("Classic")} style={styles.button5}>
-              <Text style={styles.buttonText}>Classic</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleGenre("Blues")} style={styles.button6}>
-              <Text style={styles.buttonText}>Blues</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonFlex}>
-            <TouchableOpacity onPress={() => handleGenre("Pop")} style={styles.button7}>
-              <Text style={styles.buttonText}>Pop</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleGenre("Country")} style={styles.button8}>
-              <Text style={styles.buttonText}>Country</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonFlex}>
-            <TouchableOpacity onPress={() => handleGenre("Rap")} style={styles.button9}>
-              <Text style={styles.buttonText}>Hip-Hop / Rap</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      }
-    </View>
+        }
+      </View>
+      <MusicPlayer />
+    </>
   );
 }
 

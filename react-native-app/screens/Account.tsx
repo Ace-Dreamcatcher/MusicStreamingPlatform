@@ -187,7 +187,7 @@ export default function Account() {
       </View>
       <View style={styles.membershipText}>
         <Text style={{ fontSize: 11 }}>Just 6,99 € per month.</Text>
-        <TouchableOpacity onPress={handleMembership}>
+        <TouchableOpacity onPress={handleMembership} activeOpacity={0.7}>
           {membership === "PREMIUM" ? (
             <Text style={{ fontSize: 11, color: "#19bfb7" }}> Cancel</Text>
           ) : (

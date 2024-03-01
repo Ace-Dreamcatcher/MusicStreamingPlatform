@@ -14,7 +14,7 @@ import Starting from "./screens/Starting";
 import Account from "./screens/Account";
 import EditInfo from "./screens/EditInfo";
 import Genre from "./screens/Genre";
-import Player from "./screens/Player"; // Import the Player screen
+import Player from "./screens/Player";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

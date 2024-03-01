@@ -2,11 +2,10 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StyleSheet, StatusBar, useColorScheme, Image, ScrollView, TouchableOpacity } from "react-native";
 import { View, Text } from "../components/Theme";
-import { Song, getGenreSongs, toggleLike } from "../SongHandler";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useSong } from "../SongContext";
+import { Song, toggleLike, useSong } from "../SongContext";
 
 
 export default function Genre({route}: any) {
@@ -18,7 +17,7 @@ export default function Genre({route}: any) {
     const styles = getStyles(colorScheme);
     const [songs, setSongs] = useState<Song[]>([]);
     const [likedSongs, setLikedSongs] = useState<string[]>([]);
-    const { onPlay, soundState } = useSong();
+    const { onGetGenreSongs, onPressSong } = useSong();
     const {genre} = route.params;
 
     useLayoutEffect(() => {
@@ -43,7 +42,7 @@ export default function Genre({route}: any) {
       }, [navigation, colorScheme]);
 
       useEffect(() => {
-        getGenreSongs(setSongs, genre);
+        onGetGenreSongs!(setSongs, genre);
       }, []);
 
     return (
@@ -55,7 +54,7 @@ export default function Genre({route}: any) {
                     <TouchableOpacity
                         key={index}
                         style={styles.songContainer}
-                        onPress={() => onPlay!(song.track)}
+                        onPress={() => onPressSong!(song, "Home")}
                     >
                         <View style={styles.songInnerContainer}>
                         <Image

@@ -4,6 +4,7 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
+import MusicPlayer from "./MusicPlayer";
 
 export default function Library() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -24,9 +25,12 @@ export default function Library() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text>Library</Text>
-    </View>
+    <>
+      <View style={styles.container}>
+        <Text>Library</Text>
+      </View>
+      <MusicPlayer />
+    </>
   );
 }
 
