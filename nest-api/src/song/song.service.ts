@@ -138,9 +138,9 @@ export class SongService {
 			const resultSong = await this.prisma.song.findMany({
 				where: {
 					OR: [
-						{ name: { contains: query } },
-						// { albums: { name: { contains: query } } },
-						{ artists: { name: { contains: query } } },
+						{ name: { contains: query, mode: 'insensitive' } },
+						// { albums: { name: { contains: query, mode: 'insensitive' } } },
+						{ artists: { name: { contains: query, mode: 'insensitive' } } },
 					],
 				},
 				select: {
