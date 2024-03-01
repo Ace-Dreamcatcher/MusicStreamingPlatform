@@ -111,7 +111,7 @@ export default function Search() {
         </Animated.View>
         {isFocused ?
           <View style={styles.container}>
-            <ScrollView>
+            <ScrollView contentContainerStyle={{paddingBottom: 60}}>
               {songs.map((song, index) => (
                 <TouchableOpacity
                   key={index}
@@ -233,7 +233,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
     header: {
       fontSize: 30,
       fontWeight: "bold",
-      marginTop: 50,
+      marginTop: 5,
       marginBottom: 5,
       marginLeft: 5,
       color: colorScheme === "light" ? "black" : "white",
