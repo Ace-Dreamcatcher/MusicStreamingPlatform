@@ -20,6 +20,7 @@ interface SongsProps {
     contextSongsLibrary?: {songs: Song[]}
     soundState?: {sound: Audio.Sound | null};
     isPlaying?: {play: boolean};
+    loadingState?: {isLoading: boolean};
     onCurrentSong?: {currentSong: Song | null};
     onGetSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => Promise<any>;
     onGetSearchSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => Promise<any>;
@@ -71,44 +72,85 @@ export const SongProvider = ({ children }: any) => {
     }>({
         play: false,
     });
+    const [loadingState, setLoadingState] = useState<{
+        isLoading: boolean;
+    }>({
+        isLoading: false,
+    });
 
     const getSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => {
         try {
-          const response = await axios.get<Song[]>(`${URL_SONG}`);
+            setLoadingState({
+                isLoading: true,
+            });
 
-          setContextSongsHome({
-            songs: response.data,
-          });
+            const response = await axios.get<Song[]>(`${URL_SONG}`);
 
-          setSongs(response.data);
+            setContextSongsHome({
+                songs: response.data,
+            });
+
+            setSongs(response.data);
+
+            setLoadingState({
+                isLoading: false,
+            });
         } catch (error) {
-          console.error("Error fetching songs:", error);
+            setLoadingState({
+                isLoading: false,
+            });
+
+            console.error("Error fetching songs:", error);
         }
     };
 
     const getSearchSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => {
         try {
+            setLoadingState({
+                isLoading: true,
+            });
+
             const response = await axios.get<Song[]>(`${URL_SEARCH}?query=${encodeURIComponent(query)}`);
 
             setSongs(response.data);
+
+            setLoadingState({
+                isLoading: false,
+            });
         } catch (error) {
+            setLoadingState({
+                isLoading: false,
+            });
+
             console.error("Error fetching songs:", error);
         }
     };
 
     const getGenreSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, genre: string) => {
         try {
+            setLoadingState({
+                isLoading: true,
+            });
+
             const response = await axios.get<Song[]>(`${URL_GENRE}?query=${encodeURIComponent(genre)}`);
 
             setSongs(response.data);
+
+            setLoadingState({
+                isLoading: false,
+            });
         } catch (error) {
+            setLoadingState({
+                isLoading: false,
+            });
+
             console.error("Error fetching songs:", error);
         }
     };
 
     const playSong = async (songPath: string) => {
-        if (soundState.sound) {
-            await soundState.sound.unloadAsync();
+        if (soundState?.sound) {
+            await soundState?.sound.unloadAsync();
         }
         try {
             const { sound: newSound } = await Audio.Sound.createAsync(
@@ -124,7 +166,7 @@ export const SongProvider = ({ children }: any) => {
     };
 
     const handlePlaySong = async (song: Song, screen: string) => {
-        if (onCurrentSong.currentSong === null || onCurrentSong.currentSong.name !== song.name || onCurrentSong.currentSong.name === song.name) {
+        if (onCurrentSong?.currentSong === null || onCurrentSong?.currentSong.name !== song.name || onCurrentSong?.currentSong.name === song.name) {
             setOnCurrentSong({
                 currentSong: song,
             });
@@ -166,11 +208,11 @@ export const SongProvider = ({ children }: any) => {
     };
 
     const handlePreviousSong = async () => {
-        if (onCurrentSong.currentSong !== null) {
+        if (onCurrentSong?.currentSong) {
             if (screen.screen === "Home") {
-                const currentIndex = contextSongsHome.songs.findIndex(song => song.name === onCurrentSong.currentSong.name);
-                const previousIndex = (currentIndex - 1 + contextSongsHome.songs.length) % contextSongsHome.songs.length;
-                const previousSong = contextSongsHome.songs[previousIndex];
+                const currentIndex = contextSongsHome?.songs.findIndex(song => song.name === onCurrentSong?.currentSong?.name);
+                const previousIndex = (currentIndex - 1 + contextSongsHome?.songs.length) % contextSongsHome?.songs.length;
+                const previousSong = contextSongsHome?.songs[previousIndex];
 
                 setOnCurrentSong({
                     currentSong: previousSong,
@@ -181,9 +223,9 @@ export const SongProvider = ({ children }: any) => {
                     play: true,
                 });
             } else if (screen.screen === "Library") {
-                const currentIndex = contextSongsLibrary.songs.findIndex(song => song.name === onCurrentSong.currentSong.name);
-                const previousIndex = (currentIndex - 1 + contextSongsLibrary.songs.length) % contextSongsLibrary.songs.length;
-                const previousSong = contextSongsLibrary.songs[previousIndex];
+                const currentIndex = contextSongsLibrary?.songs.findIndex(song => song.name === onCurrentSong?.currentSong?.name);
+                const previousIndex = (currentIndex - 1 + contextSongsLibrary?.songs.length) % contextSongsLibrary?.songs.length;
+                const previousSong = contextSongsLibrary?.songs[previousIndex];
 
                 setOnCurrentSong({
                     currentSong: previousSong,
@@ -202,11 +244,11 @@ export const SongProvider = ({ children }: any) => {
     };
 
     const handleNextSong = async () => {
-        if (onCurrentSong.currentSong !== null) {
+        if (onCurrentSong?.currentSong) {
             if (screen.screen === "Home") {
-                const currentIndex = contextSongsHome.songs.findIndex(song => song.name === onCurrentSong.currentSong.name);
-                const nextIndex = (currentIndex + 1) % contextSongsHome.songs.length;
-                const nextSong = contextSongsHome.songs[nextIndex];
+                const currentIndex = contextSongsHome?.songs.findIndex(song => song.name === onCurrentSong?.currentSong?.name);
+                const nextIndex = (currentIndex + 1) % contextSongsHome?.songs.length;
+                const nextSong = contextSongsHome?.songs[nextIndex];
 
                 setOnCurrentSong({
                     currentSong: nextSong,
@@ -217,9 +259,9 @@ export const SongProvider = ({ children }: any) => {
                     play: true,
                 });
             } else if (screen.screen === "Library") {
-                const currentIndex = contextSongsLibrary.songs.findIndex(song => song.name === onCurrentSong.currentSong.name);
-                const nextIndex = (currentIndex + 1) % contextSongsLibrary.songs.length;
-                const nextSong = contextSongsLibrary.songs[nextIndex];
+                const currentIndex = contextSongsLibrary?.songs.findIndex(song => song.name === onCurrentSong?.currentSong?.name);
+                const nextIndex = (currentIndex + 1) % contextSongsLibrary?.songs.length;
+                const nextSong = contextSongsLibrary?.songs[nextIndex];
 
                 setOnCurrentSong({
                     currentSong: nextSong,
@@ -247,6 +289,7 @@ export const SongProvider = ({ children }: any) => {
         onPreviousButton: handlePreviousSong,
         onNextButton: handleNextSong,
         soundState,
+        loadingState,
         onCurrentSong,
         isPlaying,
     };

@@ -11,7 +11,6 @@ import {
 import { useState } from "react";
 import { Text, View } from "../components/Theme";
 import { useAuth } from "../AuthContext";
-import Spinner from "react-native-loading-spinner-overlay";
 
 export default function SignIn() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -20,7 +19,7 @@ export default function SignIn() {
   const [textEmail, setTextEmail] = useState("");
   const [textPassword, setTextPassword] = useState("");
   const [error, setError] = useState("");
-  const { onSignIn, loadingState } = useAuth();
+  const { onSignIn } = useAuth();
 
   const handleSignIn = async () => {
     const response = await onSignIn!(textEmail, textPassword);
@@ -40,7 +39,6 @@ export default function SignIn() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <Spinner visible={loadingState?.isLoading} />
         <Text style={styles.text}> Email </Text>
         <View style={styles.gap} />
         <TextInput
