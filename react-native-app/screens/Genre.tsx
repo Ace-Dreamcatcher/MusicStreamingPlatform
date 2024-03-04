@@ -58,7 +58,7 @@ export default function Genre({route}: any) {
                     >
                         <View style={styles.songInnerContainer}>
                         <Image
-                            source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
+                            source={{ uri: `http://192.168.1.2:3000/media/${song.albums.image}` }}
                             style={styles.albumImage}
                             defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
                             resizeMode="cover"

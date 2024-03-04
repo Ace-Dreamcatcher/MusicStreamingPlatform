@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import { Text } from "../components/Theme"; 
 import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { useSong } from '../SongContext';
-
+import { Feather } from '@expo/vector-icons';
 
 export default function Player() {
-  const { onCurrentSong, onTogglePlay, onPreviousButton, onNextButton, isPlaying } = useSong();
+  const { onCurrentSong, onTogglePlay, onPreviousButton, onNextButton, isPlaying, ToggleLoop, isLoop, durationMillis, positionMillis } = useSong();
+  const progress = durationMillis > 0 ? (positionMillis / durationMillis) * 100 : 0;
+
   
+
   return (
     <LinearGradient colors={["#19bfb7", "black"]} style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -19,7 +23,7 @@ export default function Player() {
         <View style={styles.imageContainer}>
           {onCurrentSong?.currentSong ?
             <Image
-              source={{ uri: `http://192.168.1.5:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
+              source={{ uri: `http://192.168.1.2:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
               style={styles.albumImage}
               defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
               resizeMode="cover"
@@ -41,8 +45,20 @@ export default function Player() {
           }
         </View>
         <View style={styles.controls}>
+          <View style={styles.options}>
+            <TouchableOpacity style={{marginHorizontal: 115}}>
+              <FontAwesome name= {"heart-o"} size={30} color=  {"#757575"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={{marginHorizontal: 115}} onPress={ToggleLoop} activeOpacity={0.6}>
+              <Feather name={"repeat"} size={27} color={isLoop?.loop? 'white' : '#757575'}  />
+            </TouchableOpacity>
+          </View>
           <View style={styles.progressBar}>
-            <Text style={styles.progressBarText}>ProgressBar</Text>
+            <View style={[styles.progress, { width: `${progress}%` }]} />
+          </View>
+          <View style={styles.timers}>
+            <Text style={{marginHorizontal: 110, color: 'white'}}> {formatTime(positionMillis)} </Text> 
+            <Text style={{marginHorizontal: 110, color: 'white'}}> {formatTime(durationMillis)} </Text>
           </View>
           <View style={styles.buttonsContainer}>
             <TouchableOpacity onPress={() => onPreviousButton!()} style={styles.controlButton}>
@@ -61,6 +77,12 @@ export default function Player() {
   );
 };
   
+const formatTime = (milliseconds: number) => {
+  const minutes = Math.floor(milliseconds / 60000);
+  const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
+  return `${minutes}:${parseInt(seconds) < 10 ? '0' : ''}${seconds}`;
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -69,7 +91,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   removeIconContainer: {
-      marginTop: Dimensions.get("window").width - 355,
+    marginTop: Dimensions.get("window").width - 355,
   },
   imageContainer: {
     alignItems: 'center',
@@ -99,20 +121,36 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: 30
+  },
+  options:{
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingBottom: 15,
+  },
+  timers:{
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   progressBar: {
-    alignItems: 'center',
+    width: Dimensions.get("window").width - 80,
+    height: 4,
+    backgroundColor: '#555555',
+    borderRadius: 2,
+    marginBottom: 15,
   },
-  progressBarText: {
-    fontSize: 18,
-    color: 'white',
+  progress: {
+    height: 4,
+    backgroundColor: 'white',
+    borderRadius: 2,
   },
   buttonsContainer: {
     flexDirection: 'row',
-    marginTop: 0,
+    paddingTop: 20,
   },
   controlButton: {
-      margin: 30,
+    margin: 30,
   },
 });
-  

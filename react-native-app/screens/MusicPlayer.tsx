@@ -16,7 +16,7 @@ export default function MusicPlayer() {
             <TouchableOpacity style={styles.musicPlayer} onPress={() => navigation.navigate("Player")} activeOpacity={0.7}>
                 {onCurrentSong?.currentSong ?
                     <Image
-                        source={{ uri: `http://192.168.1.5:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
+                        source={{ uri: `http://192.168.1.2:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
                         style={styles.musicPlayerImage}
                         defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
                         resizeMode="cover"
@@ -72,7 +72,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
         justifyContent: "space-between",
         borderRadius: 15,
         paddingHorizontal: 15,
-        backgroundColor: "#19bfb7", //colorScheme === "light" ? "#f5f5f5" : "#202123",
+        backgroundColor: "#19bfb7",
         width: Dimensions.get("window").width - 15,
         height: 60,
         },
@@ -91,7 +91,7 @@ const getStyles = (colorScheme: string | null | undefined) => {
         },
         musicPlayerText: {
         fontSize: 16,
-        fontWeight: "500",
+        fontWeight: '600',
         color: "black",
         },
         controls: {

@@ -151,7 +151,7 @@ function TabScreens() {
               },
             }),
             gestureResponseDistance: 1000, 
-            gestureVelocityImpact: 0.1,
+            gestureVelocityImpact: 0.3,
             presentation: 'modal', 
           }}
         />

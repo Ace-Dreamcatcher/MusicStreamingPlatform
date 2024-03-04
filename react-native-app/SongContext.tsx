@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Audio } from "expo-av";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export interface Song {
     name: string;
@@ -20,6 +20,8 @@ interface SongsProps {
     contextSongsLibrary?: {songs: Song[]}
     soundState?: {sound: Audio.Sound | null};
     isPlaying?: {play: boolean};
+    isLoop: {loop: boolean};
+    ToggleLoop?: () => Promise<any>
     onCurrentSong?: {currentSong: Song | null};
     onGetSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => Promise<any>;
     onGetSearchSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => Promise<any>;
@@ -29,16 +31,26 @@ interface SongsProps {
     onTogglePlay?: () => Promise<any>;
     onPreviousButton?: () => Promise<any>;
     onNextButton?: () => Promise<any>;
+    positionMillis: number;
+    durationMillis: number;
 }
 
-export const URL_SONG = "http://192.168.1.5:3000/song/getSongs";
-export const URL_SEARCH = "http://192.168.1.5:3000/song/getSearchSongs";
-export const URL_GENRE = "http://192.168.1.5:3000/song/getGenreSongs";
+export const URL_SONG = "http://192.168.1.2:3000/song/getSongs";
+export const URL_SEARCH = "http://192.168.1.2:3000/song/getSearchSongs";
+export const URL_GENRE = "http://192.168.1.2:3000/song/getGenreSongs";
 
-const SongContext = createContext<SongsProps>({});
+const SongContext = createContext<SongsProps>({
+    positionMillis: 0,
+    durationMillis: 0,
+    isLoop: {
+        loop: false
+    }
+});
 export const useSong = () => {
     return useContext(SongContext);
 };
+
+
 
 export const SongProvider = ({ children }: any) => {
     const [contextSongsHome, setContextSongsHome] = useState<{
@@ -71,6 +83,14 @@ export const SongProvider = ({ children }: any) => {
     }>({
         play: false,
     });
+    const [isLoop, setLooping ] = useState<{
+        loop: boolean;
+    }>({
+        loop: false,
+    });
+    const [positionMillis, setPositionMillis] = useState(0);
+    const [durationMillis, setDurationMillis] = useState(0);
+
 
     const getSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => {
         try {
@@ -112,8 +132,8 @@ export const SongProvider = ({ children }: any) => {
         }
         try {
             const { sound: newSound } = await Audio.Sound.createAsync(
-                { uri: `http://192.168.1.5:3000/media/${songPath}` },
-                { shouldPlay: true },
+                { uri: `http://192.168.1.2:3000/media/${songPath}` },
+                { shouldPlay: true, isLooping: isLoop.loop },
             );
             setSoundState({
                 sound: newSound,
@@ -237,6 +257,39 @@ export const SongProvider = ({ children }: any) => {
         }
     };
 
+    const ToggleLoop = async () => {
+        if(!isLoop.loop){
+            setLooping({
+                loop: true,
+            }); 
+        }else {
+            setLooping({
+                loop: false,
+            })
+        }
+        
+    };
+
+    useEffect(() => {
+        if (soundState.sound) {
+            soundState.sound.setOnPlaybackStatusUpdate(async (status) => {
+                if (status.isLoaded && status.positionMillis && status.durationMillis) {
+                    const position = status.positionMillis;
+                    const duration = status.durationMillis;
+                    setDurationMillis(duration);
+                    setPositionMillis(position);
+                    if ((position >= duration - 1000) && (!isLoop.loop)) {
+                        //console.log("Loop = ", isLoop.loop);
+                        await handleNextSong();
+                    }
+                }
+            });
+        }
+        if (soundState.sound) {
+            soundState.sound.setIsLoopingAsync(isLoop.loop);
+        }
+    }, [soundState.sound, isLoop.loop]);
+
     const value = {
         onGetSongs: getSongs,
         onGetSearchSongs: getSearchSongs,
@@ -249,6 +302,10 @@ export const SongProvider = ({ children }: any) => {
         soundState,
         onCurrentSong,
         isPlaying,
+        isLoop,
+        ToggleLoop,
+        positionMillis,
+        durationMillis,
     };
     
     return <SongContext.Provider value={value}>{children}</SongContext.Provider>;
