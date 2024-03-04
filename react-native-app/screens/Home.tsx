@@ -33,7 +33,10 @@ export default function Home() {
   }, [navigation]);
 
   useEffect(() => {
-    onGetSongs!(setSongs);
+    const getSongs = async () => {
+      await onGetSongs!(setSongs);
+    };
+    getSongs();
   }, []);
 
   const handleToggleLike = async (index: number, songs: Song[]) => {
@@ -61,7 +64,7 @@ export default function Home() {
             >
               <View style={styles.songInnerContainer}>
                 <Image
-                  source={{ uri: `http://192.168.1.2:3000/media/${song.albums.image}` }}
+                  source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
                   style={styles.albumImage}
                   defaultSource={require("../assets/Songs/default.png")}
                   resizeMode="cover"

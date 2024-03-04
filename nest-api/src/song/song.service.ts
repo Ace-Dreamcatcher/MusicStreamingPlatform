@@ -145,6 +145,7 @@ export class SongService {
 					],
 				},
 				select: {
+					id: true,
 					name: true,
 					track: true,
 					albums: { select: { name: true, image: true } },
@@ -166,6 +167,7 @@ export class SongService {
 						genre: query,
 					},
 					select: {
+						id: true,
 						name: true,
 						track: true,
 						albums: { select: { name: true, image: true } },
@@ -180,6 +182,7 @@ export class SongService {
 						genre: query || 'Hip-Hop',
 					},
 					select: {
+						id: true,
 						name: true,
 						track: true,
 						albums: { select: { name: true, image: true } },

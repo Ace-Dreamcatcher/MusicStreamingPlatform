@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { AdminController } from 'src/admin/admin.controller';
 import { SongService } from './song.service';
 import { ArtistService } from 'src/artist/artist.service';

@@ -26,6 +26,7 @@ interface SongsProps {
     loadingState?: {isLoading: boolean};
     onCurrentSong?: {currentSong: Song | null};
     onGetSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => Promise<any>;
+    onGetLikedSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => Promise<any>;
     onGetSearchSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => Promise<any>;
     onGetGenreSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, genre: string) => Promise<any>;
     onPlay?: (songPath: string) => Promise<any>;
@@ -40,6 +41,7 @@ interface SongsProps {
 }
 
 export const URL_SONG = "http://192.168.1.5:3000/song/getSongs";
+export const URL_LIKEDSONG = "http://192.168.1.5:3000/auth/getLikedSongs";
 export const URL_SEARCH = "http://192.168.1.5:3000/song/getSearchSongs";
 export const URL_GENRE = "http://192.168.1.5:3000/song/getGenreSongs";
 
@@ -107,6 +109,32 @@ export const SongProvider = ({ children }: any) => {
             const response = await axios.get<Song[]>(`${URL_SONG}`);
 
             setContextSongsHome({
+                songs: response.data,
+            });
+
+            setSongs(response.data);
+
+            setLoadingState({
+                isLoading: false,
+            });
+        } catch (error) {
+            setLoadingState({
+                isLoading: false,
+            });
+
+            console.error("Error fetching songs:", error);
+        }
+    };
+
+    const getLikedSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => {
+        try {
+            setLoadingState({
+                isLoading: true,
+            });
+
+            const response = await axios.get<Song[]>(`${URL_LIKEDSONG}?query=${encodeURIComponent(query)}`);
+
+            setContextSongsLibrary({
                 songs: response.data,
             });
 
@@ -353,6 +381,7 @@ export const SongProvider = ({ children }: any) => {
 
     const value = {
         onGetSongs: getSongs,
+        onGetLikedSongs: getLikedSongs,
         onGetSearchSongs: getSearchSongs,
         onGetGenreSongs: getGenreSongs,
         onPlay: playSong,

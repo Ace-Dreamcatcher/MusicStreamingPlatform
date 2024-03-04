@@ -3,7 +3,9 @@ import {
 	Body,
 	Controller,
 	ForbiddenException,
+	Get,
 	Post,
+	Query,
 	ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -81,6 +83,15 @@ export class AuthController {
 			return await this.authService.removeLikedSong(dto);
 		} catch (error) {
 			throw new BadRequestException('*Failed to remove liked song!');
+		}
+	}
+
+	@Get('getLikedSongs')
+	async printLikedSongs(@Query('query') query: string) {
+		try {
+			return await this.authService.printLikedSongs(query);
+		} catch (error) {
+			throw new BadRequestException('*Failed to retrieve liked songs!');
 		}
 	}
 }

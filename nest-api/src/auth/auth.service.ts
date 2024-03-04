@@ -208,12 +208,32 @@ export class AuthService {
 		}
 	}
 
-	// async printLikedSongs() {
-	// 	try {
-	// 	} catch (error) {
-	// 		throw new BadRequestException('Failed to get liked songs!');
-	// 	}
-	// }
+	async printLikedSongs(query: string) {
+		try {
+			const decodedToken = await this.jwt.decode(query);
+
+			const resultSong = await this.prisma.song.findMany({
+				where: {
+					users: {
+						some: {
+							id: decodedToken.id,
+						},
+					},
+				},
+				select: {
+					id: true,
+					name: true,
+					track: true,
+					albums: { select: { name: true, image: true } },
+					artists: { select: { name: true, image: true } },
+				},
+			});
+
+			return resultSong;
+		} catch (error) {
+			throw new BadRequestException('Failed to get liked songs!');
+		}
+	}
 
 	async signToken(
 		id: string,
