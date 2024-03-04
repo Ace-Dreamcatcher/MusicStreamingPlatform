@@ -1,11 +1,12 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme } from "react-native";
+import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme, ActivityIndicator } from "react-native";
 import { Text, View } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { FontAwesome,  } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Song, toggleLike, useSong } from "../SongContext";
 import MusicPlayer from "./MusicPlayer";
+import Spinner from "react-native-loading-spinner-overlay";
 
 
 export default function Home() {
@@ -14,7 +15,7 @@ export default function Home() {
   const styles = getStyles(colorScheme);
   const [songs, setSongs] = useState<Song[]>([]);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
-  const { onPressSong, onGetSongs } = useSong();
+  const { onPressSong, onGetSongs, loadingState } = useSong();
 
 
   useLayoutEffect(() => {
@@ -38,8 +39,9 @@ export default function Home() {
   return (
     <>
       <View style={styles.container}>
+        <Spinner visible={loadingState?.isLoading} />
         <Text style={styles.heading}>Songs</Text>
-        <ScrollView contentContainerStyle={styles.scrollview}>
+        <ScrollView contentContainerStyle={{paddingBottom: 60}}>
           {songs.map((song, index) => (
             <TouchableOpacity
               key={index}
@@ -79,9 +81,6 @@ const getStyles = (colorScheme: string | null | undefined) => {
     container: {
       flex: 1,
       padding: 5,
-    },
-    scrollview: {
-      paddingBottom: 60,
     },
     heading: {
       fontSize: 25,

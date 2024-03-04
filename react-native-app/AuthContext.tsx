@@ -98,10 +98,6 @@ export const AuthProvider = ({ children }: any) => {
 
   const signup = async (email: string, username: string, password: string) => {
     try {
-      setLoadingState({
-        isLoading: true,
-      });
-
       const result = await axios.post(`${URL_AUTH}signup`, {
         email,
         username,
@@ -118,15 +114,8 @@ export const AuthProvider = ({ children }: any) => {
 
       await AsyncStorage.setItem("accessToken", result.data.accessToken);
 
-      setLoadingState({
-        isLoading: false,
-      });
-
       return result;
     } catch (error) {
-      setLoadingState({
-        isLoading: false,
-      });
 
       return {
         error: true,
@@ -138,10 +127,6 @@ export const AuthProvider = ({ children }: any) => {
 
   const signin = async (email: string, password: string) => {
     try {
-      setLoadingState({
-        isLoading: true,
-      });
-
       const result = await axios.post(`${URL_AUTH}signin`, { email, password });
 
       axios.defaults.headers.common["Authorization"] =
@@ -154,16 +139,8 @@ export const AuthProvider = ({ children }: any) => {
 
       await AsyncStorage.setItem("accessToken", result.data.accessToken);
 
-      setLoadingState({
-        isLoading: false,
-      });
-
       return result;
     } catch (error) {
-      setLoadingState({
-        isLoading: false,
-      });
-
       return {
         error: true,
         message: (error as any).response.data.message,

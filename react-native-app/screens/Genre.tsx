@@ -6,6 +6,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Song, toggleLike, useSong } from "../SongContext";
+import Spinner from "react-native-loading-spinner-overlay";
 
 
 export default function Genre({route}: any) {
@@ -17,7 +18,7 @@ export default function Genre({route}: any) {
     const styles = getStyles(colorScheme);
     const [songs, setSongs] = useState<Song[]>([]);
     const [likedSongs, setLikedSongs] = useState<string[]>([]);
-    const { onGetGenreSongs, onPressSong } = useSong();
+    const { onGetGenreSongs, onPressSong, loadingState } = useSong();
     const {genre} = route.params;
 
     useLayoutEffect(() => {
@@ -49,35 +50,36 @@ export default function Genre({route}: any) {
         <>
             <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
             <View style={styles.container}>
-                <ScrollView>
-                    {songs.map((song, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        style={styles.songContainer}
-                        onPress={() => onPressSong!(song, "Home")}
-                    >
-                        <View style={styles.songInnerContainer}>
-                        <Image
-                            source={{ uri: `http://192.168.1.2:3000/media/${song.albums.image}` }}
-                            style={styles.albumImage}
-                            defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
-                            resizeMode="cover"
-                        />
-                        <View style={styles.songInfo}>
-                            <Text style={styles.songTitle}>{song.name}</Text>
-                            <Text style={styles.artist}>{song.artists.name}</Text>
-                        </View>
-                        <TouchableOpacity onPress={() => toggleLike(index, songs, likedSongs, setLikedSongs)}>
-                            <FontAwesome
-                            name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
-                            size={28}
-                            color={likedSongs.includes(song.name) ? "#19bfb7" : "grey"}
-                            />
-                        </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                    ))}
-                </ScrollView>
+              <Spinner visible={loadingState?.isLoading} />
+              <ScrollView>
+                  {songs.map((song, index) => (
+                  <TouchableOpacity
+                      key={index}
+                      style={styles.songContainer}
+                      onPress={() => onPressSong!(song, "Home")}
+                  >
+                      <View style={styles.songInnerContainer}>
+                      <Image
+                          source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
+                          style={styles.albumImage}
+                          defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
+                          resizeMode="cover"
+                      />
+                      <View style={styles.songInfo}>
+                          <Text style={styles.songTitle}>{song.name}</Text>
+                          <Text style={styles.artist}>{song.artists.name}</Text>
+                      </View>
+                      <TouchableOpacity onPress={() => toggleLike(index, songs, likedSongs, setLikedSongs)}>
+                          <FontAwesome
+                          name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
+                          size={28}
+                          color={likedSongs.includes(song.name) ? "#19bfb7" : "grey"}
+                          />
+                      </TouchableOpacity>
+                      </View>
+                  </TouchableOpacity>
+                  ))}
+              </ScrollView>
             </View>
         </>
     );
