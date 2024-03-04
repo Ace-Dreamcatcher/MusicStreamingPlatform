@@ -1,8 +1,10 @@
 import axios from "axios";
 import { Audio, InterruptionModeIOS } from "expo-av";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthContext";
 
 export interface Song {
+    id: string;
     name: string;
     track: string;
     albums: {
@@ -32,6 +34,7 @@ interface SongsProps {
     onPreviousButton?: () => Promise<any>;
     onNextButton?: () => Promise<any>;
     onToggleLoop?: () => Promise<any>;
+    onToggleLike?: (token: string, idSong: string) => Promise<any>;
     positionMillis: number;
     durationMillis: number;
 }
@@ -51,6 +54,7 @@ export const useSong = () => {
 
 
 export const SongProvider = ({ children }: any) => {
+    const { onAddLikedSong, onRemoveLikedSong } = useAuth();
     const [contextSongsHome, setContextSongsHome] = useState<{
         songs: Song[];
     }>({
@@ -312,7 +316,22 @@ export const SongProvider = ({ children }: any) => {
                 loop: false,
             });
         }
-        
+    };
+
+    const handleToggleLike = async (token: string, idSong: string) => {
+        if (true) {
+            await onAddLikedSong!(token, idSong);
+        } else {
+            await onRemoveLikedSong!(token, idSong);
+        }
+        // //likedSongs: string[], setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>
+        // //const newLikedSongs = [...likedSongs];
+        // if (newLikedSongs.includes(songs[index].id)) {
+        //     newLikedSongs.splice(newLikedSongs.indexOf(songs[index].id), 1);
+        // } else {
+        //     newLikedSongs.push(songs[index].id);
+        // }
+        // //setLikedSongs(newLikedSongs);
     };
 
     useEffect(() => {
@@ -342,6 +361,7 @@ export const SongProvider = ({ children }: any) => {
         onPreviousButton: handlePreviousSong,
         onNextButton: handleNextSong,
         onToggleLoop: handleToggleLoop,
+        onToggleLike: handleToggleLike,
         soundState,
         loadingState,
         onCurrentSong,
@@ -353,19 +373,3 @@ export const SongProvider = ({ children }: any) => {
     
     return <SongContext.Provider value={value}>{children}</SongContext.Provider>;
 };
-
-
-export const toggleLike = (
-    index: number,
-    songs: Song[],
-    likedSongs: string[],
-    setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>
-    ) => {
-        const newLikedSongs = [...likedSongs];
-        if (newLikedSongs.includes(songs[index].name)) {
-            newLikedSongs.splice(newLikedSongs.indexOf(songs[index].name), 1);
-        } else {
-            newLikedSongs.push(songs[index].name);
-        }
-        setLikedSongs(newLikedSongs);
-    };

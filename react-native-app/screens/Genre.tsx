@@ -5,7 +5,7 @@ import { View, Text } from "../components/Theme";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { Song, toggleLike, useSong } from "../SongContext";
+import { Song, useSong } from "../SongContext";
 import Spinner from "react-native-loading-spinner-overlay";
 
 
@@ -18,7 +18,7 @@ export default function Genre({route}: any) {
     const styles = getStyles(colorScheme);
     const [songs, setSongs] = useState<Song[]>([]);
     const [likedSongs, setLikedSongs] = useState<string[]>([]);
-    const { onGetGenreSongs, onPressSong, loadingState } = useSong();
+    const { onGetGenreSongs, onPressSong, onToggleLike, loadingState } = useSong();
     const {genre} = route.params;
 
     useLayoutEffect(() => {
@@ -69,7 +69,7 @@ export default function Genre({route}: any) {
                           <Text style={styles.songTitle}>{song.name}</Text>
                           <Text style={styles.artist}>{song.artists.name}</Text>
                       </View>
-                      <TouchableOpacity onPress={() => toggleLike(index, songs, likedSongs, setLikedSongs)}>
+                      <TouchableOpacity onPress={() => onToggleLike!()}>
                           <FontAwesome
                           name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
                           size={28}

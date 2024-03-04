@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateDto, SignInDto, SignUpDto, TokenDto } from './dto';
+import { UpdateDto, SignInDto, SignUpDto, TokenDto, SongDto } from './dto';
 import { Role } from '@prisma/client';
 import * as argon from 'argon2';
 
@@ -170,13 +170,37 @@ export class AuthService {
 		}
 	}
 
-	async likedSong(dto: TokenDto) {
+	async addLikedSong(dto: SongDto) {
 		try {
 			const decodedToken = await this.jwt.decode(dto.token);
 
-			const user = await this.prisma.user.findUnique({
+			await this.prisma.user.update({
 				where: {
 					id: decodedToken.id,
+				},
+				data: {
+					playlist: {
+						connect: { id: dto.idSong },
+					},
+				},
+			});
+		} catch (error) {
+			throw new BadRequestException('Failed to add liked song!');
+		}
+	}
+
+	async removeLikedSong(dto: SongDto) {
+		try {
+			const decodedToken = await this.jwt.decode(dto.token);
+
+			await this.prisma.user.update({
+				where: {
+					id: decodedToken.id,
+				},
+				data: {
+					playlist: {
+						disconnect: { id: dto.idSong },
+					},
 				},
 			});
 		} catch (error) {

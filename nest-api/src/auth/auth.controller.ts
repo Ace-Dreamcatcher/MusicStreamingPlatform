@@ -7,7 +7,7 @@ import {
 	ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UpdateDto, SignInDto, SignUpDto, TokenDto } from './dto';
+import { UpdateDto, SignInDto, SignUpDto, TokenDto, SongDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Controller('auth')
@@ -66,12 +66,21 @@ export class AuthController {
 		}
 	}
 
-	@Post('like')
-	async likedSong(@Body(new ValidationPipe()) dto: TokenDto) {
+	@Post('addLike')
+	async addLikedSong(@Body(new ValidationPipe()) dto: SongDto) {
 		try {
-			return await this.authService.likedSong(dto);
+			return await this.authService.addLikedSong(dto);
 		} catch (error) {
 			throw new BadRequestException('*Failed to add liked song!');
+		}
+	}
+
+	@Post('removeLike')
+	async removeLikedSong(@Body(new ValidationPipe()) dto: SongDto) {
+		try {
+			return await this.authService.removeLikedSong(dto);
+		} catch (error) {
+			throw new BadRequestException('*Failed to remove liked song!');
 		}
 	}
 }

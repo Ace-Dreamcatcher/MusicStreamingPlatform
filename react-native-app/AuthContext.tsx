@@ -22,6 +22,8 @@ interface AuthProps {
   onDelete?: (token: string) => Promise<any>;
   onRole?: (token: string) => Promise<any>;
   getUser?: (token: string) => Promise<any>;
+  onAddLikedSong?: (token: string, idSong: string) => Promise<any>;
+  onRemoveLikedSong?: (token: string, idSong: string) => Promise<any>;
 }
 
 export const URL_AUTH = "http://192.168.1.5:3000/auth/";
@@ -316,6 +318,52 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
+  const addLikedSong = async (token: string, idSong: string) => {
+    try {
+      await axios.get(`${URL_USER}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      await axios.post(`${URL_AUTH}addLike`, { token, idSong });
+    } catch (error) {
+      setAuthState({
+        accessToken: null,
+        isAuthenticated: false,
+      });
+
+      return {
+        error: true,
+        message: (error as any).response.data.message,
+        statusCode: (error as any).response.data.statusCode,
+      };
+    }
+  };
+
+  const removeLikedSong = async (token: string, idSong: string) => {
+    try {
+      await axios.get(`${URL_USER}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      await axios.post(`${URL_AUTH}addLike`, { token, idSong });
+    } catch (error) {
+      setAuthState({
+        accessToken: null,
+        isAuthenticated: false,
+      });
+      
+      return {
+        error: true,
+        message: (error as any).response.data.message,
+        statusCode: (error as any).response.data.statusCode,
+      };
+    }
+  };
+
   const value = {
     onSignUp: signup,
     onSignIn: signin,
@@ -324,6 +372,8 @@ export const AuthProvider = ({ children }: any) => {
     onDelete: deleteUser,
     onRole: role,
     getUser: user,
+    onAddLikedSong: addLikedSong,
+    onRemoveLikedSong: removeLikedSong,
     authState,
     loadingState,
   };

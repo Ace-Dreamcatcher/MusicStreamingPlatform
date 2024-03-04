@@ -1,12 +1,13 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme, ActivityIndicator } from "react-native";
+import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme } from "react-native";
 import { Text, View } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { FontAwesome,  } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Song, toggleLike, useSong } from "../SongContext";
+import { Song, useSong } from "../SongContext";
 import MusicPlayer from "./MusicPlayer";
 import Spinner from "react-native-loading-spinner-overlay";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function Home() {
@@ -15,8 +16,7 @@ export default function Home() {
   const styles = getStyles(colorScheme);
   const [songs, setSongs] = useState<Song[]>([]);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
-  const { onPressSong, onGetSongs, loadingState } = useSong();
-
+  const { onPressSong, onGetSongs, onToggleLike, loadingState } = useSong();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -35,6 +35,17 @@ export default function Home() {
   useEffect(() => {
     onGetSongs!(setSongs);
   }, []);
+
+  const handleToggleLike = async (index: number, songs: Song[]) => {
+    try {
+      const token = (await AsyncStorage.getItem("accessToken")) || "";
+      const idSong = songs[index].id;
+
+      await onToggleLike!(token, idSong);
+    } catch (error) {
+      console.error("Error handling like:", error);
+    };
+  };
 
   return (
     <>
@@ -59,11 +70,11 @@ export default function Home() {
                   <Text style={styles.songTitle}>{song.name}</Text>
                   <Text style={styles.artist}>{song.artists.name}</Text>
                 </View>
-                <TouchableOpacity onPress={() => toggleLike(index, songs, likedSongs, setLikedSongs)}>
+                <TouchableOpacity onPress={() => handleToggleLike(index, songs)}>
                   <FontAwesome
-                    name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
+                    name={likedSongs.includes(song.id) ? "heart" : "heart-o"}
                     size={28}
-                    color={likedSongs.includes(song.name) ? "#19bfb7" : "grey"}
+                    color={likedSongs.includes(song.id) ? "#19bfb7" : "grey"}
                   />
                 </TouchableOpacity>
               </View>

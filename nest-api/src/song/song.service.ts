@@ -118,6 +118,7 @@ export class SongService {
 		try {
 			const resultSong = await this.prisma.song.findMany({
 				select: {
+					id: true,
 					name: true,
 					track: true,
 					albums: { select: { name: true, image: true } },

@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Song, toggleLike, useSong } from "../SongContext";
+import { Song, useSong } from "../SongContext";
 import MusicPlayer from "./MusicPlayer";
 
 export default function Search() {
@@ -29,7 +29,7 @@ export default function Search() {
   ).current;
   const [songs, setSongs] = useState<Song[]>([]);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
-  const { onGetSearchSongs, onPressSong } = useSong();
+  const { onGetSearchSongs, onPressSong, onToggleLike } = useSong();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -129,7 +129,7 @@ export default function Search() {
                       <Text style={styles.songTitle}>{song.name}</Text>
                       <Text style={styles.artist}>{song.artists.name}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => toggleLike(index, songs, likedSongs, setLikedSongs)}>
+                    <TouchableOpacity onPress={() => onToggleLike!()}>
                       <FontAwesome
                         name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
                         size={28}
