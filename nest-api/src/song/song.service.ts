@@ -192,18 +192,4 @@ export class SongService {
 			throw new BadRequestException('Failed to get genre songs!');
 		}
 	}
-
-	async addLikedSong() {
-		try {
-		} catch (error) {
-			throw new BadRequestException('Failed to add liked song!');
-		}
-	}
-
-	async printLikedSongs() {
-		try {
-		} catch (error) {
-			throw new BadRequestException('Failed to get liked songs!');
-		}
-	}
 }

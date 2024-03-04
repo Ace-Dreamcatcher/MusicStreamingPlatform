@@ -158,7 +158,7 @@ export class AuthService {
 		try {
 			const decodedToken = await this.jwt.decode(dto.token);
 
-			const user = await this.prisma.user.delete({
+			await this.prisma.user.delete({
 				where: {
 					id: decodedToken.id,
 				},
@@ -169,6 +169,27 @@ export class AuthService {
 			throw new BadRequestException();
 		}
 	}
+
+	async likedSong(dto: TokenDto) {
+		try {
+			const decodedToken = await this.jwt.decode(dto.token);
+
+			const user = await this.prisma.user.findUnique({
+				where: {
+					id: decodedToken.id,
+				},
+			});
+		} catch (error) {
+			throw new BadRequestException('Failed to add liked song!');
+		}
+	}
+
+	// async printLikedSongs() {
+	// 	try {
+	// 	} catch (error) {
+	// 		throw new BadRequestException('Failed to get liked songs!');
+	// 	}
+	// }
 
 	async signToken(
 		id: string,

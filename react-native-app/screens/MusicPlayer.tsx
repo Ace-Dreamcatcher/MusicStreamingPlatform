@@ -4,25 +4,52 @@ import { Ionicons } from '@expo/vector-icons';
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useSong } from "../SongContext";
+import { useState } from "react";
 
 export default function MusicPlayer() {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     const colorScheme = useColorScheme();
     const styles = getStyles(colorScheme);
+    const [timeHandler, setTimeHandler] = useState(false);
+    const cooldownTime = 1;
     const { onCurrentSong, onTogglePlay, isPlaying, onPreviousButton, onNextButton } = useSong();
+
+    const handlePreviousButton = async () => {
+        if (!timeHandler) {
+            setTimeHandler(true);
+            await onPreviousButton!();
+            setTimeout(() => {
+                setTimeHandler(false);
+            }, cooldownTime);
+        }
+    };
+
+    const handleNextButton = async () => {
+        if (!timeHandler) {
+            setTimeHandler(true);
+            await onNextButton!();
+            setTimeout(() => {
+                setTimeHandler(false);
+            }, cooldownTime);
+        }
+    };
+
+    const handleToggleButton = async () => {
+        await onTogglePlay!();
+    };
     
     return (
         <View style={styles.musicPlayerContainer}>
             <TouchableOpacity style={styles.musicPlayer} onPress={() => navigation.navigate("Player")} activeOpacity={0.7}>
                 {onCurrentSong?.currentSong ?
                     <Image
-                        source={{ uri: `http://192.168.1.2:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
+                        source={{ uri: `http://192.168.1.5:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
                         style={styles.musicPlayerImage}
-                        defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
+                        defaultSource={require("../assets/Songs/default.png")}
                         resizeMode="cover"
                     /> :
                     <Image
-                        source={require("../assets/Songs/DefaultSongImage2.png")}
+                        source={require("../assets/Songs/default.png")}
                         style={styles.musicPlayerImage}
                         resizeMode="cover"
                     />
@@ -38,13 +65,13 @@ export default function MusicPlayer() {
                     }
                 </View>
                 <View style={styles.controls}>
-                    <TouchableOpacity onPress={() => onPreviousButton!()} style={styles.controlButton}>
+                    <TouchableOpacity onPress={handlePreviousButton} style={styles.controlButton}>
                         <Ionicons name="play-back" size={29} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => onTogglePlay!()} style={styles.controlButton}>
+                    <TouchableOpacity onPress={handleToggleButton} style={styles.controlButton}>
                         <Ionicons name={isPlaying?.play ? "pause" : "play"} size={31} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => onNextButton!()} style={styles.controlButton}>
+                    <TouchableOpacity onPress={handleNextButton} style={styles.controlButton}>
                         <Ionicons name="play-forward" size={29} />
                     </TouchableOpacity>
                 </View>

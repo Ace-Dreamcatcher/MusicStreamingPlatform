@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Audio } from "expo-av";
+import { Audio, InterruptionModeIOS } from "expo-av";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 export interface Song {
@@ -20,8 +20,7 @@ interface SongsProps {
     contextSongsLibrary?: {songs: Song[]}
     soundState?: {sound: Audio.Sound | null};
     isPlaying?: {play: boolean};
-    isLoop: {loop: boolean};
-    ToggleLoop?: () => Promise<any>
+    isLooping?: {loop: boolean};
     loadingState?: {isLoading: boolean};
     onCurrentSong?: {currentSong: Song | null};
     onGetSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => Promise<any>;
@@ -32,20 +31,18 @@ interface SongsProps {
     onTogglePlay?: () => Promise<any>;
     onPreviousButton?: () => Promise<any>;
     onNextButton?: () => Promise<any>;
+    onToggleLoop?: () => Promise<any>;
     positionMillis: number;
     durationMillis: number;
 }
 
-export const URL_SONG = "http://192.168.1.2:3000/song/getSongs";
-export const URL_SEARCH = "http://192.168.1.2:3000/song/getSearchSongs";
-export const URL_GENRE = "http://192.168.1.2:3000/song/getGenreSongs";
+export const URL_SONG = "http://192.168.1.5:3000/song/getSongs";
+export const URL_SEARCH = "http://192.168.1.5:3000/song/getSearchSongs";
+export const URL_GENRE = "http://192.168.1.5:3000/song/getGenreSongs";
 
 const SongContext = createContext<SongsProps>({
     positionMillis: 0,
     durationMillis: 0,
-    isLoop: {
-        loop: false
-    }
 });
 export const useSong = () => {
     return useContext(SongContext);
@@ -84,19 +81,18 @@ export const SongProvider = ({ children }: any) => {
     }>({
         play: false,
     });
-    const [isLoop, setLooping ] = useState<{
+    const [isLooping, setIsLooping ] = useState<{
         loop: boolean;
     }>({
         loop: false,
     });
-    const [positionMillis, setPositionMillis] = useState(0);
-    const [durationMillis, setDurationMillis] = useState(0);
-
     const [loadingState, setLoadingState] = useState<{
         isLoading: boolean;
     }>({
         isLoading: false,
     });
+    const [positionMillis, setPositionMillis] = useState(0);
+    const [durationMillis, setDurationMillis] = useState(0);
 
     const getSongs = async (setSongs: React.Dispatch<React.SetStateAction<Song[]>>) => {
         try {
@@ -173,10 +169,17 @@ export const SongProvider = ({ children }: any) => {
             await soundState?.sound.unloadAsync();
         }
         try {
+            await Audio.setAudioModeAsync({
+                staysActiveInBackground: true,
+                playsInSilentModeIOS: true,
+                interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+            });
+
             const { sound: newSound } = await Audio.Sound.createAsync(
-                { uri: `http://192.168.1.2:3000/media/${songPath}` },
-                { shouldPlay: true, isLooping: isLoop.loop },
+                { uri: `http://192.168.1.5:3000/media/${songPath}` },
+                { shouldPlay: true, isLooping: isLooping?.loop, shouldCorrectPitch: true },
             );
+
             setSoundState({
                 sound: newSound,
             });
@@ -208,21 +211,21 @@ export const SongProvider = ({ children }: any) => {
     };
 
     const handleTogglePlay = async () => {
-        if (!onCurrentSong?.currentSong) return;
-    
-        if (soundState?.sound) {
-            if (isPlaying?.play) {
-            await soundState?.sound.pauseAsync();
+        if (onCurrentSong?.currentSong) {
+            if (soundState?.sound) {
+                if (isPlaying?.play) {
+                    await soundState?.sound.pauseAsync();
 
-            setIsPlaying({
-                play: false,
-            }); 
-            } else {
-            await soundState?.sound.playAsync();
+                    setIsPlaying({
+                        play: false,
+                    });
+                } else {
+                    await soundState?.sound.playAsync();
 
-            setIsPlaying({
-                play: true,
-            }); 
+                    setIsPlaying({
+                        play: true,
+                    });
+                }
             }
         }
     };
@@ -294,43 +297,40 @@ export const SongProvider = ({ children }: any) => {
             }
         } else {
             setIsPlaying({
-                play: true,
+                play: false,
             });
         }
     };
 
-    const ToggleLoop = async () => {
-        if(!isLoop.loop){
-            setLooping({
+    const handleToggleLoop = async () => {
+        if (!isLooping?.loop) {
+            setIsLooping({
                 loop: true,
             }); 
-        }else {
-            setLooping({
+        } else {
+            setIsLooping({
                 loop: false,
-            })
+            });
         }
         
     };
 
     useEffect(() => {
-        if (soundState.sound) {
-            soundState.sound.setOnPlaybackStatusUpdate(async (status) => {
+        if (soundState?.sound) {
+            soundState?.sound.setIsLoopingAsync(isLooping?.loop);
+            soundState?.sound.setOnPlaybackStatusUpdate(async (status) => {
                 if (status.isLoaded && status.positionMillis && status.durationMillis) {
                     const position = status.positionMillis;
                     const duration = status.durationMillis;
                     setDurationMillis(duration);
                     setPositionMillis(position);
-                    if ((position >= duration - 1000) && (!isLoop.loop)) {
-                        //console.log("Loop = ", isLoop.loop);
+                    if ((position >= duration - 1000) && (!isLooping?.loop)) {
                         await handleNextSong();
                     }
                 }
             });
         }
-        if (soundState.sound) {
-            soundState.sound.setIsLoopingAsync(isLoop.loop);
-        }
-    }, [soundState.sound, isLoop.loop]);
+    }, [soundState?.sound, isLooping?.loop]);
 
     const value = {
         onGetSongs: getSongs,
@@ -341,12 +341,12 @@ export const SongProvider = ({ children }: any) => {
         onTogglePlay: handleTogglePlay,
         onPreviousButton: handlePreviousSong,
         onNextButton: handleNextSong,
+        onToggleLoop: handleToggleLoop,
         soundState,
         loadingState,
         onCurrentSong,
         isPlaying,
-        isLoop,
-        ToggleLoop,
+        isLooping,
         positionMillis,
         durationMillis,
     };

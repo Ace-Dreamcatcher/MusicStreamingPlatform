@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import { Text } from "../components/Theme"; 
@@ -9,10 +9,38 @@ import { useSong } from '../SongContext';
 import { Feather } from '@expo/vector-icons';
 
 export default function Player() {
-  const { onCurrentSong, onTogglePlay, onPreviousButton, onNextButton, isPlaying, ToggleLoop, isLoop, durationMillis, positionMillis } = useSong();
+  const { onCurrentSong, onTogglePlay, onPreviousButton, onNextButton, isPlaying, onToggleLoop, isLooping, durationMillis, positionMillis } = useSong();
   const progress = durationMillis > 0 ? (positionMillis / durationMillis) * 100 : 0;
+  const [timeHandler, setTimeHandler] = useState(false);
+  const cooldownTime = 1;
 
-  
+  const handleToggleLoop = async () => {
+    await onToggleLoop!();
+  };
+
+  const handlePreviousButton = async () => {
+    if (!timeHandler) {
+        setTimeHandler(true);
+        await onPreviousButton!();
+        setTimeout(() => {
+            setTimeHandler(false);
+        }, cooldownTime);
+    }
+  };
+
+  const handleNextButton = async () => {
+    if (!timeHandler) {
+        setTimeHandler(true);
+        await onNextButton!();
+        setTimeout(() => {
+            setTimeHandler(false);
+        }, cooldownTime);
+    }
+  };
+
+  const handleToggleButton = async () => {
+    await onTogglePlay!();
+  };
 
   return (
     <LinearGradient colors={["#19bfb7", "black"]} style={{ flex: 1 }}>
@@ -23,13 +51,13 @@ export default function Player() {
         <View style={styles.imageContainer}>
           {onCurrentSong?.currentSong ?
             <Image
-              source={{ uri: `http://192.168.1.2:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
+              source={{ uri: `http://192.168.1.5:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
               style={styles.albumImage}
-              defaultSource={require("../assets/Songs/DefaultSongImage2.png")}
+              defaultSource={require("../assets/Songs/default.png")}
               resizeMode="cover"
             /> :
             <Image
-              source={require("../assets/Songs/DefaultSongImage2.png")}
+              source={require("../assets/Songs/default.png")}
               style={styles.albumImage}
               resizeMode="cover"
             />
@@ -49,8 +77,8 @@ export default function Player() {
             <TouchableOpacity style={{marginHorizontal: 115}}>
               <FontAwesome name= {"heart-o"} size={30} color=  {"#757575"}/>
             </TouchableOpacity>
-            <TouchableOpacity style={{marginHorizontal: 115}} onPress={ToggleLoop} activeOpacity={0.6}>
-              <Feather name={"repeat"} size={27} color={isLoop?.loop? 'white' : '#757575'}  />
+            <TouchableOpacity style={{marginHorizontal: 115}} onPress={handleToggleLoop} activeOpacity={0.6}>
+              <Feather name={"repeat"} size={27} color={isLooping?.loop? 'white' : '#757575'}  />
             </TouchableOpacity>
           </View>
           <View style={styles.progressBar}>
@@ -61,13 +89,13 @@ export default function Player() {
             <Text style={{marginHorizontal: 110, color: 'white'}}> {formatTime(durationMillis)} </Text>
           </View>
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity onPress={() => onPreviousButton!()} style={styles.controlButton}>
+            <TouchableOpacity onPress={handlePreviousButton} style={styles.controlButton}>
               <Ionicons name="play-back" size={50} color={"white"}/>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onTogglePlay!()} style={styles.controlButton}>
+            <TouchableOpacity onPress={handleToggleButton} style={styles.controlButton}>
               <Ionicons name={isPlaying?.play ? "pause" : "play"} size={50} color={"white"}/>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onNextButton!()} style={styles.controlButton}>
+            <TouchableOpacity onPress={handleNextButton} style={styles.controlButton}>
               <Ionicons name="play-forward" size={50} color={"white"}/>
             </TouchableOpacity>
           </View>

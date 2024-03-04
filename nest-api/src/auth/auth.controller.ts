@@ -65,4 +65,13 @@ export class AuthController {
 			throw new BadRequestException('*Failed to delete user!');
 		}
 	}
+
+	@Post('like')
+	async likedSong(@Body(new ValidationPipe()) dto: TokenDto) {
+		try {
+			return await this.authService.likedSong(dto);
+		} catch (error) {
+			throw new BadRequestException('*Failed to add liked song!');
+		}
+	}
 }
