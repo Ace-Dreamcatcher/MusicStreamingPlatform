@@ -35,7 +35,8 @@ interface SongsProps {
     onPreviousButton?: () => Promise<any>;
     onNextButton?: () => Promise<any>;
     onToggleLoop?: () => Promise<any>;
-    onToggleLike?: (token: string, idSong: string) => Promise<any>;
+    onToggleLike?: (token: string, idSong: string, index: number, songs: Song[], setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>) => Promise<any>;
+    onHandleLikedSongs?: (setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>) => Promise<any>;
     positionMillis: number;
     durationMillis: number;
 }
@@ -346,20 +347,49 @@ export const SongProvider = ({ children }: any) => {
         }
     };
 
-    const handleToggleLike = async (token: string, idSong: string) => {
-        if (true) {
-            await onAddLikedSong!(token, idSong);
-        } else {
+    const handleToggleLike = async (token: string, idSong: string, index: number, songs: Song[], setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>) => {
+        if (contextSongsLibrary?.songs.includes(songs[index])) {
             await onRemoveLikedSong!(token, idSong);
+        } else {
+            await onAddLikedSong!(token, idSong);
         }
-        // //likedSongs: string[], setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>
-        // //const newLikedSongs = [...likedSongs];
-        // if (newLikedSongs.includes(songs[index].id)) {
-        //     newLikedSongs.splice(newLikedSongs.indexOf(songs[index].id), 1);
-        // } else {
-        //     newLikedSongs.push(songs[index].id);
-        // }
-        // //setLikedSongs(newLikedSongs);
+
+        setLikedSongs(prevLikedSongs => {
+            const newLikedSongs = prevLikedSongs.slice();
+            const indexInLikedSongs = newLikedSongs.indexOf(idSong);
+    
+            if (indexInLikedSongs !== -1) {
+                newLikedSongs.splice(indexInLikedSongs, 1);
+            } else {
+                newLikedSongs.push(idSong);
+            }
+
+            if (contextSongsLibrary && contextSongsLibrary.songs) {
+                contextSongsLibrary.songs.forEach(song => {
+                    if (!newLikedSongs.includes(song.id)) {
+                        newLikedSongs.push(song.id);
+                    }
+                });
+            }
+
+            return newLikedSongs;
+        });
+    };
+
+    const handleLikedSongs = async (setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>) => {
+        setLikedSongs(prevLikedSongs => {
+            const newLikedSongs = prevLikedSongs.slice();
+
+            if (contextSongsLibrary && contextSongsLibrary.songs) {
+                contextSongsLibrary.songs.forEach(song => {
+                    if (!newLikedSongs.includes(song.id)) {
+                        newLikedSongs.push(song.id);
+                    }
+                });
+            }
+
+            return newLikedSongs;
+        });
     };
 
     useEffect(() => {
@@ -391,6 +421,7 @@ export const SongProvider = ({ children }: any) => {
         onNextButton: handleNextSong,
         onToggleLoop: handleToggleLoop,
         onToggleLike: handleToggleLike,
+        onHandleLikedSongs: handleLikedSongs,
         soundState,
         loadingState,
         onCurrentSong,

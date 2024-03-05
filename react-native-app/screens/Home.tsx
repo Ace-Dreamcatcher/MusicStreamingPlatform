@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme } from "react-native";
 import { Text, View } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
@@ -16,7 +16,7 @@ export default function Home() {
   const styles = getStyles(colorScheme);
   const [songs, setSongs] = useState<Song[]>([]);
   const [likedSongs, setLikedSongs] = useState<string[]>([]);
-  const { onPressSong, onGetSongs, onToggleLike, loadingState } = useSong();
+  const { onPressSong, onGetSongs, onToggleLike, onHandleLikedSongs, loadingState } = useSong();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -37,6 +37,7 @@ export default function Home() {
       await onGetSongs!(setSongs);
     };
     getSongs();
+    onHandleLikedSongs!(setLikedSongs);
   }, []);
 
   const handleToggleLike = async (index: number, songs: Song[]) => {
@@ -44,7 +45,7 @@ export default function Home() {
       const token = (await AsyncStorage.getItem("accessToken")) || "";
       const idSong = songs[index].id;
 
-      await onToggleLike!(token, idSong);
+      await onToggleLike!(token, idSong, index, songs, setLikedSongs);
     } catch (error) {
       console.error("Error handling like:", error);
     };

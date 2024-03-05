@@ -349,7 +349,7 @@ export const AuthProvider = ({ children }: any) => {
         },
       });
       
-      await axios.post(`${URL_AUTH}addLike`, { token, idSong });
+      await axios.post(`${URL_AUTH}removeLike`, { token, idSong });
     } catch (error) {
       setAuthState({
         accessToken: null,

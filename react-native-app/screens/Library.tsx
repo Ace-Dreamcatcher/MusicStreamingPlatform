@@ -45,7 +45,7 @@ export default function Library() {
       const token = (await AsyncStorage.getItem("accessToken")) || "";
       const idSong = songs[index].id;
 
-      await onToggleLike!(token, idSong);
+      await onToggleLike!(token, idSong, index, songs, setLikedSongs);
     } catch (error) {
       console.error("Error handling like:", error);
     };
