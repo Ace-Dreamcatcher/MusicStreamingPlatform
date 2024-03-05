@@ -2,7 +2,6 @@ import axios from "axios";
 import { Audio, InterruptionModeIOS } from "expo-av";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface Song {
     id: string;
