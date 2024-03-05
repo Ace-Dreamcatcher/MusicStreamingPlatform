@@ -2,11 +2,11 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StyleSheet, StatusBar, useColorScheme, Image, ScrollView, TouchableOpacity } from "react-native";
 import { View, Text } from "../components/Theme";
-import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Song, useSong } from "../SongContext";
 import Spinner from "react-native-loading-spinner-overlay";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function Genre({route}: any) {
@@ -17,34 +17,44 @@ export default function Genre({route}: any) {
     const backButtonColor = colorScheme === "dark" ? "#202123" : "#f5f5f5";
     const styles = getStyles(colorScheme);
     const [songs, setSongs] = useState<Song[]>([]);
-    const [likedSongs, setLikedSongs] = useState<string[]>([]);
     const { onGetGenreSongs, onPressSong, onToggleLike, loadingState } = useSong();
     const {genre} = route.params;
 
     useLayoutEffect(() => {
-        navigation.setOptions({
-            title: genre,
-            headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                <View
-                    style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingHorizontal: 5,
-                    backgroundColor: backButtonColor,
-                    }}
-                >
-                    <Ionicons name="arrow-back" size={24} color="#19bfb7" />
-                    <Text style={{ fontSize: 20, color: "#19bfb7" }}> Back</Text>
-                </View>
-                </TouchableOpacity>
-            ),
-            });
-      }, [navigation, colorScheme]);
+      navigation.setOptions({
+          title: genre,
+          headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+              <View
+                  style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingHorizontal: 5,
+                  backgroundColor: backButtonColor,
+                  }}
+              >
+                  <Ionicons name="arrow-back" size={24} color="#19bfb7" />
+                  <Text style={{ fontSize: 20, color: "#19bfb7" }}> Back</Text>
+              </View>
+              </TouchableOpacity>
+          ),
+          });
+    }, [navigation, colorScheme]);
 
-      useEffect(() => {
-        onGetGenreSongs!(setSongs, genre);
-      }, []);
+    useEffect(() => {
+      onGetGenreSongs!(setSongs, genre);
+    }, []);
+
+    const handleToggleLike = async (index: number, songs: Song[]) => {
+      try {
+        const token = (await AsyncStorage.getItem("accessToken")) || "";
+        const idSong = songs[index].id;
+  
+        await onToggleLike!(token, idSong, index, songs);
+      } catch (error) {
+        console.error("Error handling like:", error);
+      };
+    };
 
     return (
         <>
@@ -69,12 +79,8 @@ export default function Genre({route}: any) {
                           <Text style={styles.songTitle}>{song.name}</Text>
                           <Text style={styles.artist}>{song.artists.name}</Text>
                       </View>
-                      <TouchableOpacity onPress={() => onToggleLike!()}>
-                          <FontAwesome
-                          name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
-                          size={28}
-                          color={likedSongs.includes(song.name) ? "#19bfb7" : "grey"}
-                          />
+                      <TouchableOpacity onPress={() => handleToggleLike(index, songs)}>
+                        <Ionicons name="add" size={30} color="#19bfb7" />
                       </TouchableOpacity>
                       </View>
                   </TouchableOpacity>

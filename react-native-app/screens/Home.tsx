@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme } from "react-native";
 import { Text, View } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
-import { FontAwesome,  } from "@expo/vector-icons";
+import { FontAwesome, Ionicons  } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Song, useSong } from "../SongContext";
 import MusicPlayer from "./MusicPlayer";
@@ -15,8 +15,7 @@ export default function Home() {
   const colorScheme = useColorScheme();
   const styles = getStyles(colorScheme);
   const [songs, setSongs] = useState<Song[]>([]);
-  const [likedSongs, setLikedSongs] = useState<string[]>([]);
-  const { onPressSong, onGetSongs, onToggleLike, onHandleLikedSongs, loadingState } = useSong();
+  const { onPressSong, onGetSongs, onToggleLike, loadingState } = useSong();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -37,7 +36,6 @@ export default function Home() {
       await onGetSongs!(setSongs);
     };
     getSongs();
-    onHandleLikedSongs!(setLikedSongs);
   }, []);
 
   const handleToggleLike = async (index: number, songs: Song[]) => {
@@ -45,7 +43,7 @@ export default function Home() {
       const token = (await AsyncStorage.getItem("accessToken")) || "";
       const idSong = songs[index].id;
 
-      await onToggleLike!(token, idSong, index, songs, setLikedSongs);
+      await onToggleLike!(token, idSong, index, songs);
     } catch (error) {
       console.error("Error handling like:", error);
     };
@@ -75,11 +73,7 @@ export default function Home() {
                   <Text style={styles.artist}>{song.artists.name}</Text>
                 </View>
                 <TouchableOpacity onPress={() => handleToggleLike(index, songs)}>
-                  <FontAwesome
-                    name={likedSongs.includes(song.id) ? "heart" : "heart-o"}
-                    size={28}
-                    color={likedSongs.includes(song.id) ? "#19bfb7" : "grey"}
-                  />
+                  <Ionicons name="add" size={30} color="#19bfb7" />
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>

@@ -2,6 +2,7 @@ import axios from "axios";
 import { Audio, InterruptionModeIOS } from "expo-av";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface Song {
     id: string;
@@ -35,8 +36,7 @@ interface SongsProps {
     onPreviousButton?: () => Promise<any>;
     onNextButton?: () => Promise<any>;
     onToggleLoop?: () => Promise<any>;
-    onToggleLike?: (token: string, idSong: string, index: number, songs: Song[], setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>) => Promise<any>;
-    onHandleLikedSongs?: (setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>) => Promise<any>;
+    onToggleLike?: (token: string, idSong: string, index: number, songs: Song[]) => Promise<any>;
     positionMillis: number;
     durationMillis: number;
 }
@@ -347,49 +347,32 @@ export const SongProvider = ({ children }: any) => {
         }
     };
 
-    const handleToggleLike = async (token: string, idSong: string, index: number, songs: Song[], setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>) => {
+    const handleToggleLike = async (token: string, idSong: string, index: number, songs: Song[]) => {
         if (contextSongsLibrary?.songs.includes(songs[index])) {
-            await onRemoveLikedSong!(token, idSong);
-        } else {
-            await onAddLikedSong!(token, idSong);
-        }
-
-        setLikedSongs(prevLikedSongs => {
-            const newLikedSongs = prevLikedSongs.slice();
-            const indexInLikedSongs = newLikedSongs.indexOf(idSong);
+            try {
+                await onRemoveLikedSong!(token, idSong);
     
-            if (indexInLikedSongs !== -1) {
-                newLikedSongs.splice(indexInLikedSongs, 1);
-            } else {
-                newLikedSongs.push(idSong);
-            }
-
-            if (contextSongsLibrary && contextSongsLibrary.songs) {
-                contextSongsLibrary.songs.forEach(song => {
-                    if (!newLikedSongs.includes(song.id)) {
-                        newLikedSongs.push(song.id);
-                    }
+                const response = await axios.get<Song[]>(`${URL_LIKEDSONG}?query=${encodeURIComponent(token)}`);
+    
+                setContextSongsLibrary({
+                    songs: response.data,
                 });
+            } catch (error) {
+                console.error("Error removing favorite song:", error);
             }
-
-            return newLikedSongs;
-        });
-    };
-
-    const handleLikedSongs = async (setLikedSongs: React.Dispatch<React.SetStateAction<string[]>>) => {
-        setLikedSongs(prevLikedSongs => {
-            const newLikedSongs = prevLikedSongs.slice();
-
-            if (contextSongsLibrary && contextSongsLibrary.songs) {
-                contextSongsLibrary.songs.forEach(song => {
-                    if (!newLikedSongs.includes(song.id)) {
-                        newLikedSongs.push(song.id);
-                    }
+        } else {
+            try {
+                await onAddLikedSong!(token, idSong);
+    
+                const response = await axios.get<Song[]>(`${URL_LIKEDSONG}?query=${encodeURIComponent(token)}`);
+    
+                setContextSongsLibrary({
+                    songs: response.data,
                 });
+            } catch (error) {
+                console.error("Error adding favorite song:", error);
             }
-
-            return newLikedSongs;
-        });
+        }
     };
 
     useEffect(() => {
@@ -421,7 +404,7 @@ export const SongProvider = ({ children }: any) => {
         onNextButton: handleNextSong,
         onToggleLoop: handleToggleLoop,
         onToggleLike: handleToggleLike,
-        onHandleLikedSongs: handleLikedSongs,
+        contextSongsLibrary,
         soundState,
         loadingState,
         onCurrentSong,

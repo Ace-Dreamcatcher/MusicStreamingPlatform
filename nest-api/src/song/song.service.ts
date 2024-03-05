@@ -175,7 +175,9 @@ export class SongService {
 					},
 				});
 
-				return resultSong;
+				const shuffledResultSong = resultSong.sort(() => Math.random() - 0.5);
+
+				return shuffledResultSong;
 			} else if (query === 'Rap') {
 				const resultSong = await this.prisma.song.findMany({
 					where: {
@@ -190,7 +192,9 @@ export class SongService {
 					},
 				});
 
-				return resultSong;
+				const shuffledResultSong = resultSong.sort(() => Math.random() - 0.5);
+
+				return shuffledResultSong;
 			}
 		} catch (error) {
 			throw new BadRequestException('Failed to get genre songs!');

@@ -10,12 +10,12 @@ import {
 } from "react-native";
 import { View, Text } from "../components/Theme";
 import { useLayoutEffect, useRef, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Song, useSong } from "../SongContext";
 import MusicPlayer from "./MusicPlayer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Search() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -28,7 +28,6 @@ export default function Search() {
     new Animated.Value(Dimensions.get("window").width),
   ).current;
   const [songs, setSongs] = useState<Song[]>([]);
-  const [likedSongs, setLikedSongs] = useState<string[]>([]);
   const { onGetSearchSongs, onPressSong, onToggleLike } = useSong();
 
   useLayoutEffect(() => {
@@ -85,6 +84,17 @@ export default function Search() {
     navigation.navigate("Genre", {genre: genre});
   };
 
+  const handleToggleLike = async (index: number, songs: Song[]) => {
+    try {
+      const token = (await AsyncStorage.getItem("accessToken")) || "";
+      const idSong = songs[index].id;
+
+      await onToggleLike!(token, idSong, index, songs);
+    } catch (error) {
+      console.error("Error handling like:", error);
+    };
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -129,12 +139,8 @@ export default function Search() {
                       <Text style={styles.songTitle}>{song.name}</Text>
                       <Text style={styles.artist}>{song.artists.name}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => onToggleLike!()}>
-                      <FontAwesome
-                        name={likedSongs.includes(song.name) ? "heart" : "heart-o"}
-                        size={28}
-                        color={likedSongs.includes(song.name) ? "#19bfb7" : "grey"}
-                      />
+                    <TouchableOpacity onPress={() => handleToggleLike(index, songs)}>
+                      <Ionicons name="add" size={30} color="#19bfb7" />
                     </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
