@@ -16,6 +16,7 @@ import { useAuth } from "../AuthContext";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
+import { useSong } from "../SongContext";
 
 export default function EditInfo() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -28,6 +29,7 @@ export default function EditInfo() {
   const [textUsername, setTextUsername] = useState("");
   const [textPassword, setTextPassword] = useState("");
   const { onUpdate, onDelete, loadingState } = useAuth();
+  const { onStop } = useSong();
 
   const handleUpdate = async () => {
     if (textEmail === "" && textUsername === "" && textPassword === "") {
@@ -73,6 +75,8 @@ export default function EditInfo() {
 
   const handleDelete = async () => {
     try {
+      await onStop!();
+
       const token = (await AsyncStorage.getItem("accessToken")) || "";
       const response = await onDelete!(token);
 

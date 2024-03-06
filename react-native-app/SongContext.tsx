@@ -30,6 +30,7 @@ interface SongsProps {
     onGetSearchSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, query: string) => Promise<any>;
     onGetGenreSongs?: (setSongs: React.Dispatch<React.SetStateAction<Song[]>>, genre: string) => Promise<any>;
     onPlay?: (songPath: string) => Promise<any>;
+    onStop?: () => Promise<any>;
     onPressSong?: (song: Song, screen: string) => Promise<any>;
     onTogglePlay?: () => Promise<any>;
     onPreviousButton?: () => Promise<any>;
@@ -194,6 +195,23 @@ export const SongProvider = ({ children }: any) => {
             });
 
             console.error("Error fetching songs:", error);
+        }
+    };
+
+    const stopSong = async () => {
+        if (soundState?.sound) {
+            await soundState?.sound.unloadAsync();
+
+            setOnCurrentSong({
+                currentSong: null,
+            });
+
+            setIsPlaying({
+                play: false,
+            });
+
+            setPositionMillis(0);
+            setDurationMillis(0);
         }
     };
 
@@ -412,6 +430,7 @@ export const SongProvider = ({ children }: any) => {
         onGetSearchSongs: getSearchSongs,
         onGetGenreSongs: getGenreSongs,
         onPlay: playSong,
+        onStop: stopSong,
         onPressSong: handlePlaySong,
         onTogglePlay: handleTogglePlay,
         onPreviousButton: handlePreviousSong,

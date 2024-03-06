@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../AuthContext";
 import Spinner from "react-native-loading-spinner-overlay";
+import { useSong } from "../SongContext";
 
 export default function Account() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -20,6 +21,7 @@ export default function Account() {
   const [membership, setMembership] = useState("FREE");
   const [username, setUsername] = useState("user");
   const { onRole, onSignOut, loadingState, getUser } = useAuth();
+  const { onStop } = useSong();
 
   const handleToggleLossless = async () => {
     const newToggleState = !toggleLossless;
@@ -65,6 +67,15 @@ export default function Account() {
       }
     } catch (error) {
       console.error("Error retrieving username and role:", error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await onStop!();
+      await onSignOut!();
+    } catch (error) {
+      console.error("Error handling sign out:", error);
     }
   };
 
@@ -199,7 +210,7 @@ export default function Account() {
         </TouchableOpacity>
       </View>
       <View style={styles.signOutButtonContainer}>
-        <TouchableOpacity onPress={onSignOut} activeOpacity={0.7}>
+        <TouchableOpacity onPress={handleSignOut} activeOpacity={0.7}>
           <View style={styles.signOutButton}>
             <Text style={styles.signOutButtonText}>Sign Out</Text>
           </View>

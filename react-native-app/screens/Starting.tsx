@@ -7,11 +7,21 @@ import {
   useColorScheme,
 } from "react-native";
 import { Text, View } from "../components/Theme";
+import { useEffect } from "react";
+import { useSong } from "../SongContext";
 
 export default function Starting() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const colorScheme = useColorScheme();
   const styles = getStyles(colorScheme);
+  const { onStop } = useSong();
+
+  useEffect(() => {
+    const stop = async () => {
+      await onStop!();
+    };
+    stop();
+  }, []);
 
   return (
     <View style={styles.container}>

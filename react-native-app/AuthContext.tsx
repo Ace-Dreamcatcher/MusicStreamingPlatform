@@ -152,22 +152,34 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const signout = async () => {
-    setLoadingState({
-      isLoading: true,
-    });
+    try {
+      setLoadingState({
+        isLoading: true,
+      });
+  
+      await AsyncStorage.removeItem("accessToken");
+  
+      axios.defaults.headers.common["Authorization"] = "";
+  
+      setAuthState({
+        accessToken: null,
+        isAuthenticated: false,
+      });
+  
+      setLoadingState({
+        isLoading: false,
+      });
+    } catch (error) {
+      setLoadingState({
+        isLoading: false,
+      });
 
-    await AsyncStorage.removeItem("accessToken");
-
-    axios.defaults.headers.common["Authorization"] = "";
-
-    setAuthState({
-      accessToken: null,
-      isAuthenticated: false,
-    });
-
-    setLoadingState({
-      isLoading: false,
-    });
+      return {
+        error: true,
+        message: (error as any).response.data.message,
+        statusCode: (error as any).response.data.statusCode,
+      };
+    }
   };
 
   const updateUser = async (
