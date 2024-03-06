@@ -13,8 +13,7 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useLayoutEffect, useState } from "react";
 import { useAuth } from "../AuthContext";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 

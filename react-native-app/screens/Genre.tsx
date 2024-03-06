@@ -7,6 +7,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { Song, useSong } from "../SongContext";
 import Spinner from "react-native-loading-spinner-overlay";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddMessage from "./AddMessage";
 
 
 export default function Genre({route}: any) {
@@ -17,6 +18,7 @@ export default function Genre({route}: any) {
     const backButtonColor = colorScheme === "dark" ? "#202123" : "#f5f5f5";
     const styles = getStyles(colorScheme);
     const [songs, setSongs] = useState<Song[]>([]);
+    const [showMessage, setShowMessage] = useState(false);
     const { onGetGenreSongs, onPressSong, onToggleLike, loadingState } = useSong();
     const {genre} = route.params;
 
@@ -51,43 +53,49 @@ export default function Genre({route}: any) {
         const idSong = songs[index].id;
   
         await onToggleLike!(token, idSong, index, songs);
+
+        setShowMessage(true);
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 3000);
       } catch (error) {
         console.error("Error handling like:", error);
       };
     };
 
     return (
-        <>
-            <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
-            <View style={styles.container}>
-              <Spinner visible={loadingState?.isLoading} />
-              <ScrollView>
-                  {songs.map((song, index) => (
-                  <TouchableOpacity
-                      key={index}
-                      style={styles.songContainer}
-                      onPress={() => onPressSong!(song, "Home")}
-                  >
-                      <View style={styles.songInnerContainer}>
-                      <Image
-                          source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
-                          style={styles.albumImage}
-                          defaultSource={require("../assets/Songs/default.png")}
-                          resizeMode="cover"
-                      />
-                      <View style={styles.songInfo}>
-                          <Text style={styles.songTitle}>{song.name}</Text>
-                          <Text style={styles.artist}>{song.artists.name}</Text>
-                      </View>
-                      <TouchableOpacity onPress={() => handleToggleLike(index, songs)}>
-                        <Ionicons name="add" size={30} color="#19bfb7" />
-                      </TouchableOpacity>
-                      </View>
+      <>
+        <StatusBar barStyle={statusBarStyle} backgroundColor={backgroundColor} />
+        <View style={styles.container}>
+          <Spinner visible={loadingState?.isLoading} />
+          <ScrollView>
+              {songs.map((song, index) => (
+              <TouchableOpacity
+                  key={index}
+                  style={styles.songContainer}
+                  onPress={() => onPressSong!(song, "Home")}
+              >
+                  <View style={styles.songInnerContainer}>
+                  <Image
+                      source={{ uri: `http://192.168.1.5:3000/media/${song.albums.image}` }}
+                      style={styles.albumImage}
+                      defaultSource={require("../assets/Songs/default.png")}
+                      resizeMode="cover"
+                  />
+                  <View style={styles.songInfo}>
+                      <Text style={styles.songTitle}>{song.name}</Text>
+                      <Text style={styles.artist}>{song.artists.name}</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => handleToggleLike(index, songs)}>
+                    <Ionicons name="add" size={30} color="#19bfb7" />
                   </TouchableOpacity>
-                  ))}
-              </ScrollView>
-            </View>
-        </>
+                  </View>
+              </TouchableOpacity>
+              ))}
+          </ScrollView>
+        </View>
+        {showMessage && <AddMessage />}
+      </>
     );
 }
 

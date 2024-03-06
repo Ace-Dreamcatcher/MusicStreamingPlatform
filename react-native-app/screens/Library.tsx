@@ -8,12 +8,14 @@ import MusicPlayer from "./MusicPlayer";
 import { Song, useSong } from "../SongContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
+import RemoveMessage from "./RemoveMessage";
 
 export default function Library() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const colorScheme = useColorScheme();
   const styles = getStyles(colorScheme);
   const [songs, setSongs] = useState<Song[]>([]);
+  const [showMessage, setShowMessage] = useState(false);
   const { onPressSong, onGetLikedSongs, onToggleLike, contextSongsLibrary, loadingState } = useSong();
 
   useLayoutEffect(() => {
@@ -53,6 +55,11 @@ export default function Library() {
       const idSong = songs[index].id;
 
       await onToggleLike!(token, idSong, index, songs);
+
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
     } catch (error) {
       console.error("Error handling like:", error);
     };
@@ -90,6 +97,7 @@ export default function Library() {
         </ScrollView>
       </View>
       <MusicPlayer />
+      {showMessage && <RemoveMessage />}
     </>
   );
 }

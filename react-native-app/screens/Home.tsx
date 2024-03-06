@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { TouchableOpacity, ScrollView, StyleSheet, Image, useColorScheme } from "react-native";
 import { Text, View } from "../components/Theme";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
@@ -8,6 +8,7 @@ import { Song, useSong } from "../SongContext";
 import MusicPlayer from "./MusicPlayer";
 import Spinner from "react-native-loading-spinner-overlay";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddMessage from "./AddMessage";
 
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
   const colorScheme = useColorScheme();
   const styles = getStyles(colorScheme);
   const [songs, setSongs] = useState<Song[]>([]);
+  const [showMessage, setShowMessage] = useState(false);
   const { onPressSong, onGetSongs, onToggleLike, loadingState } = useSong();
 
   useLayoutEffect(() => {
@@ -44,6 +46,11 @@ export default function Home() {
       const idSong = songs[index].id;
 
       await onToggleLike!(token, idSong, index, songs);
+
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
     } catch (error) {
       console.error("Error handling like:", error);
     };
@@ -81,6 +88,7 @@ export default function Home() {
         </ScrollView>
       </View>
       <MusicPlayer />
+      {showMessage && <AddMessage />}
     </>
   );
 }

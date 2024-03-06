@@ -36,6 +36,7 @@ interface SongsProps {
     onNextButton?: () => Promise<any>;
     onToggleLoop?: () => Promise<any>;
     onToggleLike?: (token: string, idSong: string, index: number, songs: Song[]) => Promise<any>;
+    onHandlePlayerToggleLike?: (token: string, idSong: string) => Promise<any>;
     positionMillis: number;
     durationMillis: number;
 }
@@ -374,6 +375,20 @@ export const SongProvider = ({ children }: any) => {
         }
     };
 
+    const handlePlayerToggleLike = async (token: string, idSong: string) => {
+        try {
+            await onAddLikedSong!(token, idSong);
+
+            const response = await axios.get<Song[]>(`${URL_LIKEDSONG}?query=${encodeURIComponent(token)}`);
+
+            setContextSongsLibrary({
+                songs: response.data,
+            });
+        } catch (error) {
+            console.error("Error adding favorite song from player:", error);
+        }
+    };
+
     useEffect(() => {
         if (soundState?.sound) {
             soundState?.sound.setIsLoopingAsync(isLooping?.loop);
@@ -403,6 +418,7 @@ export const SongProvider = ({ children }: any) => {
         onNextButton: handleNextSong,
         onToggleLoop: handleToggleLoop,
         onToggleLike: handleToggleLike,
+        onHandlePlayerToggleLike: handlePlayerToggleLike,
         contextSongsLibrary,
         soundState,
         loadingState,

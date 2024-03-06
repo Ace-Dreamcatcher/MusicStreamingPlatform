@@ -16,11 +16,13 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { Song, useSong } from "../SongContext";
 import MusicPlayer from "./MusicPlayer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddMessage from "./AddMessage";
 
 export default function Search() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const colorScheme = useColorScheme();
   const styles = getStyles(colorScheme);
+  const [showMessage, setShowMessage] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<TextInput>(null);
@@ -90,6 +92,11 @@ export default function Search() {
       const idSong = songs[index].id;
 
       await onToggleLike!(token, idSong, index, songs);
+
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
     } catch (error) {
       console.error("Error handling like:", error);
     };
@@ -191,6 +198,7 @@ export default function Search() {
         }
       </View>
       <MusicPlayer />
+      {showMessage && <AddMessage />}
     </>
   );
 }

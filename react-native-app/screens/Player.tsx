@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import { Text } from "../components/Theme"; 
-import { Ionicons } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons, Octicons, Feather } from '@expo/vector-icons';
 import { useSong } from '../SongContext';
-import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddPlayerMessage from './AddPlayerMessage';
 
 export default function Player() {
-  const { onCurrentSong, onTogglePlay, onPreviousButton, onNextButton, isPlaying, onToggleLoop, isLooping, durationMillis, positionMillis } = useSong();
+  const { onHandlePlayerToggleLike, onCurrentSong, onTogglePlay, onPreviousButton, onNextButton, isPlaying, onToggleLoop, isLooping, durationMillis, positionMillis } = useSong();
   const progress = durationMillis > 0 ? (positionMillis / durationMillis) * 100 : 0;
   const [timeHandler, setTimeHandler] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
   const cooldownTime = 1;
 
   const handleToggleLoop = async () => {
@@ -42,66 +42,87 @@ export default function Player() {
     await onTogglePlay!();
   };
 
+  const handleToggleLike = async () => {
+    try {
+      const token = (await AsyncStorage.getItem("accessToken")) || "";
+      const idSong = onCurrentSong?.currentSong?.id;
+      
+      if (idSong !== undefined) {
+        await onHandlePlayerToggleLike!(token, idSong);
+
+        setShowMessage(true);
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error handling like:", error);
+    };
+  };
+
   return (
-    <LinearGradient colors={["#19bfb7", "black"]} style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View style={styles.removeIconContainer}>
-          <Octicons name="dash" size={60} color="#3b3b3b" />
-        </View>
-        <View style={styles.imageContainer}>
-          {onCurrentSong?.currentSong ?
-            <Image
-              source={{ uri: `http://192.168.1.5:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
-              style={styles.albumImage}
-              defaultSource={require("../assets/Songs/default.png")}
-              resizeMode="cover"
-            /> :
-            <Image
-              source={require("../assets/Songs/default.png")}
-              style={styles.albumImage}
-              resizeMode="cover"
-            />
-          }
-        </View>
-        <View style={styles.songInfoContainer}>
-          {onCurrentSong?.currentSong ?
-            <>
-              <Text style={styles.songTitle}>{onCurrentSong?.currentSong.name}</Text>
-              <Text style={styles.songArtist}>{onCurrentSong?.currentSong.artists.name}</Text> 
-            </> :
-            <Text style={styles.songTitle}>Not playing</Text>
-          }
-        </View>
-        <View style={styles.controls}>
-          <View style={styles.options}>
-            <TouchableOpacity style={{marginHorizontal: 115}}>
-              <FontAwesome name= {"heart-o"} size={30} color=  {"#757575"}/>
-            </TouchableOpacity>
-            <TouchableOpacity style={{marginHorizontal: 115}} onPress={handleToggleLoop} activeOpacity={0.6}>
-              <Feather name={"repeat"} size={27} color={isLooping?.loop? 'white' : '#757575'}  />
-            </TouchableOpacity>
+    <>
+      <LinearGradient colors={["#19bfb7", "black"]} style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <View style={styles.removeIconContainer}>
+            <Octicons name="dash" size={60} color="#3b3b3b" />
           </View>
-          <View style={styles.progressBar}>
-            <View style={[styles.progress, { width: `${progress}%` }]} />
+          <View style={styles.imageContainer}>
+            {onCurrentSong?.currentSong ?
+              <Image
+                source={{ uri: `http://192.168.1.5:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
+                style={styles.albumImage}
+                defaultSource={require("../assets/Songs/default.png")}
+                resizeMode="cover"
+              /> :
+              <Image
+                source={require("../assets/Songs/default.png")}
+                style={styles.albumImage}
+                resizeMode="cover"
+              />
+            }
           </View>
-          <View style={styles.timers}>
-            <Text style={{marginHorizontal: 110, color: 'white'}}> {formatTime(positionMillis)} </Text> 
-            <Text style={{marginHorizontal: 110, color: 'white'}}> {formatTime(durationMillis)} </Text>
+          <View style={styles.songInfoContainer}>
+            {onCurrentSong?.currentSong ?
+              <>
+                <Text style={styles.songTitle}>{onCurrentSong?.currentSong.name}</Text>
+                <Text style={styles.songArtist}>{onCurrentSong?.currentSong.artists.name}</Text> 
+              </> :
+              <Text style={styles.songTitle}>Not playing</Text>
+            }
           </View>
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity onPress={handlePreviousButton} style={styles.controlButton}>
-              <Ionicons name="play-back" size={50} color={"white"}/>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleToggleButton} style={styles.controlButton}>
-              <Ionicons name={isPlaying?.play ? "pause" : "play"} size={50} color={"white"}/>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleNextButton} style={styles.controlButton}>
-              <Ionicons name="play-forward" size={50} color={"white"}/>
-            </TouchableOpacity>
+          <View style={styles.controls}>
+            <View style={styles.options}>
+              <TouchableOpacity onPress={handleToggleLike} style={{marginHorizontal: 115}}>
+                <Ionicons name="add" size={35} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity style={{marginHorizontal: 115}} onPress={handleToggleLoop} activeOpacity={0.6}>
+                <Feather name={"repeat"} size={27} color={isLooping?.loop? 'white' : '#757575'}  />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.progressBar}>
+              <View style={[styles.progress, { width: `${progress}%` }]} />
+            </View>
+            <View style={styles.timers}>
+              <Text style={{marginHorizontal: 110, color: 'white'}}> {formatTime(positionMillis)} </Text> 
+              <Text style={{marginHorizontal: 110, color: 'white'}}> {formatTime(durationMillis)} </Text>
+            </View>
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity onPress={handlePreviousButton} style={styles.controlButton}>
+                <Ionicons name="play-back" size={50} color={"white"}/>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleToggleButton} style={styles.controlButton}>
+                <Ionicons name={isPlaying?.play ? "pause" : "play"} size={50} color={"white"}/>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleNextButton} style={styles.controlButton}>
+                <Ionicons name="play-forward" size={50} color={"white"}/>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </LinearGradient>
+      </LinearGradient>
+      {showMessage && <AddPlayerMessage />}
+    </>
   );
 };
   
