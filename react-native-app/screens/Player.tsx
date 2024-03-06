@@ -70,7 +70,7 @@ export default function Player() {
           <View style={styles.imageContainer}>
             {onCurrentSong?.currentSong ?
               <Image
-                source={{ uri: `http://192.168.1.5:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
+                source={{ uri: `http://192.168.1.2:3000/media/${onCurrentSong?.currentSong.albums.image}` }}
                 style={styles.albumImage}
                 defaultSource={require("../assets/Songs/default.png")}
                 resizeMode="cover"
@@ -94,7 +94,7 @@ export default function Player() {
           <View style={styles.controls}>
             <View style={styles.options}>
               <TouchableOpacity onPress={handleToggleLike} style={{marginHorizontal: 115}}>
-                <Ionicons name="add" size={35} color="white" />
+                <Ionicons name="add" size={40} color="white" />
               </TouchableOpacity>
               <TouchableOpacity style={{marginHorizontal: 115}} onPress={handleToggleLoop} activeOpacity={0.6}>
                 <Feather name={"repeat"} size={27} color={isLooping?.loop? 'white' : '#757575'}  />
