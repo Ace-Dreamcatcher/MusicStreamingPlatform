@@ -37,8 +37,8 @@ export class AuthService {
 				user.createAt,
 				user.role,
 			);
-		} catch (e) {
-			throw e;
+		} catch (error) {
+			throw error;
 		}
 	}
 
@@ -66,8 +66,8 @@ export class AuthService {
 				user.createAt,
 				user.role,
 			);
-		} catch (e) {
-			throw e;
+		} catch (error) {
+			throw error;
 		}
 	}
 
@@ -150,7 +150,7 @@ export class AuthService {
 				updatedUser.role,
 			);
 		} catch (error) {
-			throw new BadRequestException();
+			throw error;
 		}
 	}
 
@@ -166,7 +166,7 @@ export class AuthService {
 
 			return { message: 'Your account has been deleted successfully!' };
 		} catch (error) {
-			throw new BadRequestException();
+			throw error;
 		}
 	}
 
@@ -240,7 +240,7 @@ export class AuthService {
 		email: string,
 		username: string,
 		hash: string,
-		createdAt: Date,
+		createAt: Date,
 		role: Role,
 	): Promise<{ accessToken: string }> {
 		const payload = {
@@ -248,7 +248,7 @@ export class AuthService {
 			email,
 			username,
 			hash,
-			createdAt,
+			createAt,
 			role,
 		};
 

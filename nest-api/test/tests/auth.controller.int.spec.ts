@@ -31,11 +31,11 @@ describe('AuthController', () => {
 			}
 
 			mockPrismaService.user.create.mockResolvedValue({
-				id: 'someUserId',
+				id: '1',
 				email: dto.email,
 				username: dto.username,
 				hash: '$argon2id$v=19$m=65536,t=3,p=4$COaT0vbhjCETwq8/b503Kg$OSIxLiy4PHDmK2DIwBS/4lZ+qN1StQHAq7v9K7j4ijE',
-				createAt: new Date(),
+				createAt: '2024-03-16T18:10:21.828Z',
 				role: 'FREE',
 			});
 
@@ -60,11 +60,11 @@ describe('AuthController', () => {
 
 		update: jest.fn(async (dto: UpdateDto) => {
 			const mockUser = {
-				id: 'someUserId',
+				id: '1',
 				email: 'Ioannis@gmail.com',
 				username: 'Ioannis',
 				hash: '$argon2id$v=19$m=65536,t=3,p=4$COaT0vbhjCETwq8/b503Kg$OSIxLiy4PHDmK2DIwBS/4lZ+qN1StQHAq7v9K7j4ijE',
-				createdAt: undefined,
+				createAt: '2024-03-16T18:10:21.828Z',
 				role: 'FREE',
 			};
 
@@ -96,11 +96,11 @@ describe('AuthController', () => {
 
 		delete: jest.fn(async (dto: TokenDto) => {
 			const mockUser = {
-				id: 'someUserId',
+				id: '1',
 				email: 'Ioannis@gmail.com',
 				username: 'Ioannis',
 				hash: '$argon2id$v=19$m=65536,t=3,p=4$COaT0vbhjCETwq8/b503Kg$OSIxLiy4PHDmK2DIwBS/4lZ+qN1StQHAq7v9K7j4ijE',
-				createdAt: undefined,
+				createAt: '2024-03-16T18:10:21.828Z',
 				role: 'FREE',
 			};
 
