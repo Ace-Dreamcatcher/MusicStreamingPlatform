@@ -1,4 +1,4 @@
-version: "4.25.2"
+version: "4.28.0"
 services:
   AA-db:
     image: postgres:15
@@ -8,7 +8,5 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: AudioAlcove
-    networks:
-      - musicstreamingplatform
 networks:
   musicstreamingplatform:
