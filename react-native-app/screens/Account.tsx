@@ -20,6 +20,7 @@ export default function Account() {
   const [toggleDolby, setToggleDolby] = useState(false);
   const [membership, setMembership] = useState("FREE");
   const [username, setUsername] = useState("user");
+  const [email, setEmail] = useState("example@gmail.com");
   const { onRole, onSignOut, loadingState, getUser } = useAuth();
   const { onStop } = useSong();
 
@@ -62,12 +63,17 @@ export default function Account() {
       const token = (await AsyncStorage.getItem("accessToken")) || "";
       const response = await getUser!(token);
       if (response.data !== undefined) {
+        setEmail(response.data.email);
         setUsername(response.data.username);
         setMembership(response.data.role);
       }
     } catch (error) {
       console.error("Error retrieving username and role:", error);
     }
+  };
+
+  const handleEditInfoButton = async () => {
+    navigation.navigate("Edit Info", {email: email, username: username});
   };
 
   const handleSignOut = async () => {
@@ -106,7 +112,7 @@ export default function Account() {
       <View style={styles.userButtonContainer}>
         <TouchableOpacity
           style={styles.userButton}
-          onPress={() => navigation.navigate("Edit Info")}
+          onPress={handleEditInfoButton}
           activeOpacity={0.7}
         >
           <View style={styles.directionForUserButton}>

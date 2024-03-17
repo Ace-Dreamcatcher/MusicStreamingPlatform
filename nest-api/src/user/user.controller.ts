@@ -8,6 +8,6 @@ export class UserController {
 	@UseGuards(JwtGuard)
 	@Get('me')
 	getMe(@GetUser() user: User) {
-		return { username: user.username, role: user.role };
+		return { email: user.email, username: user.username, role: user.role };
 	}
 }

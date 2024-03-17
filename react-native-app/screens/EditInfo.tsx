@@ -18,7 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useSong } from "../SongContext";
 
-export default function EditInfo() {
+export default function EditInfo({route}: any) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const colorScheme = useColorScheme();
   const backgroundColor = colorScheme === "dark" ? "black" : "white";
@@ -30,6 +30,7 @@ export default function EditInfo() {
   const [textPassword, setTextPassword] = useState("");
   const { onUpdate, onDelete, loadingState } = useAuth();
   const { onStop } = useSong();
+  const {email, username} = route.params;
 
   const handleUpdate = async () => {
     if (textEmail === "" && textUsername === "" && textPassword === "") {
@@ -131,6 +132,8 @@ export default function EditInfo() {
           <View style={styles.gap} />
           <TextInput
             style={styles.textInput}
+            placeholder={email}
+            placeholderTextColor="gray"
             onChangeText={(newText) => {
               setTextEmail(newText);
             }}
@@ -141,6 +144,8 @@ export default function EditInfo() {
           <View style={styles.gap} />
           <TextInput
             style={styles.textInput}
+            placeholder={username}
+            placeholderTextColor="gray"
             onChangeText={(newText) => setTextUsername(newText)}
             defaultValue={textUsername}
           />
@@ -150,6 +155,8 @@ export default function EditInfo() {
           <TextInput
             style={styles.textInput}
             secureTextEntry={true}
+            placeholder="••••••••"
+            placeholderTextColor="gray"
             onChangeText={(newText) => {
               setTextPassword(newText);
             }}
