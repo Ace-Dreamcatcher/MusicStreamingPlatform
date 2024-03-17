@@ -30,12 +30,12 @@ export default function EditInfo({route}: any) {
   const [textPassword, setTextPassword] = useState("");
   const { onUpdate, onDelete, loadingState } = useAuth();
   const { onStop } = useSong();
-  const {email, username} = route.params;
+  const { email, username } = route.params;
 
   const handleUpdate = async () => {
     if (textEmail === "" && textUsername === "" && textPassword === "") {
       Alert.alert("Failed to update info:", "Nothing to update!", [
-        { text: "OK", onPress: () => navigation.navigate("Edit Info") },
+        { text: "OK", onPress: () => navigation.navigate("Edit Info", {email: email, username: username}) },
       ]);
     } else {
       const token = (await AsyncStorage.getItem("accessToken")) || "";
@@ -55,14 +55,14 @@ export default function EditInfo({route}: any) {
             errorResponse[0].includes("email")
           ) {
             Alert.alert("Failed to update info:", errorResponse[0], [
-              { text: "OK", onPress: () => navigation.navigate("Edit Info") },
+              { text: "OK", onPress: () => navigation.navigate("Edit Info", {email: email, username: username}) },
             ]);
           } else if (
             errorResponse[0].includes("Password") ||
             errorResponse[0].includes("password")
           ) {
             Alert.alert("Failed to update info:", errorResponse[0], [
-              { text: "OK", onPress: () => navigation.navigate("Edit Info") },
+              { text: "OK", onPress: () => navigation.navigate("Edit Info", {email: email, username: username}) },
             ]);
           }
         } else {
