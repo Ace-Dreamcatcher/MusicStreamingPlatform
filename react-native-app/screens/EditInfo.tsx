@@ -185,7 +185,7 @@ export default function EditInfo({route}: any) {
                       },
                       {
                         text: "No",
-                        onPress: () => navigation.navigate("Edit Info"),
+                        onPress: () => navigation.navigate("Edit Info", {email: email, username: username}),
                       },
                     ],
                   );
